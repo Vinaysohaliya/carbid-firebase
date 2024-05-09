@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardBody, Button, Image, useSelect, Divider, DateRangePicker } from "@nextui-org/react";
 import { useDispatch, useSelector } from 'react-redux';
-import { checkIfVehicleLiked, toggleVehicleLike } from '../Redux/vehicleSlice';
+import { checkIfVehicleLiked, toggleVehicleLike } from '../../Redux/vehicleSlice';
 import { useNavigate } from "react-router-dom";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
 
 const VehicleCard = ({ vehicle }) => {
-  const { id, make, model, imageUrl, brand, fuelType, transmission, distanceTraveled } = vehicle;
+  console.log(vehicle);
+  const { id, make, model, vehiclePhotos, brand, fuelType, transmission, distanceTraveled } = vehicle;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState(false);
@@ -41,10 +42,9 @@ const VehicleCard = ({ vehicle }) => {
   return (
     <Card shadow="dark-lg" className="w-[300px] flex flex-col rounded-xl overflow-hidden">
       <div className="relative h-48 overflow-hidden">
-        <Image alt={`${make} ${model}`} src={imageUrl} className="object-cover w-full h-full" />
+        <Image alt={`${make} ${model}`} src={vehiclePhotos[0]} className="object-cover w-full h-full" />
       </div>
       {<Button onClick={handleLike}>{isLiked ? "Unlike" : "Like"}</Button>}
-
       <CardBody className="flex flex-col p-4">z
         <h3 className="font-bold text-xl mb-4">{make} {model}</h3>
         <div className="flex mb-2">
@@ -74,9 +74,7 @@ const VehicleCard = ({ vehicle }) => {
             label="Stay duration"
             className="max-w-xs"
           />
-          <ModalBody>
-            {/* Add content for the auction modal here */}
-          </ModalBody>
+          
           <ModalFooter>
             <Button color="error" variant="light" onClick={onClose}>Cancel</Button>
             <Button color="primary" onClick={onClose}>Add to Auction</Button>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchLikedVehicles } from '../../Redux/vehicleSlice';
-import VehicleCard from '../VehicleCard';
+import VehicleCard from '../Card/VehicleCard';
 
 const Mywishlist = () => {
     const [vehicles, setvehicle] = useState([]);

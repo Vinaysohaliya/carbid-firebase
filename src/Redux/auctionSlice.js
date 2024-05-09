@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
 
@@ -36,6 +36,42 @@ export const fetchAuctionDetails = createAsyncThunk(
     }
   }
 );
+
+
+
+
+export const removeFromAuction = createAsyncThunk(
+  'auction/removeFromAuction',
+  async ({ vehicleId }) => {
+    try {
+      const auctionQuery = query(collection(db, 'auctions'), where('vehicleId', '==', vehicleId));
+      const auctionQuerySnapshot = await getDocs(auctionQuery);
+      if (!auctionQuerySnapshot.empty) {
+        const auctionDocRef = auctionQuerySnapshot.docs[0].ref;
+        await deleteDoc(auctionDocRef);
+      }
+
+      const vehicleDocRef = doc(db, 'vehicles', vehicleId);
+      await deleteDoc(vehicleDocRef);
+
+      const userQuery = query(collection(db, 'users'), where('submittedVehicles', 'array-contains', vehicleId));
+      const userQuerySnapshot = await getDocs(userQuery);
+      if (!userQuerySnapshot.empty) {
+        const userDocRef = userQuerySnapshot.docs[0].ref;
+        await updateDoc(userDocRef, {
+          submittedVehicles: userQuerySnapshot.docs[0].data().submittedVehicles.filter(id => id !== vehicleId)
+        });
+      }
+
+      return { success: true };
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+
+
 
 
 export const fetchBidData = createAsyncThunk(
@@ -79,7 +115,7 @@ export const fetchBidData = createAsyncThunk(
 
 export const addToAuction = createAsyncThunk(
   'auction/addToAuction',
-  async ( { rejectWithValue }) => {
+  async ({ rejectWithValue }) => {
     try {
       // Create a new auction document
       const auctionDocRef = await addDoc(collection(db, 'auctions'), {

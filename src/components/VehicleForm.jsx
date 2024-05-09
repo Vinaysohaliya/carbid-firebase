@@ -54,7 +54,6 @@ const VehicleSellingForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("dddddddddddddddd");
     try {
       if (!idProof) {
         setIdProofError('Please upload your ID proof.');
@@ -90,22 +89,24 @@ const VehicleSellingForm = () => {
         website: '',
         salesRange: '',
       });
+      setStage(1);
+      onClose();
 
     } catch (error) {
       console.error('Error submitting vehicle details:', error.message);
     }
   };
 
-  const handleSubmitAndAddToAuction = async () => {
-    try {
-      await handleSubmit();
-      await dispatch(addToAuction({ vehicleId: vehicleDocRef.id }));
-      setStage(1);
-      onClose();
-    } catch (error) {
-      console.error('Error submitting vehicle details and adding to auction:', error.message);
-    }
-  };
+  // const handleSubmitAndAddToAuction = async () => {
+  //   try {
+  //     await handleSubmit();
+  //     await dispatch(addToAuction({ vehicleId: vehicleDocRef.id }));
+  //     setStage(1);
+  //     onClose();
+  //   } catch (error) {
+  //     console.error('Error submitting vehicle details and adding to auction:', error.message);
+  //   }
+  // };
 
 
   const renderStage = () => {
@@ -347,9 +348,21 @@ const VehicleSellingForm = () => {
                 <Button radius='sm' className='mr-2' onClick={() => setStage((prevStage) => Math.max(prevStage - 1, 1))}>
                   Previous
                 </Button>
-                <Button type={stage === 4 ? "button" : "submit"} radius='sm' onClick={() => setStage(prevStage => prevStage + 1)}>
+               
+                <Button
+                  type="button"
+                  radius='sm'
+                  onClick={(e) => {
+                    if (stage === 4) {
+                      handleSubmit(e);
+                    } else {
+                      setStage(prevStage => prevStage + 1);
+                    }
+                  }}
+                >
                   {stage === 4 ? 'Submit' : 'Next'}
                 </Button>
+
 
               </div>
             </form>

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import VehicleCard from '../components/VehicleCard.jsx';
+import VehicleCard from '../components/Card/VehicleCard.jsx';
 import Filters from '../components/Filter/Filters.jsx';
 import { fetchAllVehicles } from '../Redux/vehicleSlice.js'; // Updated import statement
 

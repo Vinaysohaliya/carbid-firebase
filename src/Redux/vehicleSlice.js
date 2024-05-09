@@ -8,7 +8,6 @@ import { update } from 'firebase/database';
 
 
 
-// Async thunk for fetching all vehicles
 export const fetchAllVehicles = createAsyncThunk(
   'vehicles/fetchAll',
   async () => {
@@ -150,14 +149,13 @@ export const fetchUserSubmittedVehicles = createAsyncThunk(
   'auction/fetchUserSubmittedVehicles',
   async (userId) => {
     try {
-      const userVehiclesQuery = query(collection(db, 'vehicles'), where('userId', '==', userId));
+      const userVehiclesQuery = query(collection(db, 'vehicles'), where('userId', '==', userId), where('auctionStatus', '==', true));
       const querySnapshot = await getDocs(userVehiclesQuery);
-
       const userSubmittedVehicles = [];
       querySnapshot.forEach((doc) => {
+        console.log(doc.id);
         userSubmittedVehicles.push({ id: doc.id, ...doc.data() });
       });
-
       return userSubmittedVehicles;
     } catch (error) {
       throw error;
