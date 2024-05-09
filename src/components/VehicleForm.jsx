@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { submitVehicleDetails } from '../Redux/vehicleSlice.js';
+import { fetchVehicle, submitVehicleDetails } from '../Redux/vehicleSlice.js';
 import { useNavigate } from 'react-router-dom';
 import { Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Radio, RadioGroup, Input, Divider, Checkbox, ScrollShadow } from '@nextui-org/react'; // Remove Select and SelectItem imports
 import { addToAuction } from '../Redux/auctionSlice.js';
 
-const VehicleSellingForm = () => {
+const VehicleSellingForm = ({vehicle}) => {
+  console.log(vehicle);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const currentUser = useSelector(state => state.auth.data);
@@ -32,6 +33,39 @@ const VehicleSellingForm = () => {
     website: '', // New dealer fields
     salesRange: '', // New dealer fields
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await dispatch(fetchVehicle({ vehicleId: vehicle.id }));
+        const vehicleData = res.payload;
+        setFormData({
+          sellerType: vehicleData.sellerType,
+          name: vehicleData.name,
+          mobile: vehicleData.mobile,
+          address: vehicleData.address,
+          registrationYear: vehicleData.registrationYear,
+          brand: vehicleData.brand,
+          model: vehicleData.model,
+          travelDistance: vehicleData.travelDistance,
+          transmission: vehicleData.transmission,
+          ownerType: vehicleData.ownerType,
+          carLocation: vehicleData.carLocation,
+          modification: vehicleData.modification,
+          pickupLocation: vehicleData.pickupLocation,
+          dealershipName: vehicleData.dealershipName,
+          website: vehicleData.website,
+          salesRange: vehicleData.salesRange,
+        });
+      } catch (error) {
+        console.error('Error fetching vehicle data:', error.message);
+      }
+    };
+  
+    fetchData();
+  }, [dispatch, vehicle.id]);
+  
+  
 
   const [idProof, setIdProof] = useState('');
   const [vehiclePhotos, setVehiclePhotos] = useState([]);

@@ -148,7 +148,6 @@ export const fetchUserSubmittedVehicles = createAsyncThunk(
       const querySnapshot = await getDocs(userVehiclesQuery);
       const userSubmittedVehicles = [];
       querySnapshot.forEach((doc) => {
-        console.log(doc.id);
         userSubmittedVehicles.push({ id: doc.id, ...doc.data() });
       });
       return userSubmittedVehicles;
@@ -158,6 +157,22 @@ export const fetchUserSubmittedVehicles = createAsyncThunk(
   }
 );
 
+export const fetchUserSubmittedVehiclesbutnotonAuction = createAsyncThunk(
+  'auction/fetchUserSubmittedVehicles',
+  async (userId) => {
+    try {
+      const userVehiclesQuery = query(collection(db, 'vehicles'), where('userId', '==', userId));
+      const querySnapshot = await getDocs(userVehiclesQuery);
+      const userSubmittedVehicles = [];
+      querySnapshot.forEach((doc) => {
+        userSubmittedVehicles.push({ id: doc.id, ...doc.data() });
+      });
+      return userSubmittedVehicles;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
 
 
 

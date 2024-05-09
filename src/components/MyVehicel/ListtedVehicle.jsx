@@ -6,9 +6,8 @@ import SellerVehicleCard from '../Card/SellerVehicleCard';
 
 const ListtedVehicle = () => {
     const dispatch = useDispatch();
-    const userId = useSelector(state => state.auth.data.uid); // Assuming you store user id in auth slice
+    const userId = useSelector(state => state.auth.data.uid); 
     const [vehicles, setVehicles] = useState([]);
-
     useEffect(() => {
         const fetchVehicles = async () => {
             try {
