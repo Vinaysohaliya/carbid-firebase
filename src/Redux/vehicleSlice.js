@@ -124,16 +124,11 @@ export const fetchVehicle = createAsyncThunk(
   'auction/fetchVehicle',
   async (vehicleId) => {
     try {
-      // Fetch the vehicle document from Firestore
-      console.log(vehicleId);
-      const vehicleDoc = await getDoc(doc(db, 'vehicles', vehicleId));
-      console.log(vehicleDoc);
-      // Check if the document exists
+      const vehicleDoc = await getDoc(doc(db, 'vehicles', vehicleId.vehicleId));
       if (!vehicleDoc.exists()) {
         throw new Error('Vehicle not found');
       }
 
-      // Extract vehicle data from the document
       const vehicleData = vehicleDoc.data();
 
       return vehicleData;
