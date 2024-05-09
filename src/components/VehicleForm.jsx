@@ -2,19 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchVehicle, submitVehicleDetails } from '../Redux/vehicleSlice.js';
 import { useNavigate } from 'react-router-dom';
-import { Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Radio, RadioGroup, Input, Divider, Checkbox, ScrollShadow } from '@nextui-org/react'; // Remove Select and SelectItem imports
+import { Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Radio, RadioGroup, Input, Divider, Checkbox, ScrollShadow } from '@nextui-org/react';
 import { addToAuction } from '../Redux/auctionSlice.js';
 
-const VehicleSellingForm = ({vehicle}) => {
-  console.log(vehicle);
+const VehicleSellingForm = ({ vehicle }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const currentUser = useSelector(state => state.auth.data);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const [dataFetched, setDataFetched] = useState(false);
   const [stage, setStage] = useState(1);
   const [idProofError, setIdProofError] = useState('');
-
   const [formData, setFormData] = useState({
     sellerType: 'individual',
     name: '',
@@ -29,10 +28,12 @@ const VehicleSellingForm = ({vehicle}) => {
     carLocation: '',
     modification: '',
     pickupLocation: '',
-    dealershipName: '', // New dealer fields
-    website: '', // New dealer fields
-    salesRange: '', // New dealer fields
+    dealershipName: '',
+    website: '',
+    salesRange: '',
   });
+  const [auctionStatus, setAuctionStatus] = useState(false);
+  const [formDisabled, setFormDisabled] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,18 +58,21 @@ const VehicleSellingForm = ({vehicle}) => {
           website: vehicleData.website,
           salesRange: vehicleData.salesRange,
         });
+        setDataFetched(true);
+        setAuctionStatus(vehicleData.auctionStatus);
+        setFormDisabled(vehicleData.auctionStatus);
+        setStage(vehicleData.auctionStatus ? 5 : 1);
       } catch (error) {
         console.error('Error fetching vehicle data:', error.message);
       }
     };
-  
+
     fetchData();
   }, [dispatch, vehicle.id]);
-  
-  
 
   const [idProof, setIdProof] = useState('');
   const [vehiclePhotos, setVehiclePhotos] = useState([]);
+
   const handlepickup = (e) => {
     if (e.target.checked) {
       setFormData({ ...formData, pickupLocation: formData.carLocation });
@@ -96,7 +100,6 @@ const VehicleSellingForm = ({vehicle}) => {
         setIdProofError('');
       }
 
-      console.log(formData);
       await dispatch(submitVehicleDetails({
         vehicleData: formData,
         vehiclePhotos,
@@ -105,7 +108,6 @@ const VehicleSellingForm = ({vehicle}) => {
       }));
 
       setFormData({
-        ...formData,
         sellerType: 'individual',
         name: '',
         mobile: '',
@@ -130,18 +132,6 @@ const VehicleSellingForm = ({vehicle}) => {
       console.error('Error submitting vehicle details:', error.message);
     }
   };
-
-  // const handleSubmitAndAddToAuction = async () => {
-  //   try {
-  //     await handleSubmit();
-  //     await dispatch(addToAuction({ vehicleId: vehicleDocRef.id }));
-  //     setStage(1);
-  //     onClose();
-  //   } catch (error) {
-  //     console.error('Error submitting vehicle details and adding to auction:', error.message);
-  //   }
-  // };
-
 
   const renderStage = () => {
     switch (stage) {
@@ -353,6 +343,7 @@ const VehicleSellingForm = ({vehicle}) => {
                 onChange={handlepickup}  >Same as car location</Checkbox>
             </div>
             <Input
+            
               type="text"
               placeholder="Enter pickup location"
               value={formData.pickupLocation}
@@ -361,15 +352,17 @@ const VehicleSellingForm = ({vehicle}) => {
             />
           </div>
         );
-
-
+        case 5:
+          return(<>hij</>)
+          case 6:
+            return(<>dsggshfs</>)
     }
   };
 
   return (
     <>
       <h2>Submit Vehicle Details</h2>
-      <Button onPress={onOpen}>Add Vehicle</Button>
+      <Button onPress={onOpen} disabled={formDisabled}>Add Vehicle</Button>
       <Modal size='2xl' isOpen={isOpen} onOpenChange={onClose}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">Submit Vehicle Details</ModalHeader>
@@ -378,14 +371,15 @@ const VehicleSellingForm = ({vehicle}) => {
               {renderStage()}
               <Divider />
               <div className='my-4 flex items-center justify-end'>
-
-                <Button radius='sm' className='mr-2' onClick={() => setStage((prevStage) => Math.max(prevStage - 1, 1))}>
-                  Previous
-                </Button>
-               
+                {stage !== 5 && (
+                  <Button radius='sm' className='mr-2' onClick={() => setStage((prevStage) => Math.max(prevStage - 1, 1))} disabled={(!auctionStatus && stage<5)}>
+                    Previous
+                  </Button>
+                )}
                 <Button
                   type="button"
                   radius='sm'
+                  
                   onClick={(e) => {
                     if (stage === 4) {
                       handleSubmit(e);
@@ -396,12 +390,9 @@ const VehicleSellingForm = ({vehicle}) => {
                 >
                   {stage === 4 ? 'Submit' : 'Next'}
                 </Button>
-
-
               </div>
             </form>
           </ModalBody>
-
         </ModalContent>
       </Modal>
     </>
