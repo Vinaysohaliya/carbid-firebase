@@ -21,7 +21,7 @@ const VehicleDetail = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      await dispatch(fetchVehicle(id));
+      await dispatch(fetchVehicle({vehicleId:id}));
       const isLiked = await dispatch(checkIfVehicleLiked({ vehicleId: id, userId }));
       setIsLiked(isLiked.payload);
     };

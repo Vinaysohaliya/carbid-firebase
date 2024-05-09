@@ -9,7 +9,6 @@ const VehicleList = () => {
     const vehicles = useSelector((state) => state.vehicle.vehicles) || [];
 
     useEffect(() => {
-        console.log("sfdsfdgfdghha");
         dispatch(fetchAllVehicles());
     }, [dispatch]); // Added dispatch as a dependency to useEffect
     return (

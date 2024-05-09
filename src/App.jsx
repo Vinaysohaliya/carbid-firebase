@@ -5,8 +5,9 @@ import Home from './components/Home';
 import Signup from './components/Signup';
 import SignIn from './components/Signin';
 import VehicleList from './pages/VehicleList';
-import VehicleSellingForm from './components/VehicleForm';
 import VehicleDetail from './pages/VehicleDetail';
+import MyVehicle from './pages/MyVehicle';
+import SellerDashboard from './pages/SellerDashboard';
 
 function App() {
 
@@ -18,7 +19,8 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/vehicle/:id" element={<VehicleDetail />} />
         <Route path="/signin" element={<SignIn />} />
-        <Route path="/sellform" element={<VehicleSellingForm />} />
+        <Route path="/sellform" element={<SellerDashboard />} />
+        <Route path="/my" element={<MyVehicle />} />
       </Routes>
     </>
   );

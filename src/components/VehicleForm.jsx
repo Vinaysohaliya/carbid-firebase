@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { submitVehicleDetails } from '../Redux/vehicleSlice.js';
 import { useNavigate } from 'react-router-dom';
-import { Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Radio, RadioGroup, Input, Divider, Select, SelectItem, ScrollShadow, Checkbox } from '@nextui-org/react';
+import { Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Radio, RadioGroup, Input, Divider, Checkbox, ScrollShadow } from '@nextui-org/react'; // Remove Select and SelectItem imports
+import { addToAuction } from '../Redux/auctionSlice.js';
 
 const VehicleSellingForm = () => {
   const navigate = useNavigate();
@@ -27,6 +28,9 @@ const VehicleSellingForm = () => {
     carLocation: '',
     modification: '',
     pickupLocation: '',
+    dealershipName: '', // New dealer fields
+    website: '', // New dealer fields
+    salesRange: '', // New dealer fields
   });
 
   const [idProof, setIdProof] = useState('');
@@ -50,6 +54,7 @@ const VehicleSellingForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("dddddddddddddddd");
     try {
       if (!idProof) {
         setIdProofError('Please upload your ID proof.');
@@ -60,7 +65,7 @@ const VehicleSellingForm = () => {
 
       console.log(formData);
       await dispatch(submitVehicleDetails({
-        vehicleData:formData,
+        vehicleData: formData,
         vehiclePhotos,
         userId: currentUser.uid,
         idProof
@@ -80,17 +85,32 @@ const VehicleSellingForm = () => {
         ownerType: '',
         carLocation: '',
         modification: '',
-        pickupLocation: ''
+        pickupLocation: '',
+        dealershipName: '',
+        website: '',
+        salesRange: '',
       });
 
-      onClose();
     } catch (error) {
       console.error('Error submitting vehicle details:', error.message);
     }
   };
 
+  const handleSubmitAndAddToAuction = async () => {
+    try {
+      await handleSubmit();
+      await dispatch(addToAuction({ vehicleId: vehicleDocRef.id }));
+      setStage(1);
+      onClose();
+    } catch (error) {
+      console.error('Error submitting vehicle details and adding to auction:', error.message);
+    }
+  };
+
+
   const renderStage = () => {
     switch (stage) {
+
       case 1:
         return (
           <div>
@@ -101,7 +121,7 @@ const VehicleSellingForm = () => {
               </div>
             </RadioGroup>
             <h2>Seller Information</h2>
-            <div className='flex my-2'>
+            {formData.sellerType === 'individual' && <div className='flex my-2'>
               <Input
                 type="text"
                 placeholder="Enter your name"
@@ -117,18 +137,18 @@ const VehicleSellingForm = () => {
                 radius='sm'
                 onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
               />
+              <Input
+                type="text"
+                placeholder="Enter your address"
+                value={formData.address}
+                radius='sm'
+                className='mb-2'
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              />
             </div>
-            <Input
-              type="text"
-              placeholder="Enter your address"
-              value={formData.address}
-              radius='sm'
-              className='mb-2'
-              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-            />
-            {/* Display error message */}
+            }
+
             {idProofError && <p className="text-red-500">{idProofError}</p>}
-            {/* File upload for ID proof */}
             <label className="block m-4">
               <span className="text-gray-700">Upload your ID proof</span>
               <div className="mt-1 flex  flex-col">
@@ -136,106 +156,142 @@ const VehicleSellingForm = () => {
                 <span className=" bg-gray-200 rounded-md px-3 py-1 size-2/5 flex items-center justify-center text-sm font-medium text-gray-700 mr-2">
                   Choose file
                 </span>
-                <input type="file" className="sr-only"  onChange={(e) => handelIdproof(e.target.files[0])} />
+                <input type="file" className="sr-only" onChange={(e) => handelIdproof(e.target.files[0])} />
               </div>
             </label>
+            {formData.sellerType === 'dealer' && (
+              <>
+                <Input
+                  type="text"
+                  placeholder="Enter dealer name"
+                  value={formData.dealerName}
+                  radius='sm'
+                  onChange={(e) => setFormData({ ...formData, dealerName: e.target.value })}
+                  className='mb-2'
+                />
+                <Input
+                  type="text"
+                  placeholder="Enter dealership name"
+                  value={formData.dealershipName}
+                  radius='sm'
+                  onChange={(e) => setFormData({ ...formData, dealershipName: e.target.value })}
+                  className='mb-2'
+                />
+                <Input
+                  type="text"
+                  placeholder="Enter website"
+                  value={formData.website}
+                  radius='sm'
+                  onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                  className='mb-2'
+                />
+                <Input
+                  type="text"
+                  placeholder="Enter sales range"
+                  value={formData.salesRange}
+                  radius='sm'
+                  onChange={(e) => setFormData({ ...formData, salesRange: e.target.value })}
+                  className='mb-2'
+                />
+              </>
+            )}
           </div>
         );
+
       case 2:
         return (
           <ScrollShadow hideScrollBar className="w-[300px] h-[400px]">
             <div>
-              <Select
+              <select
                 value={formData.registrationYear}
-                onChange={(value) => setFormData({ ...formData, registrationYear: value })}
-                placeholder="Select registration year"
-                className="mt-2"
-                radius="sm"
+                onChange={(e) => setFormData({ ...formData, registrationYear: e.target.value })}
+                className="mt-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               >
+                <option value="">Select registration year</option>
                 {[2022, 2021, 2020, 2019, 2018].map((year) => (
-                  <SelectItem key={year} value={year}>
+                  <option key={year} value={year}>
                     {year}
-                  </SelectItem>
+                  </option>
                 ))}
-              </Select>
-              <Select
+              </select>
+              {/* Repeat the same approach for other fields */}
+              <select
                 value={formData.brand}
-                onChange={(value) => setFormData({ ...formData, brand: value })}
-                placeholder="Select vehicle brand"
-                radius='sm'
-                className='mt-2'
+                onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
+                className='mt-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
               >
-                <SelectItem value="Toyota">Toyota</SelectItem>
-                <SelectItem value="Honda">Honda</SelectItem>
-                <SelectItem value="Ford">Ford</SelectItem>
-              </Select>
-              <Select
+                <option value="">Select vehicle brand</option>
+                <option value="Toyota">Toyota</option>
+                <option value="Honda">Honda</option>
+                <option value="Ford">Ford</option>
+              </select>
+              <select
                 value={formData.model}
-                onChange={(value) => setFormData({ ...formData, model: value })}
-                placeholder="Select vehicle model"
-                radius='sm'
-                className='mt-2'
+                onChange={(e) => setFormData({ ...formData, model: e.target.value })}
+                className='mt-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
               >
+                <option value="">Select vehicle model</option>
                 {formData.brand === 'Toyota' && (
                   <>
-                    <SelectItem value="Corolla">Corolla</SelectItem>
-                    <SelectItem value="Camry">Camry</SelectItem>
+                    <option value="Corolla">Corolla</option>
+                    <option value="Camry">Camry</option>
                   </>
                 )}
                 {formData.brand === 'Honda' && (
                   <>
-                    <SelectItem value="Civic">Civic</SelectItem>
-                    <SelectItem value="Accord">Accord</SelectItem>
+                    <option value="Civic">Civic</option>
+                    <option value="Accord">Accord</option>
                     {/* Add more options as needed */}
                   </>
                 )}
-                {/* Add more brand-specific options as needed */}
-              </Select>
-              <Input
-                type="text"
-                placeholder="Travel Distance (in kilometers)"
-                value={formData.travelDistance}
-                radius='sm'
-                className='mt-2'
-                onChange={(e) => setFormData({ ...formData, travelDistance: e.target.value })}
-              />
-              <RadioGroup
-                value={formData.transmission}
-                label="Transmission Type"
-                className="mt-2"
-                onChange={(e) => setFormData({ ...formData, transmission: e.target.value })}
-              >
-                <Radio value="auto">Automatic</Radio>
-                <Radio value="manual">Manual</Radio>
-              </RadioGroup>
-              <RadioGroup
-                value={formData.ownerType}
-                label="Owner Type"
-                className="mt-2"
-                onChange={(e) => setFormData({ ...formData, ownerType: e.target.value })}
-              >
-                <Radio value="first">First Owner</Radio>
-                <Radio value="second">Second Owner</Radio>
-                <Radio value="third">Third Owner</Radio>
-              </RadioGroup>
-              <Input
-                type="text"
-                placeholder="Car Location"
-                value={formData.carLocation}
-                radius='sm'
-                className='mt-2'
-                onChange={(e) => setFormData({ ...formData, carLocation: e.target.value })}
-              />
-              <RadioGroup
-                value={formData.modification}
-                label="Has there been any modification?"
-                className="mt-2"
-                onChange={(e) => setFormData({ ...formData, modification: e.target.value })}
-              >
-                <Radio value="yes">Yes</Radio>
-                <Radio value="no">No</Radio>
-              </RadioGroup>
+              </select>
+
             </div>
+            <Input
+              type="text"
+              placeholder="Travel Distance (in kilometers)"
+              value={formData.travelDistance}
+              radius='sm'
+              className='mt-2'
+              onChange={(e) => setFormData({ ...formData, travelDistance: e.target.value })}
+            />
+            <RadioGroup
+              value={formData.transmission}
+              label="Transmission Type"
+              className="mt-2"
+              onChange={(e) => setFormData({ ...formData, transmission: e.target.value })}
+            >
+              <Radio value="auto">Automatic</Radio>
+              <Radio value="manual">Manual</Radio>
+            </RadioGroup>
+            <RadioGroup
+              value={formData.ownerType}
+              label="Owner Type"
+              className="mt-2"
+              onChange={(e) => setFormData({ ...formData, ownerType: e.target.value })}
+            >
+              <Radio value="first">First Owner</Radio>
+              <Radio value="second">Second Owner</Radio>
+              <Radio value="third">Third Owner</Radio>
+            </RadioGroup>
+            <Input
+              type="text"
+              placeholder="Car Location"
+              value={formData.carLocation}
+              radius='sm'
+              className='mt-2'
+              onChange={(e) => setFormData({ ...formData, carLocation: e.target.value })}
+            />
+            <RadioGroup
+              value={formData.modification}
+              label="Has there been any modification?"
+              className="mt-2"
+              onChange={(e) => setFormData({ ...formData, modification: e.target.value })}
+            >
+              <Radio value="yes">Yes</Radio>
+              <Radio value="no">No</Radio>
+            </RadioGroup>
+
           </ScrollShadow>
 
         );
@@ -270,12 +326,8 @@ const VehicleSellingForm = () => {
             />
           </div>
         );
-        case 5:
-          return(
-            <h1>sure to submit</h1>
-          )
 
-     
+
     }
   };
 
@@ -295,13 +347,14 @@ const VehicleSellingForm = () => {
                 <Button radius='sm' className='mr-2' onClick={() => setStage((prevStage) => Math.max(prevStage - 1, 1))}>
                   Previous
                 </Button>
-                <Button type={stage === 5 ? "submit" : "button"} radius='sm' onClick={() => setStage(prevStage => prevStage + 1)}>
-                  {stage === 5 ? 'Submit' : 'Next'}
+                <Button type={stage === 4 ? "button" : "submit"} radius='sm' onClick={() => setStage(prevStage => prevStage + 1)}>
+                  {stage === 4 ? 'Submit' : 'Next'}
                 </Button>
+
               </div>
             </form>
           </ModalBody>
-          
+
         </ModalContent>
       </Modal>
     </>

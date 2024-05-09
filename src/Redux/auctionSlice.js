@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import {  collection, doc, getDoc, getDocs } from 'firebase/firestore';
-import  { db } from '../config/firebase';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { db } from '../config/firebase';
 
 
 
@@ -55,12 +55,12 @@ export const fetchBidData = createAsyncThunk(
         const bidData = bidDoc.data();
         console.log(bidData);
         // If highestBid is null or bid amount is greater, update highestBid
-        if ( bidData.amount > highestBid) {
+        if (bidData.amount > highestBid) {
           highestBid = bidData;
           console.log(bidData.amount);
         }
         // If firstBid is null, update firstBid
-        if ( bidData.createdAt < firstBid.createdAt) {
+        if (bidData.createdAt < firstBid.createdAt) {
           firstBid = bidData;
         }
       });
@@ -77,11 +77,36 @@ export const fetchBidData = createAsyncThunk(
 
 
 
+export const addToAuction = createAsyncThunk(
+  'auction/addToAuction',
+  async ( { rejectWithValue }) => {
+    try {
+      // Create a new auction document
+      const auctionDocRef = await addDoc(collection(db, 'auctions'), {
+        startDate: new Date(),
+        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        status: 'active'
+      });
+
+      // Create a collection of bids under the new auction document
+      const bidsCollectionRef = collection(db, `auctions/${auctionDocRef.id}/bids`);
+      console.log(auctionDocRef, bidsCollectionRef, vehicleId);
+      // Update the vehicle document to include a reference to the auction document
+      const vehicleRef = doc(db, 'vehicles', vehicleId);
+      await updateDoc(vehicleRef, { auctionId: auctionDocRef.id, auctionStatus: true });
+
+      // If the update is successful, return the vehicleId
+      return vehicleId;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 
-// import { createAsyncThunk } from '@reduxjs/toolkit';
-// import firebase from 'firebase/app';
-// import 'firebase/firestore';
+
+
+
 
 // // Thunk action to fetch the winner of the auction
 // export const fetchAuctionWinner = createAsyncThunk(
