@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Modal, ModalContent, ModalHeader, ModalFooter, useDisclosure } from "@nextui-org/react";
 
 const SellerVehicleCard = ({ vehicle }) => {
-  console.log(vehicle);
+  const userId=useSelector((state)=>state.auth.data.uid);
   const { id, make, model, vehiclePhotos, brand, fuelType, transmission, distanceTraveled } = vehicle;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const SellerVehicleCard = ({ vehicle }) => {
 
   const handleDeleteFromAuction = async () => {
     try {
-      await dispatch(removeFromAuction({ vehicleId: id }));
+      await dispatch(removeFromAuction({ vehicleId: id ,userId}));
     } catch (error) {
       console.error('Error deleting vehicle from auction:', error.message);
     }

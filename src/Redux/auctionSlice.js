@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { collection, deleteDoc, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
 
@@ -42,7 +42,7 @@ export const fetchAuctionDetails = createAsyncThunk(
 
 export const removeFromAuction = createAsyncThunk(
   'auction/removeFromAuction',
-  async ({ vehicleId }) => {
+  async ({ vehicleId,userId }) => {
     try {
       const auctionQuery = query(collection(db, 'auctions'), where('vehicleId', '==', vehicleId));
       const auctionQuerySnapshot = await getDocs(auctionQuery);
@@ -54,15 +54,18 @@ export const removeFromAuction = createAsyncThunk(
       const vehicleDocRef = doc(db, 'vehicles', vehicleId);
       await deleteDoc(vehicleDocRef);
 
-      const userQuery = query(collection(db, 'users'), where('submittedVehicles', 'array-contains', vehicleId));
-      const userQuerySnapshot = await getDocs(userQuery);
-      if (!userQuerySnapshot.empty) {
-        const userDocRef = userQuerySnapshot.docs[0].ref;
-        await updateDoc(userDocRef, {
-          submittedVehicles: userQuerySnapshot.docs[0].data().submittedVehicles.filter(id => id !== vehicleId)
-        });
+      const userRef = doc(db, 'users', userId);
+      const userDocSnapshot = await getDoc(userRef);
+      
+      if (userDocSnapshot.exists()) {
+        const submittedVehicles = userDocSnapshot.data().submittedVehicleId;
+        const updatedSubmittedVehicles = submittedVehicles.filter(id => id !== vehicleId);
+        
+        await updateDoc(userRef, { submittedVehicleId: updatedSubmittedVehicles });
+        console.log('Vehicle ID removed from user submitted vehicles.');
+      } else {
+        console.log('User document does not exist.');
       }
-
       return { success: true };
     } catch (error) {
       throw error;
