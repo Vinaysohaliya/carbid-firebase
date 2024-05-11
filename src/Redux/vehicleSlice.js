@@ -76,6 +76,7 @@ export const submitVehicleDetails = createAsyncThunk(
       if (stage === 7) {
         try {
           if (startingBid !== undefined && startingBid.trim() !== '' && agreeToTerms) {
+            const userVehiclesQuery = query(collection(db, 'auctions'), where('vehicleId', '==', vehicleId));
 
             const vehicleDocSnap = await getDoc(doc(db, 'vehicles', vehicleId));
             if (vehicleDocSnap.exists()) {
@@ -84,6 +85,15 @@ export const submitVehicleDetails = createAsyncThunk(
                 agreeToTerms: agreeToTerms,
                 auctionStatus: true,
               });
+
+              // Update auctionStatus to true in the corresponding auction document
+              const auctionQuerySnapshot = await getDocs(userVehiclesQuery);
+              auctionQuerySnapshot.forEach(async (doc) => {
+                await updateDoc(doc.ref, {
+                  auctionStatus: true
+                });
+              });
+
               vehicleIdResult = vehicleId;
             } else {
               throw new Error('Vehicle document does not exist.');
@@ -112,7 +122,7 @@ export const submitVehicleDetails = createAsyncThunk(
           ...vehicleData,
           vehiclePhotos: photoUrls,
           auctionStatus: false,
-          evaluationDone: false, // Corrected spelling
+          evaluationDone: false,
           createdAt: new Date(),
         });
 
@@ -122,12 +132,20 @@ export const submitVehicleDetails = createAsyncThunk(
           submittedVehicleId: arrayUnion(vehicleIdResult),
         });
 
-        await addDoc(collection(db, 'auctions'), {
+      const auctionDoc=  await addDoc(collection(db, 'auctions'), {
           vehicleId: vehicleIdResult,
           userId,
           auctionStatus: false,
           createdAt: new Date(),
         });
+        const vehicleDoc = await getDoc(doc(db, 'vehicles', vehicleIdResult));
+        if (vehicleDoc.exists()) {
+          await updateDoc(vehicleDoc.ref, {
+            auctionId: auctionDoc.id, 
+          });
+        } else {
+          console.error('Vehicle document not found');
+        }
       }
 
       return { vehicleId: vehicleIdResult };
@@ -142,7 +160,7 @@ export const submitVehicleDetails = createAsyncThunk(
 
 
 
-// Async thunk action to fetch vehicle details
+
 export const fetchVehicle = createAsyncThunk(
   'auction/fetchVehicle',
   async (vehicleId) => {
@@ -153,6 +171,11 @@ export const fetchVehicle = createAsyncThunk(
       }
 
       const vehicleData = vehicleDoc.data();
+      const id = vehicleDoc.id;
+
+      // Add id property inside the vehicleData object
+      console.log(vehicleData);
+      vehicleData.id = id;
 
       return vehicleData;
     } catch (error) {
@@ -160,6 +183,7 @@ export const fetchVehicle = createAsyncThunk(
     }
   }
 );
+
 
 
 
@@ -187,7 +211,7 @@ export const deleteListing = createAsyncThunk(
   async ({ vehicleId, userId }) => {
     try {
 
-      
+
       // Remove the corresponding auction document from the 'auctions' collection
       const auctionQuerySnapshot = await getDocs(query(collection(db, 'auctions'), where('vehicleId', '==', vehicleId)));
       const auctionDocs = auctionQuerySnapshot.docs;
@@ -209,10 +233,10 @@ export const deleteListing = createAsyncThunk(
         await deleteObject(photoRef);
       }));
 
-      
+
       // Delete the vehicle document from the 'vehicles' collection
       await deleteDoc(vehicleDocRef);
-      
+
       // Update the user document to remove the vehicleId from the 'submittedVehicleId' array
       const userDocRef = doc(db, 'users', userId);
       await updateDoc(userDocRef, {

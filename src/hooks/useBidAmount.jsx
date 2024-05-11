@@ -1,21 +1,18 @@
 import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { fetchBidData } from '../Redux/auctionSlice';
 
-const useBidAmounts = () => {
+const useBidAmounts = ({vehicleId,auctionId}) => {
   const [startingBid, setStartingBid] = useState(null);
   const [highestBid, setHighestBid] = useState(null);
   const dispatch = useDispatch();
-  const vehicle = useSelector((state) => state.vehicle.onevehicle);
-
   useEffect(() => {
     const fetchBidAmounts = async () => {
-      if (vehicle) {
-        // Fetch starting bid amount and highest bid amount from the vehicle data
+      if (vehicleId && auctionId) {
         try {
-          const res = await dispatch(fetchBidData(vehicle.auctionId));
-
-          setHighestBid(res.payload.highestBid.amount); // Assuming 'firstBid' contains the first bid object with an 'amount' field
+          const res = await dispatch(fetchBidData({ auctionId,vehicleId }));
+          // Assuming 'res.payload' contains the 'highestBid' and 'firstBid' objects
+          setHighestBid(res.payload.highestBid.amount);
           setStartingBid(res.payload.firstBid.amount);
         } catch (error) {
           console.error('Error fetching bid data:', error);
@@ -25,7 +22,7 @@ const useBidAmounts = () => {
 
     fetchBidAmounts();
 
-  }, [dispatch, vehicle]);
+  }, [dispatch, vehicleId,auctionId]);
 
   return { startingBid, highestBid };
 };

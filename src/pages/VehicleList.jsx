@@ -7,7 +7,6 @@ import { fetchAllVehicles } from '../Redux/vehicleSlice.js'; // Updated import s
 const VehicleList = () => {
     const dispatch = useDispatch();
     const vehicles = useSelector((state) => state.vehicle.vehicles) || [];
-
     useEffect(() => {
         dispatch(fetchAllVehicles());
     }, [dispatch]); // Added dispatch as a dependency to useEffect

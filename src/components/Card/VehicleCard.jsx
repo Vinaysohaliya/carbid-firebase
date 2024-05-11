@@ -5,7 +5,7 @@ import { checkIfVehicleLiked, deleteListing, toggleVehicleLike } from '../../Red
 import { useNavigate } from "react-router-dom";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
 
-const VehicleCard = ({ vehicle, isonListed }) => {
+const VehicleCard = ({ vehicle, isonListed=false,isonMyBid=false }) => {
   const { id, make, model, vehiclePhotos, brand, fuelType, transmission, distanceTraveled } = vehicle;
   const dispatch = useDispatch();
   const navigate = useNavigate();

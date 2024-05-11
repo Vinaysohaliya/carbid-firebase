@@ -1,40 +1,53 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { addDoc, serverTimestamp, collection, getDocs, query, onSnapshot } from 'firebase/firestore';
+import { addDoc, serverTimestamp, collection, getDocs, query, onSnapshot, where } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
-export const 
-placeBid = createAsyncThunk(
-    'bids/placeBid',
-    async ({ auctionId, bidAmount,userId,userName, }) => {
-        try {
-            const bidSnapshot = await getDocs(collection(db, `auctions/${auctionId}/bids`));
-            let highestBidAmount = 0;
-            bidSnapshot.forEach((doc) => {
-                const bidData = doc.data();
-                if (bidData.amount > highestBidAmount) {
-                    highestBidAmount = bidData.amount;
-                }
-            });
 
-
-            // Check if the new bid amount is higher than the highest bid amount
-            if (bidAmount <= highestBidAmount) {
-                return { message: "bid amount must be greater" };
-            }
-
-            // Place the bid
-            const bidRef = await addDoc(collection(db, `auctions/${auctionId}/bids/${userId}`), {
-                amount: bidAmount,
-                bidderId: userId, // Replace 'userId' with the actual user ID
-                userName:userName,
-                createdAt: serverTimestamp(),
-            });
-            return { id: bidRef.id, amount: bidAmount };
-        } catch (error) {
-            throw error; // Throw the error to be handled by createAsyncThunk
+export const placeBid = createAsyncThunk(
+  'bids/placeBid',
+  async ({ auctionId, bidAmount, userId, userName }) => {
+    try {
+        console.log(auctionId,bidAmount,userId,userName);
+      // Fetch highest bid amount from the auction
+      const bidSnapshot = await getDocs(collection(db, `auctions/${auctionId}/bids`));
+      let highestBidAmount = 0;
+      bidSnapshot.forEach((doc) => {
+        const bidData = doc.data();
+        if (bidData.amount > highestBidAmount) {
+          highestBidAmount = bidData.amount;
         }
+      });
+
+      // Fetch starting bid from the vehicles collection
+      const vehicleSnapshot = await getDocs(collection(db, 'vehicles'));
+      let startingBid = 0;
+      vehicleSnapshot.forEach((doc) => {
+        const vehicleData = doc.data();
+        if (doc.id === auctionId) {
+          startingBid = vehicleData.startingBid;
+        }
+      });
+
+      // Check if the new bid amount is higher than the highest bid amount and starting bid
+      if (bidAmount <= highestBidAmount || bidAmount <= startingBid) {
+        return { message: 'Bid amount must be greater than the Current bid and starting bid' };
+      }
+
+      // Place the bid
+      const bidRef = await addDoc(collection(db, `auctions/${auctionId}/bids`), {
+        amount: bidAmount,
+        bidderId: userId,
+        userName: userName,
+        createdAt: serverTimestamp(),
+      });
+
+      return { id: bidRef.id, amount: bidAmount };
+    } catch (error) {
+      throw error; // Throw the error to be handled by createAsyncThunk
     }
+  }
 );
+
 
 export const fetchBidsForAuction = createAsyncThunk(
     'bids/fetchBidsForAuction',
@@ -58,41 +71,45 @@ export const fetchBidsForAuction = createAsyncThunk(
 );
 
 
-export const fetchUserBids = createAsyncThunk(
-  'mywishlist/fetchUserBids',
-  async (userId, { rejectWithValue }) => {
+
+export const fetchBidsByUserId = createAsyncThunk(
+  'bids/fetchBidsByUserId',
+  async (userId) => {
     try {
-      // Fetch all auctions where the user has placed a bid
-      const auctionQuery = query(collection(db, 'auctions'), where(`bids.${userId}`, '!=', null));
-      const auctionDocs = await getDocs(auctionQuery);
+      // Query the auctions collection for auctions where the userId matches
+      const auctionQuerySnapshot = await getDocs(query(collection(db, 'auctions'), where('userId', '==', userId)));
 
-      // Array to store user's bids
-      const userBids = [];
+      const bids = [];
 
-      // Iterate over auction documents
-      for (const auctionDoc of auctionDocs) {
-        // Get auction ID
+      // For each auction where the userId matches, fetch the corresponding bids
+      await Promise.all(auctionQuerySnapshot.docs.map(async (auctionDoc) => {
         const auctionId = auctionDoc.id;
 
-        // Fetch bids subcollection for the auction
-        const bidsCollectionRef = collection(doc(db, 'auctions', auctionId), 'bids');
+        // Query the bids collection under the auction document
+        const bidsQuerySnapshot = await getDocs(collection(db, `auctions/${auctionId}/bids`));
 
-        // Fetch bid documents from the subcollection
-        const bidQuery = query(bidsCollectionRef, where('userId', '==', userId));
-        const bidDocs = await getDocs(bidQuery);
-
-        // Add bids to userBids array
-        bidDocs.forEach((bidDoc) => {
-          userBids.push({ id: bidDoc.id, auctionId, ...bidDoc.data() });
+        // For each bid, fetch the bid data and add it to the bids array
+        bidsQuerySnapshot.forEach((bidDoc) => {
+          const bidData = bidDoc.data();
+          bids.push({
+            id: bidDoc.id,
+            auctionId: auctionId,
+            amount: bidData.amount,
+            bidderId: bidData.bidderId,
+            userName: bidData.userName,
+            createdAt: bidData.createdAt,
+          });
         });
-      }
+      }));
 
-      return userBids;
+     
+      return bids;
     } catch (error) {
-      return rejectWithValue(error.message);
+      throw error; // Throw the error to be handled by createAsyncThunk
     }
   }
 );
+
 
 
 const initialState = {

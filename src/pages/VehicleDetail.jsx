@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { checkIfVehicleLiked, fetchVehicle, toggleVehicleLike,  } from '../Redux/vehicleSlice';
-import { placeBid } from '../Redux/bidSlice';
+import { checkIfVehicleLiked, fetchVehicle, toggleVehicleLike } from '../Redux/vehicleSlice';
 import { Input, Button, Divider, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Popover, PopoverTrigger, PopoverContent } from '@nextui-org/react';
 import Vehicleinfo from '../components/Vehicleinfo';
-import useBidAmounts from '../hooks/useBidAmount';
+import { fetchBidData } from '../Redux/auctionSlice';
+import { placeBid } from '../Redux/bidSlice';
 
 const VehicleDetail = () => {
+  const userName = useSelector((state) => state.auth.data.displayName);
   const [isLiked, setIsLiked] = useState(false);
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -15,27 +16,43 @@ const VehicleDetail = () => {
   const [bidAmount, setBidAmount] = useState(0);
   const [message, setMessage] = useState('');
   const userId = useSelector((state) => state.auth.data.uid);
-  const userName = useSelector((state) => state.auth.data.displayName);
   const vehicle = useSelector((state) => state.vehicle.onevehicle);
-  const { startingBid, highestBid } = useBidAmounts();
+  const [startingBid, setStartingBid] = useState(null);
+  const [highestBid, setHighestBid] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      await dispatch(fetchVehicle({vehicleId:id}));
+      await dispatch(fetchVehicle({ vehicleId: id }));
       const isLiked = await dispatch(checkIfVehicleLiked({ vehicleId: id, userId }));
       setIsLiked(isLiked.payload);
     };
     fetchData();
   }, [dispatch, id, userId]);
-  
+
+  useEffect(() => {
+    const fetchBidAmounts = async () => {
+      if (vehicle) {
+        try {
+          // Fetch bid data directly here
+          const res = await dispatch(fetchBidData({ auctionId: vehicle.auctionId, vehicleId: vehicle.id }));
+          console.log(res);
+          // Assuming 'res.payload' contains the 'highestBid' and 'firstBid' objects
+          setStartingBid(res.payload.firstBid);
+          setHighestBid(res.payload.highestBid);
+        } catch (error) {
+          console.error('Error fetching bid data:', error);
+        }
+      }
+    };
+
+    if (vehicle) {
+      fetchBidAmounts();
+    }
+  }, [dispatch, vehicle]);
 
   const handleLike = async () => {
-    const res=await dispatch(toggleVehicleLike({ vehicleId: id, userId }));
-    if(res.payload){
-      setIsLiked(true);
-    }else{
-      setIsLiked(false);
-    }
+    const res = await dispatch(toggleVehicleLike({ vehicleId: id, userId }));
+    setIsLiked(res.payload);
   };
 
   const handleChange = (e) => {
@@ -45,6 +62,7 @@ const VehicleDetail = () => {
   const handlePlaceBid = async () => {
     try {
       const res = await dispatch(placeBid({ auctionId: vehicle.auctionId, bidAmount: parseFloat(bidAmount), userId, userName }));
+      console.log(res);
       setMessage(res.payload.message);
       // Close the modal after placing the bid
       onClose();
@@ -74,7 +92,7 @@ const VehicleDetail = () => {
           <div className='flex justify-between m-2'>
             <div className='font-bold'>Model name</div>
             <div>
-              {   <Button onClick={handleLike}>{isLiked?"Unlike":"Like"}</Button>}
+              {<Button onClick={handleLike}>{isLiked ? "Unlike" : "Like"}</Button>}
             </div>
           </div>
           <div className='flex flex-col'>
@@ -105,7 +123,7 @@ const VehicleDetail = () => {
               <div className='mr-14' style={{ width: '30%' }}>
                 <div>
                   <div>{startingBid}</div>
-                  <div className='font-light'>Current bid</div>
+                  <div className='font-light'>Starting Bid</div>
                   <Button fullWidth>Book Test Drive</Button>
                 </div>
               </div>

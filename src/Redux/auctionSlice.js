@@ -77,33 +77,46 @@ export const removeFromAuction = createAsyncThunk(
 
 export const fetchBidData = createAsyncThunk(
   'bid/fetchBidData',
-  async (auctionId, thunkAPI) => {
+  async ({ auctionId, vehicleId }, thunkAPI) => { // Correct the payload creator function to accept an object with auctionId and vehicleId
     try {
+      console.log(auctionId,vehicleId);
       // Get the reference to the bids collection for the auction
       const bidsCollectionRef = collection(db, `auctions/${auctionId}/bids`);
       // Fetch all bids documents
       const bidsQuerySnapshot = await getDocs(bidsCollectionRef);
       let highestBid = 0;
-      let firstBid = 0;
 
-      bidsQuerySnapshot.forEach((bidDoc) => {
-        const bidData = bidDoc.data();
-        if (bidData.amount > highestBid) {
-          highestBid = bidData;
-        }
-        if (bidData.createdAt < firstBid.createdAt) {
-          firstBid = bidData;
-        }
-      });
+      // Get the reference to the starting bid document for the vehicle
+      const startingBidRef = doc(db, 'vehicles', vehicleId);
+      const startingBidDoc = await getDoc(startingBidRef);
 
-      // Return the highest and first bid
-      return { highestBid, firstBid };
+      // Check if the starting bid document exists
+      if (startingBidDoc.exists()) {
+        // Access the data of the starting bid document
+        const startingBidData = startingBidDoc.data();
+        // Assign the starting bid data to firstBid
+        const firstBid = startingBidData.startingBid;
+        
+        bidsQuerySnapshot.forEach((bidDoc) => {
+          const bidData = bidDoc.data();
+          if (bidData.amount > highestBid) {
+            highestBid = bidData.amount;
+          }
+        });
+
+        // Return the highest and first bid
+        return { highestBid, firstBid };
+      } else {
+        // If the starting bid document does not exist, return an error
+        return thunkAPI.rejectWithValue('Starting bid document does not exist');
+      }
     } catch (error) {
       // If any error occurs, reject the thunk with the error message
       return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
+
 
 
 
@@ -129,37 +142,6 @@ export const addToAuction = createAsyncThunk(
 );
 
 
-
-
-
-
-// // Thunk action to fetch the winner of the auction
-// export const fetchAuctionWinner = createAsyncThunk(
-//   'auction/fetchWinner',
-//   async (auctionId, thunkAPI) => {
-//     try {
-//       // Fetch the auction document from Firestore
-//       const auctionDoc = await firebase.firestore().collection('auctions').doc(auctionId).get();
-//       if (auctionDoc.exists) {
-//         const auctionData = auctionDoc.data();
-//         // Check if the auction has bids
-//         if (auctionData.bids && auctionData.bids.length > 0) {
-//           const winner = sortedBids[0];
-//           return winner;
-//         } else {
-//           // If there are no bids, there is no winner
-//           return null;
-//         }
-//       } else {
-//         // If the auction does not exist, return null
-//         return null;
-//       }
-//     } catch (error) {
-//       // Handle any errors and reject with the error message
-//       return thunkAPI.rejectWithValue(error.message);
-//     }
-//   }
-// );
 
 
 // Initial state for vehicles slice
