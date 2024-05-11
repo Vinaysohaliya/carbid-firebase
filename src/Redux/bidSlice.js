@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { addDoc, serverTimestamp, collection, getDocs, query, onSnapshot, where } from 'firebase/firestore';
+import { addDoc, serverTimestamp, collection, getDocs, query, onSnapshot, where, getDoc, doc } from 'firebase/firestore';
 import { db } from '../config/firebase';
 
 
@@ -7,7 +7,7 @@ export const placeBid = createAsyncThunk(
   'bids/placeBid',
   async ({ auctionId, bidAmount, userId, userName }) => {
     try {
-        console.log(auctionId,bidAmount,userId,userName);
+      console.log(auctionId, bidAmount, userId, userName);
       // Fetch highest bid amount from the auction
       const bidSnapshot = await getDocs(collection(db, `auctions/${auctionId}/bids`));
       let highestBidAmount = 0;
@@ -18,16 +18,16 @@ export const placeBid = createAsyncThunk(
         }
       });
 
-      // Fetch starting bid from the vehicles collection
-      const vehicleSnapshot = await getDocs(collection(db, 'vehicles'));
-      let startingBid = 0;
-      vehicleSnapshot.forEach((doc) => {
-        const vehicleData = doc.data();
-        if (doc.id === auctionId) {
-          startingBid = vehicleData.startingBid;
-        }
-      });
+      // Fetch starting bid from the vehicle collection
+      const auctionSnapshot = await getDoc(doc(db, `auctions/${auctionId}`));
+      const auctionData = auctionSnapshot.data();
+      const vehicleId = auctionData.vehicleId;
+      const vehicleSnapshot = await getDoc(doc(db, `vehicles/${vehicleId}`));
+      const vehicleData = vehicleSnapshot.data();
+      const startingBid = vehicleData.startingBid;
 
+      console.log(startingBid, highestBidAmount);
+      
       // Check if the new bid amount is higher than the highest bid amount and starting bid
       if (bidAmount <= highestBidAmount || bidAmount <= startingBid) {
         return { message: 'Bid amount must be greater than the Current bid and starting bid' };
@@ -38,6 +38,7 @@ export const placeBid = createAsyncThunk(
         amount: bidAmount,
         bidderId: userId,
         userName: userName,
+        userId,
         createdAt: serverTimestamp(),
       });
 
@@ -49,25 +50,26 @@ export const placeBid = createAsyncThunk(
 );
 
 
-export const fetchBidsForAuction = createAsyncThunk(
-    'bids/fetchBidsForAuction',
-    async (auctionId, thunkAPI) => {
-        try {
-            const bidsCollectionRef = collection(db, `auctions/${auctionId}/bids`);
-            const q = query(bidsCollectionRef);
-            const unsubscribe = onSnapshot(q, (snapshot) => {
-                const bids = [];
-                snapshot.forEach((doc) => {
-                    bids.push({ id: doc.id, ...doc.data() });
-                });
-                thunkAPI.dispatch(setBids(bids)); // Dispatch action to update Redux state with fetched bids
-            });
 
-            return unsubscribe; // Return unsubscribe function to be used for cleanup
-        } catch (error) {
-            return thunkAPI.rejectWithValue(error.message);
-        }
+export const fetchBidsForAuction = createAsyncThunk(
+  'bids/fetchBidsForAuction',
+  async (auctionId, thunkAPI) => {
+    try {
+      const bidsCollectionRef = collection(db, `auctions/${auctionId}/bids`);
+      const q = query(bidsCollectionRef);
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const bids = [];
+        snapshot.forEach((doc) => {
+          bids.push({ id: doc.id, ...doc.data() });
+        });
+        thunkAPI.dispatch(setBids(bids)); // Dispatch action to update Redux state with fetched bids
+      });
+
+      return unsubscribe; // Return unsubscribe function to be used for cleanup
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
     }
+  }
 );
 
 
@@ -76,34 +78,45 @@ export const fetchBidsByUserId = createAsyncThunk(
   'bids/fetchBidsByUserId',
   async (userId) => {
     try {
-      // Query the auctions collection for auctions where the userId matches
-      const auctionQuerySnapshot = await getDocs(query(collection(db, 'auctions'), where('userId', '==', userId)));
-
       const bids = [];
 
-      // For each auction where the userId matches, fetch the corresponding bids
-      await Promise.all(auctionQuerySnapshot.docs.map(async (auctionDoc) => {
-        const auctionId = auctionDoc.id;
+      // Query the auctions collection for auctions
+      const auctionsQuerySnapshot = await getDocs(collection(db, 'auctions'));
 
+      // Iterate through each auction
+      for (const auctionDoc of auctionsQuerySnapshot.docs) {
+        const auctionData = auctionDoc.data();
+        const auctionId = auctionDoc.id;
+        const vehicleId = auctionData.vehicleId; // Assuming vehicleId is a field in auction documents
+        console.log(vehicleId);
         // Query the bids collection under the auction document
         const bidsQuerySnapshot = await getDocs(collection(db, `auctions/${auctionId}/bids`));
 
-        // For each bid, fetch the bid data and add it to the bids array
-        bidsQuerySnapshot.forEach((bidDoc) => {
+        // Iterate through each bid in the auction
+        for (const bidDoc of bidsQuerySnapshot.docs) {
           const bidData = bidDoc.data();
-          bids.push({
-            id: bidDoc.id,
-            auctionId: auctionId,
-            amount: bidData.amount,
-            bidderId: bidData.bidderId,
-            userName: bidData.userName,
-            createdAt: bidData.createdAt,
-          });
-        });
-      }));
+          console.log(bidData);
+          // Check if the bid was placed by the specified user
+          if (bidData.userId === userId) {
+            console.log("DSf");
+            const vehicleDoc = await getDoc(doc(db, 'vehicles', vehicleId));
+            const vehicleData = vehicleDoc.data();
+            bids.push({
+              id: bidDoc.id,
+              auctionId: auctionId,
+              vehicleId: vehicleId,
+              amount: bidData.amount,
+              bidderId: bidData.bidderId,
+              userName: bidData.userName,
+              createdAt: bidData.createdAt,
+              vehicle: vehicleData // Include vehicle details
+            });
+          }
+        }
+      }
+      console.log(bids);
 
-     
-      return bids;
+      return { bids };
     } catch (error) {
       throw error; // Throw the error to be handled by createAsyncThunk
     }
@@ -112,34 +125,35 @@ export const fetchBidsByUserId = createAsyncThunk(
 
 
 
+
 const initialState = {
-    loading: false,
-    error: null,
-    bids: [],
+  loading: false,
+  error: null,
+  bids: [],
 };
 
 const bidSlice = createSlice({
-    name: 'bids',
-    initialState,
-    reducers: {
-        setBids(state, action) {
-            state.bids = action.payload;
-        },
+  name: 'bids',
+  initialState,
+  reducers: {
+    setBids(state, action) {
+      state.bids = action.payload;
     },
-    extraReducers: (builder) => {
-        builder
-            .addCase(placeBid.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(placeBid.fulfilled, (state) => {
-                state.loading = false;
-            })
-            .addCase(placeBid.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload;
-            });
-    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(placeBid.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(placeBid.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(placeBid.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+  },
 });
 
 export const { setBids } = bidSlice.actions;

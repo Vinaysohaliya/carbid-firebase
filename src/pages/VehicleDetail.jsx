@@ -62,7 +62,6 @@ const VehicleDetail = () => {
   const handlePlaceBid = async () => {
     try {
       const res = await dispatch(placeBid({ auctionId: vehicle.auctionId, bidAmount: parseFloat(bidAmount), userId, userName }));
-      console.log(res);
       setMessage(res.payload.message);
       // Close the modal after placing the bid
       onClose();
