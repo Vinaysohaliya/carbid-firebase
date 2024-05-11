@@ -37,6 +37,16 @@ const NavbarComponent = () => {
         </div>
       </NavbarBrand>
       <NavbarContent className="nav-links" justify="center">
+      <NavbarItem>
+          <Link color="foreground" href="/buyvehicle">
+            Buy
+          </Link>
+        </NavbarItem>
+        <NavbarItem>
+          <Link color="foreground" href="/sellvehicle">
+            Sell
+          </Link>
+        </NavbarItem>
         <NavbarItem>
           <Link color="foreground" href="/">
             Home
@@ -47,6 +57,7 @@ const NavbarComponent = () => {
             About
           </Link>
         </NavbarItem>
+        
         {loggedIn ? (
           <>
             <NavbarItem>
