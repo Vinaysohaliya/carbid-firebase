@@ -132,7 +132,7 @@ export const submitVehicleDetails = createAsyncThunk(
           submittedVehicleId: arrayUnion(vehicleIdResult),
         });
 
-      const auctionDoc=  await addDoc(collection(db, 'auctions'), {
+        const auctionDoc = await addDoc(collection(db, 'auctions'), {
           vehicleId: vehicleIdResult,
           userId,
           auctionStatus: false,
@@ -141,7 +141,7 @@ export const submitVehicleDetails = createAsyncThunk(
         const vehicleDoc = await getDoc(doc(db, 'vehicles', vehicleIdResult));
         if (vehicleDoc.exists()) {
           await updateDoc(vehicleDoc.ref, {
-            auctionId: auctionDoc.id, 
+            auctionId: auctionDoc.id,
           });
         } else {
           console.error('Vehicle document not found');
@@ -187,22 +187,40 @@ export const fetchVehicle = createAsyncThunk(
 
 
 
+
 export const fetchUserSubmittedVehicles = createAsyncThunk(
   'auction/fetchUserSubmittedVehicles',
   async (userId) => {
     try {
-      const userVehiclesQuery = query(collection(db, 'vehicles'), where('userId', '==', userId), where('auctionStatus', '==', true));
-      const querySnapshot = await getDocs(userVehiclesQuery);
+      const userAuctionsQuery = query(collection(db, 'auctions'), where('userId', '==', userId));
+      const userAuctionsSnapshot = await getDocs(userAuctionsQuery);
       const userSubmittedVehicles = [];
-      querySnapshot.forEach((doc) => {
-        userSubmittedVehicles.push({ id: doc.id, ...doc.data() });
-      });
+
+      for (const auctionDoc of userAuctionsSnapshot.docs) {
+        const auctionData = auctionDoc.data();
+        const auctionId = auctionDoc.id;
+
+        // Fetch bids for this auction
+        const bidsQuerySnapshot = await getDocs(collection(db, `auctions/${auctionId}/bids`));
+        const auctionBids = bidsQuerySnapshot.docs.map(bidDoc => ({ id: bidDoc.id, ...bidDoc.data() }));
+        
+        auctionBids.sort((a, b) => b.amount - a.amount);
+
+        // Fetch vehicle data
+        const vehicleDoc = await getDoc(doc(db, 'vehicles', auctionData.vehicleId));
+        const vehicleData = vehicleDoc.data();
+
+        userSubmittedVehicles.push({ id: auctionId, ...vehicleData, bids: auctionBids });
+      }
+
       return userSubmittedVehicles;
     } catch (error) {
       throw error;
     }
   }
 );
+
+
 
 
 

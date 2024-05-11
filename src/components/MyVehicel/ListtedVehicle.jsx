@@ -12,8 +12,8 @@ const ListtedVehicle = () => {
         const fetchVehicles = async () => {
             try {
                 const res = await dispatch(fetchUserSubmittedVehicles(userId));
+                console.log(res);
                 setVehicles(res.payload);
-                console.log(vehicles);
             } catch (error) {
                 console.error('Error fetching vehicles:', error.message);
             }
@@ -21,12 +21,12 @@ const ListtedVehicle = () => {
         fetchVehicles();
     }, [dispatch, userId]);
 
-
     return (
         <div>
             <h2>Listed Vehicles</h2>
             {vehicles && vehicles.map((vehicle) => (
-                <VehicleCard isonListed={true} vehicle={vehicle} key={vehicle.id} />
+                
+                <VehicleCard isonListed={true} vehicle={vehicle} key={vehicle.id} bids={vehicle.bids} />
             ))}
         </div>
     );

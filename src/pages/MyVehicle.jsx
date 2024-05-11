@@ -10,7 +10,7 @@ const MyVehicle = () => {
       <br></br>
       <ListtedVehicle/>
       <br></br>
-      
+      <>mybids</>
       <MyBids/>
     </div>
   )
