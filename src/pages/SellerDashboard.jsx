@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import VehicleSellingForm from '../components/VehicleForm';
 import { fetchUserSubmittedVehiclesbutnotonAuction } from '../Redux/vehicleSlice';
+import SimpleVehicleForm  from '../components/SimpleVehicleForm'
+import VehicleSellingForm from '../components/VehicleForm';
 
 const SellerDashboard = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -24,9 +25,12 @@ const SellerDashboard = () => {
 
   return (
     <div>
-      {vehicles.map((vehicle, index) => (
-        <VehicleSellingForm key={index} vehicle={vehicle} />
-      ))}
+     {vehicles.map((vehicle, index) => (
+  !vehicle.auctionStatus && <VehicleSellingForm key={index} vehicle={vehicle} />
+))}
+
+      <SimpleVehicleForm/>
+
     </div>
   );
 };

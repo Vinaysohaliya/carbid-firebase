@@ -31,10 +31,10 @@ export const fetchUserAuctions = createAsyncThunk(
     try {
       // Query the 'auctions' collection to fetch auctions associated with the user
       const auctionQuery = query(collection(db, 'auctions'), where('userId', '==', userId));
-      
+
       // Get the documents from the auction query
       const auctionSnapshot = await getDocs(auctionQuery);
-      
+
       // Initialize an array to store fetched auctions with vehicle details
       const userAuctions = [];
 
@@ -65,56 +65,80 @@ export const fetchUserAuctions = createAsyncThunk(
 
 
 
+
+
 export const submitVehicleDetails = createAsyncThunk(
   'vehicles/submitToFirebase',
-  async ({ vehicleData, vehiclePhotos, userId, idProof }) => {
+  async ({ vehicleData, vehiclePhotos, userId, idProof, startingBid, agreeToTerms, stage, vehicleId }) => {
     try {
-      // Upload vehicle photos to Firebase Storage and get download URLs
-      const photoUrls = await Promise.all(vehiclePhotos.map(async (photoFile) => {
-        const photoRef = ref(storage, `vehiclePhotos/${userId}/${photoFile.name}`);
-        await uploadBytes(photoRef, photoFile);
-        return getDownloadURL(photoRef);
-      }));
+      let vehicleIdResult;
+      console.log(vehicleData, vehiclePhotos, userId, idProof, startingBid, agreeToTerms, stage, vehicleId);
 
-      // Upload ID proof to Firebase Storage and get download URL
-      const idProofRef = ref(storage, `idProofs/${userId}/${idProof.name}`);
-      await uploadBytes(idProofRef, idProof);
-      const idProofUrl = await getDownloadURL(idProofRef);
+      if (stage === 7) {
+        try {
+          // Check if startingBid is defined and valid
+          if (startingBid !== undefined && startingBid.trim() !== '') {
+            const vehicleDocSnap = await getDoc(doc(db, 'vehicles', vehicleId));
+            console.log(vehicleDocSnap);
+            if (vehicleDocSnap.exists()) {
+              await updateDoc(doc(db, 'vehicles', vehicleId), {
+                startingBid: startingBid,
+                agreeToTerms: agreeToTerms,
+              });
+              vehicleIdResult = vehicleId;
+            } else {
+              throw new Error('Vehicle document does not exist.');
+            }
+          } else {
+            throw new Error('Starting bid is undefined or empty.');
+          }
+        } catch (error) {
+          console.error('Error updating vehicle document:', error.message);
+        }
+           
+      } else if (stage === 4) {
+        const photoUrls = await Promise.all(vehiclePhotos.map(async (photoFile) => {
+          const photoRef = ref(storage, `vehiclePhotos/${userId}/${photoFile.name}`);
+          await uploadBytes(photoRef, photoFile);
+          return getDownloadURL(photoRef).catch(error => { throw error; }); // Handling Promise rejection
+        }));
 
-      // Add the vehicle document to the 'vehicles' collection in Firestore
-      const vehicleDocRef = await addDoc(collection(db, 'vehicles'), {
-        userId,
-        idProof: idProofUrl,
-        ...vehicleData,
-        vehiclePhotos: photoUrls,
-        auctionStatus: false, // Set auction status to false initially
-        createdAt: new Date(),
-      });
+        const idProofRef = ref(storage, `idProofs/${userId}/${idProof.name}`);
+        await uploadBytes(idProofRef, idProof);
+        const idProofUrl = await getDownloadURL(idProofRef).catch(error => { throw error; }); // Handling Promise rejection
 
-      // Get the ID of the newly created vehicle document
-      const vehicleId = vehicleDocRef.id;
+        const vehicleDocRef = await addDoc(collection(db, 'vehicles'), {
+          userId,
+          idProof: idProofUrl,
+          ...vehicleData,
+          vehiclePhotos: photoUrls,
+          auctionStatus: false,
+          evaluationDone: false, // Corrected spelling
+          createdAt: new Date(),
+        });
 
-      // Add the vehicle to the user's submitted vehicles array
-      await updateDoc(doc(db, 'users', userId), {
-        submittedVehicleId: arrayUnion(vehicleId),
-      });
+        vehicleIdResult = vehicleDocRef.id;
 
-      // Create an auction document for the vehicle in the 'auctions' collection
-      // Note: You may need to adjust the auction details based on your application logic
-      await addDoc(collection(db, 'auctions'), {
-        vehicleId,
-        userId,
-        auctionStatus: false, // Set auction status to false initially
-        createdAt: new Date(),
-      });
+        await updateDoc(doc(db, 'users', userId), {
+          submittedVehicleId: arrayUnion(vehicleIdResult),
+        });
 
-      // Return relevant data
-      return { vehicleId, userId, idProof: idProofUrl, ...vehicleData, vehiclePhotos: photoUrls, createdAt: new Date(), vehicleRef: vehicleDocRef };
+        await addDoc(collection(db, 'auctions'), {
+          vehicleId: vehicleIdResult,
+          userId,
+          auctionStatus: false,
+          createdAt: new Date(),
+        });
+      }
+
+      return { vehicleId: vehicleIdResult };
     } catch (error) {
+      console.error(error); // Logging the error for debugging
       throw error;
     }
   }
 );
+
 
 
 
@@ -312,7 +336,7 @@ export const checkIfVehicleLiked = createAsyncThunk(
 
 export const fetchLikedVehicles = createAsyncThunk(
   'mywishlist/fetchLikedVehicles',
-  async (userId ) => {
+  async (userId) => {
     try {
       const userDocRef = doc(db, 'users', userId);
       const userDocSnap = await getDoc(userDocRef);
@@ -381,7 +405,7 @@ const vehicleSlice = createSlice({
         state.loading = false;
         state.error = action.error.message;
       })
-     
+
       .addCase(fetchVehicle.pending, (state) => {
         state.loading = true;
         state.error = null;
