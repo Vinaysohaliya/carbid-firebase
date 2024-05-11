@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardBody, Button, Image, useSelect, Divider, DateRangePicker } from "@nextui-org/react";
 import { useDispatch, useSelector } from 'react-redux';
-import { checkIfVehicleLiked, toggleVehicleLike } from '../../Redux/vehicleSlice';
+import { checkIfVehicleLiked, deleteListing, toggleVehicleLike } from '../../Redux/vehicleSlice';
 import { useNavigate } from "react-router-dom";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
 
-const VehicleCard = ({ vehicle }) => {
+const VehicleCard = ({ vehicle, isonListed }) => {
   const { id, make, model, vehiclePhotos, brand, fuelType, transmission, distanceTraveled } = vehicle;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,6 +17,7 @@ const VehicleCard = ({ vehicle }) => {
     const fetchData = async () => {
       const isLiked = await dispatch(checkIfVehicleLiked({ vehicleId: id, userId }));
       setIsLiked(isLiked.payload);
+      console.log(vehicle);
     };
     fetchData();
   }, [dispatch, id, userId]);
@@ -35,7 +36,19 @@ const VehicleCard = ({ vehicle }) => {
   };
 
   const handleAddToAuctionClick = () => {
-    onOpen();
+    if (isonListed) {
+      // Handle delete listing logic here
+    } else {
+      onOpen();
+    }
+  };
+
+  const handleDeleteListingClick = () => {
+    try {
+      dispatch(deleteListing({vehicleId:vehicle.id,userId:vehicle.userId}))
+    } catch (error) {
+      throw error;
+    }
   };
 
   return (
@@ -61,7 +74,11 @@ const VehicleCard = ({ vehicle }) => {
           </div>
         </div>
         <div className="flex justify-between">
-          <Button variant="text" color="primary" onClick={handleAddToAuctionClick}>Add to Auction</Button>
+          {isonListed ? (
+            <Button variant="text" color="error" onClick={handleDeleteListingClick}>Delete Listing</Button>
+          ) : (
+            <Button variant="text" color="primary" onClick={handleAddToAuctionClick}>Add to Auction</Button>
+          )}
           <Button variant="text" color="error" onClick={handleViewDetailClick}>View Detail</Button>
         </div>
       </CardBody>

@@ -1,10 +1,10 @@
 // vehicleSlice.js
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { doc, setDoc, collection, query, getDocs, addDoc, updateDoc, getDoc, where, arrayUnion } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { doc, setDoc, collection, query, getDocs, addDoc, updateDoc, getDoc, where, arrayUnion, deleteDoc, arrayRemove } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 import { db, storage } from '../config/firebase';
-import { update } from 'firebase/database';
+import { refFromURL, update } from 'firebase/database';
 
 
 
@@ -82,7 +82,7 @@ export const submitVehicleDetails = createAsyncThunk(
               await updateDoc(doc(db, 'vehicles', vehicleId), {
                 startingBid: startingBid,
                 agreeToTerms: agreeToTerms,
-                auctionStatus:true,
+                auctionStatus: true,
               });
               vehicleIdResult = vehicleId;
             } else {
@@ -94,7 +94,7 @@ export const submitVehicleDetails = createAsyncThunk(
         } catch (error) {
           console.error('Error updating vehicle document:', error.message);
         }
-           
+
       } else if (stage === 4) {
         const photoUrls = await Promise.all(vehiclePhotos.map(async (photoFile) => {
           const photoRef = ref(storage, `vehiclePhotos/${userId}/${photoFile.name}`);
@@ -179,6 +179,55 @@ export const fetchUserSubmittedVehicles = createAsyncThunk(
     }
   }
 );
+
+
+
+export const deleteListing = createAsyncThunk(
+  'vehicles/deleteListing',
+  async ({ vehicleId, userId }) => {
+    try {
+
+      
+      // Remove the corresponding auction document from the 'auctions' collection
+      const auctionQuerySnapshot = await getDocs(query(collection(db, 'auctions'), where('vehicleId', '==', vehicleId)));
+      const auctionDocs = auctionQuerySnapshot.docs;
+      await Promise.all(auctionDocs.map(doc => deleteDoc(doc.ref)));
+
+      // Retrieve the vehicle data to get the URLs of vehicle photos and ID proof
+      const vehicleDocRef = doc(db, 'vehicles', vehicleId);
+      const vehicleDocSnapshot = await getDoc(vehicleDocRef);
+      const vehicleData = vehicleDocSnapshot.data();
+      console.log(vehicleData.idProof);
+
+      const idProofRef = ref(storage, vehicleData.idProof);
+      await deleteObject(idProofRef);
+
+      // Delete each vehicle photo from storage
+      await Promise.all(vehicleData.vehiclePhotos.map(async photoUrl => {
+        console.log(photoUrl);
+        const photoRef = ref(storage, photoUrl);
+        await deleteObject(photoRef);
+      }));
+
+      
+      // Delete the vehicle document from the 'vehicles' collection
+      await deleteDoc(vehicleDocRef);
+      
+      // Update the user document to remove the vehicleId from the 'submittedVehicleId' array
+      const userDocRef = doc(db, 'users', userId);
+      await updateDoc(userDocRef, {
+        submittedVehicleId: arrayRemove(vehicleId)
+      });
+
+      return vehicleId; // Return the deleted vehicleId
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+
+
 
 export const fetchUserSubmittedVehiclesbutnotonAuction = createAsyncThunk(
   'auction/fetchUserSubmittedVehicles',

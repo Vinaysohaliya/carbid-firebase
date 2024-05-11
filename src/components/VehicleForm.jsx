@@ -40,7 +40,7 @@ console.log(evaluationDone,auctionStatus,startingBid,stage,agreeToTerms);
   return (
     <>
       <h2>Submit Vehicle Details</h2>
-      <Button onPress={onOpen}>Add Vehicle</Button>
+      <Button onPress={onOpen}>Your Vehicle</Button>
       <Modal size='2xl' isOpen={isOpen} onOpenChange={onClose}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">Submit Vehicle Details</ModalHeader>
