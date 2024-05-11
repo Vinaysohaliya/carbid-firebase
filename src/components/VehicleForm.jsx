@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchVehicle, submitVehicleDetails } from '../Redux/vehicleSlice.js';
 import { Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Input, Divider, Checkbox } from '@nextui-org/react';
+import { toast } from 'react-hot-toast';
 
 const VehicleSellingForm = ({ vehicle }) => {
   const dispatch = useDispatch();
@@ -27,10 +28,26 @@ const VehicleSellingForm = ({ vehicle }) => {
 
     fetchData();
   }, [dispatch, vehicle]);
-console.log(evaluationDone,auctionStatus,startingBid,stage,agreeToTerms);
+
+  const isFormValid = () => {
+    switch (stage) {
+      case 6:
+        return agreeToTerms;
+      case 7:
+        return startingBid.trim() !== '';
+      default:
+        return true;
+    }
+  };
+
   const handleSubmit = async () => {
     try {
-      const res = await dispatch(submitVehicleDetails({ vehicleId: vehicle.id, stage,agreeToTerms,setAgreeToTerms,startingBid }));
+      if (!isFormValid()) {
+        toast.error('Please fill all required fields.');
+        return;
+      }
+
+      const res = await dispatch(submitVehicleDetails({ vehicleId: vehicle.id, stage, agreeToTerms, setAgreeToTerms, startingBid }));
       onClose();
     } catch (error) {
       console.error('Error submitting vehicle details:', error.message);
@@ -70,21 +87,17 @@ console.log(evaluationDone,auctionStatus,startingBid,stage,agreeToTerms);
                           </Input>
                         </div>
                       )}
-                      {
-                        <>
-                          {stage === 7 && (
-                            <div>
-                              <h2>Enter Starting Bid</h2>
-                              <Input
-                                type="text"
-                                placeholder="Enter starting bid"
-                                value={startingBid}
-                                onChange={(e) => setStartingBid(e.target.value)}
-                              />
-                            </div>
-                          )}
-                        </>
-                      }
+                      {stage === 7 && (
+                        <div>
+                          <h2>Enter Starting Bid</h2>
+                          <Input
+                            type="text"
+                            placeholder="Enter starting bid"
+                            value={startingBid}
+                            onChange={(e) => setStartingBid(e.target.value)}
+                          />
+                        </div>
+                      )}
                     </>
                   )}
                 </>
