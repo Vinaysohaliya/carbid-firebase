@@ -76,14 +76,17 @@ export const submitVehicleDetails = createAsyncThunk(
 
       if (stage === 7) {
         try {
-          // Check if startingBid is defined and valid
-          if (startingBid !== undefined && startingBid.trim() !== '') {
+          console.log(startingBid);
+          if (startingBid !== undefined && startingBid.trim() !== '' && agreeToTerms) {
+          console.log("Fdfg");
+
             const vehicleDocSnap = await getDoc(doc(db, 'vehicles', vehicleId));
             console.log(vehicleDocSnap);
             if (vehicleDocSnap.exists()) {
               await updateDoc(doc(db, 'vehicles', vehicleId), {
                 startingBid: startingBid,
                 agreeToTerms: agreeToTerms,
+                auctionStatus:true,
               });
               vehicleIdResult = vehicleId;
             } else {
