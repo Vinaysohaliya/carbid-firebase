@@ -39,18 +39,15 @@ export const login = createAsyncThunk("/auth/login", async (data) => {
         const { email, password } = data;
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
-        // Fetch user data from Firestore using the user's UID
         const userDocRef = doc(db, 'users', userCredential.user.uid);
         const userDocSnap = await getDoc(userDocRef);
 
         if (userDocSnap.exists()) {
             const userData = userDocSnap.data();
-            console.log('User data:', userData);
             userCredential.user.displayName = userData.name;
 
             return { user: userCredential.user, role: userData };
         } else {
-            console.log('User data not found in Firestore');
             return { user: userCredential.user, userData: null };
         }
     } catch (error) {
@@ -74,7 +71,6 @@ const authSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(login.fulfilled, (state, action) => {
-                console.log(action.payload);
                 localStorage.setItem("data", JSON.stringify(action?.payload?.user));
                 localStorage.setItem("isLoggedIn", true);
                 localStorage.setItem("role", action?.payload?.role.role);
@@ -90,7 +86,6 @@ const authSlice = createSlice({
                 state.role = "";
             })
             .addCase(createAccount.fulfilled, (state, action) => {
-                console.log(action.payload);
                 localStorage.setItem("data", JSON.stringify(action?.payload?.user));
                 localStorage.setItem("isLoggedIn", true);
                 localStorage.setItem("role", action?.payload?.role);

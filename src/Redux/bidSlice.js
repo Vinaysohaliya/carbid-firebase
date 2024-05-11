@@ -7,9 +7,6 @@ placeBid = createAsyncThunk(
     'bids/placeBid',
     async ({ auctionId, bidAmount,userId,userName, }) => {
         try {
-            console.log(auctionId,bidAmount,userId,userName);
-            console.log(auctionId,bidAmount,userId,userName);
-            // Fetch the highest bid amount for the auction
             const bidSnapshot = await getDocs(collection(db, `auctions/${auctionId}/bids`));
             let highestBidAmount = 0;
             bidSnapshot.forEach((doc) => {
@@ -19,7 +16,6 @@ placeBid = createAsyncThunk(
                 }
             });
 
-            console.log(highestBidAmount);
 
             // Check if the new bid amount is higher than the highest bid amount
             if (bidAmount <= highestBidAmount) {

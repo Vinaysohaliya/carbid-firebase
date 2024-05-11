@@ -5,7 +5,6 @@ const PriceRangeSlider = ({ setFilter }) => {
   const [priceRange, setPriceRange] = useState([0, 1000]);
 
   const handleChange = (newValue) => {
-    console.log(newValue);
     setPriceRange(newValue);
   };
 

@@ -31,7 +31,6 @@ console.log(evaluationDone,auctionStatus,startingBid,stage,agreeToTerms);
   const handleSubmit = async () => {
     try {
       const res = await dispatch(submitVehicleDetails({ vehicleId: vehicle.id, stage,agreeToTerms,setAgreeToTerms,startingBid }));
-      console.log('Submission response:', res);
       onClose();
     } catch (error) {
       console.error('Error submitting vehicle details:', error.message);

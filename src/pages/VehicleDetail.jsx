@@ -31,7 +31,6 @@ const VehicleDetail = () => {
 
   const handleLike = async () => {
     const res=await dispatch(toggleVehicleLike({ vehicleId: id, userId }));
-    console.log(res);
     if(res.payload){
       setIsLiked(true);
     }else{

@@ -62,9 +62,7 @@ export const removeFromAuction = createAsyncThunk(
         const updatedSubmittedVehicles = submittedVehicles.filter(id => id !== vehicleId);
         
         await updateDoc(userRef, { submittedVehicleId: updatedSubmittedVehicles });
-        console.log('Vehicle ID removed from user submitted vehicles.');
       } else {
-        console.log('User document does not exist.');
       }
       return { success: true };
     } catch (error) {
@@ -85,25 +83,18 @@ export const fetchBidData = createAsyncThunk(
       const bidsCollectionRef = collection(db, `auctions/${auctionId}/bids`);
       // Fetch all bids documents
       const bidsQuerySnapshot = await getDocs(bidsCollectionRef);
-      // Initialize variables to store highest and first bid
       let highestBid = 0;
       let firstBid = 0;
 
-      // Iterate through the query snapshot to find highest and first bid
       bidsQuerySnapshot.forEach((bidDoc) => {
         const bidData = bidDoc.data();
-        console.log(bidData);
-        // If highestBid is null or bid amount is greater, update highestBid
         if (bidData.amount > highestBid) {
           highestBid = bidData;
-          console.log(bidData.amount);
         }
-        // If firstBid is null, update firstBid
         if (bidData.createdAt < firstBid.createdAt) {
           firstBid = bidData;
         }
       });
-      console.log(highestBid);
 
       // Return the highest and first bid
       return { highestBid, firstBid };
@@ -120,21 +111,16 @@ export const addToAuction = createAsyncThunk(
   'auction/addToAuction',
   async ({ rejectWithValue }) => {
     try {
-      // Create a new auction document
       const auctionDocRef = await addDoc(collection(db, 'auctions'), {
         startDate: new Date(),
         endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         status: 'active'
       });
 
-      // Create a collection of bids under the new auction document
       const bidsCollectionRef = collection(db, `auctions/${auctionDocRef.id}/bids`);
-      console.log(auctionDocRef, bidsCollectionRef, vehicleId);
-      // Update the vehicle document to include a reference to the auction document
       const vehicleRef = doc(db, 'vehicles', vehicleId);
       await updateDoc(vehicleRef, { auctionId: auctionDocRef.id, auctionStatus: true });
 
-      // If the update is successful, return the vehicleId
       return vehicleId;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -195,7 +181,6 @@ const auctionSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchAuctionDetails.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.loading = false;
         state.auctionDetails = action.payload;
       })

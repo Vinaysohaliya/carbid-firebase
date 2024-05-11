@@ -72,16 +72,12 @@ export const submitVehicleDetails = createAsyncThunk(
   async ({ vehicleData, vehiclePhotos, userId, idProof, startingBid, agreeToTerms, stage, vehicleId }) => {
     try {
       let vehicleIdResult;
-      console.log(vehicleData, vehiclePhotos, userId, idProof, startingBid, agreeToTerms, stage, vehicleId);
 
       if (stage === 7) {
         try {
-          console.log(startingBid);
           if (startingBid !== undefined && startingBid.trim() !== '' && agreeToTerms) {
-          console.log("Fdfg");
 
             const vehicleDocSnap = await getDoc(doc(db, 'vehicles', vehicleId));
-            console.log(vehicleDocSnap);
             if (vehicleDocSnap.exists()) {
               await updateDoc(doc(db, 'vehicles', vehicleId), {
                 startingBid: startingBid,
@@ -325,8 +321,6 @@ export const checkIfVehicleLiked = createAsyncThunk(
 
       // Get the liked vehicles array from the user document
       const likedVehicles = userDocSnapshot.data().likedVehicles || [];
-      console.log(likedVehicles);
-      // Check if the vehicleId exists in the likedVehicles array
       const isLiked = likedVehicles.includes(vehicleId);
       return isLiked;
     } catch (error) {

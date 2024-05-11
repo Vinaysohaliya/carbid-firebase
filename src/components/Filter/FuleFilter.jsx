@@ -6,10 +6,8 @@ const FuelType = ({  setFilterCriteria }) => {
 
 
   const handleCheckboxChange = (value, checked) => {
-    let updatedTypes; // Declare the variable outside
-   console.log(value,checked);
+    let updatedTypes; 
     setFilterCriteria((prevCriteria) => {
-      // Inside the callback function, update the variable based on the checked state
       if (checked) {
         updatedTypes = [...(prevCriteria.fuelType || []), value];
       } else {

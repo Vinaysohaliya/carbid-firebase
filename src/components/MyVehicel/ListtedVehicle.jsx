@@ -12,7 +12,6 @@ const ListtedVehicle = () => {
         const fetchVehicles = async () => {
             try {
                 const res = await dispatch(fetchUserSubmittedVehicles(userId));
-                console.log(res);
                 setVehicles(res.payload);
             } catch (error) {
                 console.error('Error fetching vehicles:', error.message);
