@@ -13,7 +13,7 @@ import LoadingButton from '../components/LoadingButton ';
 const VehicleDetail = () => {
   const userName = useSelector((state) => state.auth.data.displayName);
   const [isLiked, setIsLiked] = useState(false);
-  const [isPlacingBid, setIsPlacingBid] = useState(false); // State for managing the loading state
+  const [isPlacingBid, setIsPlacingBid] = useState(false); 
   const { id } = useParams();
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();

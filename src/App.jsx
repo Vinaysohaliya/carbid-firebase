@@ -7,9 +7,10 @@ import SignIn from './components/Signin';
 import VehicleList from './pages/VehicleList';
 import VehicleDetail from './pages/VehicleDetail';
 import MyVehicle from './pages/MyVehicle';
-import SellerDashboard from './pages/SellerDashboard';
 import Layout from './Layouts/Layout';
 import BuyDashBoard from './pages/BuyDashboard';
+import SellDashboard from './pages/SellDashboard';
+
 
 function App() {
 
@@ -21,7 +22,7 @@ function App() {
         <Route path="/signup" element={<Layout><Signup /></Layout>} />
         <Route path="/vehicle/:id" element={<Layout><VehicleDetail /></Layout>} />
         <Route path="/signin" element={<Layout><SignIn /></Layout>} />
-        <Route path="/sellvehicle" element={<Layout><SellerDashboard /></Layout>} />
+        <Route path="/sellvehicle" element={<Layout><SellDashboard /></Layout>} />
         <Route path="/buyvehicle" element={<Layout><BuyDashBoard /></Layout>} />
         <Route path="/my" element={<Layout><MyVehicle /></Layout>} />
       </Routes>

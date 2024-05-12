@@ -6,7 +6,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Rad
 import { addToAuction } from '../Redux/auctionSlice.js';
 import toast from 'react-hot-toast';
 
-const SimpleVehicleForm = ({ vehicle }) => {
+const SimpleVehicleForm = ({ vehicle,onAddNewVehicle }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.auth.data.uid);
@@ -164,6 +164,7 @@ const SimpleVehicleForm = ({ vehicle }) => {
         salesRange: '',
       });
       setStage(1);
+      onAddNewVehicle(true);
       onClose();
     } catch (error) {
       console.error('Error submitting vehicle details:', error.message);
@@ -429,7 +430,6 @@ const renderStage = () => {
 
 return (
   <>
-    <h2>Submit Vehicle Details</h2>
     <Button onPress={onOpen} disabled={formDisabled}>Add Vehicle</Button>
     <Modal size='2xl' isOpen={isOpen} onOpenChange={onClose}>
       <ModalContent>
