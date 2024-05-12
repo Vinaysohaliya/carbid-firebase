@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchVehicle, submitVehicleDetails } from '../Redux/vehicleSlice.js';
 import { useNavigate } from 'react-router-dom';
 import { Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Radio, RadioGroup, Input, Divider, Checkbox, ScrollShadow, Image } from '@nextui-org/react';
-import { addToAuction } from '../Redux/auctionSlice.js';
+
 import toast from 'react-hot-toast';
 
 const SimpleVehicleForm = ({ vehicle,onAddNewVehicle }) => {

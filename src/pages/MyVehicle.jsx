@@ -1,19 +1,19 @@
-import React from 'react'
-import Mywishlist from '../components/MyVehicel/Mywishlist'
-import ListtedVehicle from '../components/MyVehicel/ListtedVehicle'
-import MyBids from '../components/MyVehicel/MyBids'
+import React, { useState } from 'react';
+import MyVehicelLayout from '../Layouts/MyVehicleLayout';
+import ListtedVehicle from '../components/MyVehicel/ListtedVehicle';
+import Mywishlist from '../components/MyVehicel/Mywishlist';
+import MyBids from '../components/MyVehicel/MyBids';
 
 const MyVehicle = () => {
-  return (
-    <div>
-      <Mywishlist/>
-      <br></br>
-      <ListtedVehicle/>
-      <br></br>
-      <>mybids</>
-      <MyBids/>
-    </div>
-  )
-}
+  const [selectedComponent, setSelectedComponent] = useState('listings');
 
-export default MyVehicle
+  return (
+    <MyVehicelLayout selectedComponent={setSelectedComponent}>
+      {selectedComponent === 'listings' && <ListtedVehicle />}
+      {selectedComponent === 'wishlist' && <Mywishlist />}
+      {selectedComponent === 'bids' && <MyBids />}
+    </MyVehicelLayout>
+  );
+};
+
+export default MyVehicle;

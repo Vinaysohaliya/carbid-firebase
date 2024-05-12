@@ -4,7 +4,7 @@ import { fetchVehicle, submitVehicleDetails } from '../Redux/vehicleSlice.js';
 import { Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Input, Divider, Checkbox, CardHeader, CardBody, Card, Image } from '@nextui-org/react';
 import { toast } from 'react-hot-toast';
 
-const VehicleSellingForm = ({ vehicle,onAddNewVehicle  }) => {
+const VehicleSellingForm = ({ vehicle,onAddNewVehicle }) => {
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [evaluationDone, setEvaluationDone] = useState(false);
