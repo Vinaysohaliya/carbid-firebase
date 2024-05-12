@@ -1,3 +1,4 @@
+// VehicleDetail.js
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -6,10 +7,13 @@ import { Input, Button, Divider, Modal, ModalContent, ModalHeader, ModalBody, Mo
 import Vehicleinfo from '../components/Vehicleinfo';
 import { fetchBidData } from '../Redux/auctionSlice';
 import { placeBid } from '../Redux/bidSlice';
+import LoadingButton from '../components/LoadingButton ';
+
 
 const VehicleDetail = () => {
   const userName = useSelector((state) => state.auth.data.displayName);
   const [isLiked, setIsLiked] = useState(false);
+  const [isPlacingBid, setIsPlacingBid] = useState(false); // State for managing the loading state
   const { id } = useParams();
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -63,14 +67,20 @@ const VehicleDetail = () => {
 
   const handlePlaceBid = async () => {
     try {
+      setIsPlacingBid(true); 
       const res = await dispatch(placeBid({ auctionId: vehicle.auctionId, bidAmount: parseFloat(bidAmount), userId, userName }));
       setMessage(res.payload.message);
-      // Close the modal after placing the bid
       onClose();
+      const bidData = await dispatch(fetchBidData({ auctionId: vehicle.auctionId, vehicleId: id }));
+      setStartingBid(bidData.payload.firstBid);
+      setHighestBid(bidData.payload.highestBid);
     } catch (error) {
       setMessage(error.message);
+    } finally {
+      setIsPlacingBid(false); 
     }
   };
+  
 
   if (!vehicle) {
     return <div>No auction details found</div>;
@@ -92,31 +102,44 @@ const VehicleDetail = () => {
         </div>
         <div className='w-1/2'>
           <div className='flex justify-between m-2'>
-            <div className='font-bold'>Model name</div>
+            <div className='font-bold'>{vehicle.model}</div>
             <div>
               {<Button onClick={handleLike}>{isLiked ? "Unlike" : "Like"}</Button>}
             </div>
           </div>
           <div className='flex flex-col'>
             <ul className='flex gap-4'>
-              {[...Array(4)].map((_, index) => (
-                <li key={index}>
-                  <div placement="right">
-                    <div>
-                      <Button>Open Popover</Button>
-                    </div>
-                    <div>
-                      <div className="px-1 py-2">
-                        <div className="text-small font-bold">Popover Content</div>
-                        <div className="text-tiny">This is the popover content</div>
-                      </div>
-                    </div>
+              <div placement="right">
+                <div>
+                  <div className="px-1 py-2">
+                    <div className="text-small font-bold">{vehicle.travelDistance}</div>
                   </div>
-                </li>
-              ))}
+                </div>
+              </div>
+              <div placement="right">
+                <div>
+                  <div className="px-1 py-2">
+                    <div className="text-small font-bold">Popover Content</div>
+                  </div>
+                </div>
+              </div>
+              <div placement="right">
+                <div>
+                  <div className="px-1 py-2">
+                    <div className="text-small font-bold">{vehicle.transmission}</div>
+                  </div>
+                </div>
+              </div>
+              <div placement="right">
+                <div>
+                  <div className="px-1 py-2">
+                    <div className="text-small font-bold">Popover Content</div>
+                  </div>
+                </div>
+              </div>
             </ul>
             <div className='flex-col mt-6'>
-              <div className='mb-2'>L  Noida utterdrades</div>
+              <div className='mb-2'>L  {vehicle.address}</div>
               <div className='mb-2'>H  test drive available</div>
               <div className='mb-2'>Check inspection report</div>
               <div className='mb-2'>Check service history</div>
@@ -133,7 +156,11 @@ const VehicleDetail = () => {
                 <div>
                   <div>{highestBid}</div>
                   <div className='font-light'>Current bid</div>
-                  <Button onPress={onOpen} fullWidth>Place Bid</Button>
+                  {isPlacingBid ? ( // Render the LoadingButton component when placing the bid
+                    <LoadingButton />
+                  ) : (
+                    <Button onPress={onOpen} fullWidth>Place Bid</Button>
+                  )}
                 </div>
               </div>
             </div>
@@ -164,7 +191,11 @@ const VehicleDetail = () => {
           </ModalBody>
           <ModalFooter>
             <Button color="danger" variant="light" onPress={onClose}>Close</Button>
-            <Button color="primary" onPress={handlePlaceBid}>Place Bid</Button>
+            {isPlacingBid ? ( // Render the LoadingButton component when placing the bid
+              <LoadingButton />
+            ) : (
+              <Button color="primary" onPress={handlePlaceBid}>Place Bid</Button>
+            )}
           </ModalFooter>
         </ModalContent>
       </Modal>

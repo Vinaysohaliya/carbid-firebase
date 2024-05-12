@@ -8,19 +8,22 @@ import VehicleList from './pages/VehicleList';
 import VehicleDetail from './pages/VehicleDetail';
 import MyVehicle from './pages/MyVehicle';
 import SellerDashboard from './pages/SellerDashboard';
+import Layout from './Layouts/Layout';
+import BuyDashBoard from './pages/BuyDashboard';
 
 function App() {
 
   return (
     <>
       <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/list" element={<VehicleList />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/vehicle/:id" element={<VehicleDetail />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/sellvehicle" element={<SellerDashboard />} />
-        <Route path="/my" element={<MyVehicle />} />
+        <Route path="/" element={<Layout><Home /></Layout>} />
+        <Route path="/list" element={<Layout><VehicleList /></Layout>} />
+        <Route path="/signup" element={<Layout><Signup /></Layout>} />
+        <Route path="/vehicle/:id" element={<Layout><VehicleDetail /></Layout>} />
+        <Route path="/signin" element={<Layout><SignIn /></Layout>} />
+        <Route path="/sellvehicle" element={<Layout><SellerDashboard /></Layout>} />
+        <Route path="/buyvehicle" element={<Layout><BuyDashBoard /></Layout>} />
+        <Route path="/my" element={<Layout><MyVehicle /></Layout>} />
       </Routes>
     </>
   );

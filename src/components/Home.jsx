@@ -2,7 +2,7 @@ import React from 'react';
 import Navbar from './Navbar';
 import VehicleList from '../pages/VehicleList';
 import { Button } from '@nextui-org/react';
-import BuyDashBoard from './BuyDashBoard';
+import BuyDashBoard from './BuySearch';
 import HowToBuy from './HowToBuy';
 import WhyPeopleChooseUs from './WhyPeopleChooseUs';
 

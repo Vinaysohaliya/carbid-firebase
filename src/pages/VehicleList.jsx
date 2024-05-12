@@ -16,12 +16,13 @@ const VehicleList = () => {
     const userVehicles = vehicles.filter(vehicle => vehicle.userId !== userId);
 
     return (
-        <div>
-            <h2>All Vehicles</h2>
-            {/* <Filters /> */}
+        <div className=' my-10'>
+            <h2 className='font-bold my-4'>Vehicles on auction</h2>
+            <div className=' flex gap-4'>
             {userVehicles.map((vehicle) => (
                 vehicle.auctionStatus && <VehicleCard key={vehicle.id} vehicle={vehicle} /> 
             ))}
+            </div>
         </div>
     );
 };

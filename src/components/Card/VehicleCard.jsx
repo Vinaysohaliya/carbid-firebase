@@ -6,9 +6,13 @@ import { useNavigate } from "react-router-dom";
 import { Modal, ModalContent, ModalHeader, ModalFooter, useDisclosure } from "@nextui-org/react";
 import { fetchBidData } from '../../Redux/auctionSlice';
 import BidsTable from "../BidsTable";
+import { CiHeart } from "react-icons/ci";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { IoHeartOutline } from "react-icons/io5";
+import toast from "react-hot-toast";
+
 
 const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmount = null, bids = null }) => {
-  console.log(bids);
   const { id, make, model, vehiclePhotos, brand, fuelType, transmission, distanceTraveled } = vehicle;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -34,8 +38,10 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
     const res = await dispatch(toggleVehicleLike({ vehicleId: id, userId }));
     if (res.payload) {
       setIsLiked(true);
+      toast.success('Vehicle Liked!'); 
     } else {
       setIsLiked(false);
+      toast.success('Vehicle disliked!');
     }
   };
 
@@ -80,13 +86,17 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
         <div className="relative h-48 overflow-hidden">
           <Image alt={`${make} ${model}`} src={vehiclePhotos[0]} className="object-cover w-full h-full" />
         </div>
-        <Button onClick={handleLike}>{isLiked ? "Unlike" : "Like"}</Button>
+        <div className="flex items-center justify-between">
+          <h3 className="font-bold text-xl mb-4 ml-4"> {model}</h3>
+          <div onClick={handleLike} style={{ fontSize: '24px', color: '#005BC4' }} className="mr-4">
+            {isLiked ? <FaHeart /> : <FaRegHeart />}
+          </div>
+        </div>
         <CardBody className="flex flex-col p-4">
           <div className=" flex items-center justify-between">
             {!isonMyBid ? <div>startingBid {startingBid}</div> : <div>Your Bid {MyBidAmount}</div>}
             <div>HighestBid {highestBid}</div>
           </div>
-          <h3 className="font-bold text-xl mb-4">{make} {model}</h3>
           <div className="flex mb-2">
             <div className="mr-4">
               <p className="font-semibold">{brand}</p>

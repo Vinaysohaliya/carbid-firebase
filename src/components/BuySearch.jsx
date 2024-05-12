@@ -3,7 +3,7 @@ import { Button, Image, Input, Link, ScrollShadow } from '@nextui-org/react';
 import { useDispatch } from 'react-redux';
 import { searchVehicles } from '../Redux/vehicleSlice';
 
-const BuyDashBoard = () => {
+const BuySearch = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [vehicles, setVehicles] = useState([]);
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ const BuyDashBoard = () => {
     <div className="relative">
       <Image
         width={1600}
-        src="https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
+        src="https://s3-alpha-sig.figma.com/img/9069/7cb8/f402d1e9bd1077179c11d5502a3180a1?Expires=1716163200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=GxxhHJrK~fSBF41as6U1q9vB34LqjHOdYVCFIJxAumpYh1T8-pzO~GKUp5l1thmgob1-4LxMQYa7-qMbwz-eOjJiUW-xi2DZHDOSCJl6ol0jug2JRh5ukd0aGMsO7lZ8oXjUrgyYVNK3aD6qU6P8U5EZxT~4sueH4ZEXdpzzlPm1L16lpaN47loafIGvYvabX7F5hj-tPhYUx-7wV5c7BB2nUjBiTqotKdMG8mnFxluqwY96UZduOBjdcYAB5t3PK39MJucazYtyqortZtZxhAZlv2~BTBb4~NVRIMBSqrApjmdgb08wYaWZP79XNEHSbo3q3ZvZF2yqSmkeUMgwPg__"
         alt="Big Image"
         radius="none"
         className="object-cover"
@@ -128,4 +128,4 @@ const BuyDashBoard = () => {
   );
 };
 
-export default BuyDashBoard;
+export default BuySearch;
