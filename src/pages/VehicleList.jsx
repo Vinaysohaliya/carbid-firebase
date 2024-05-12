@@ -18,7 +18,7 @@ const VehicleList = () => {
     return (
         <div>
             <h2>All Vehicles</h2>
-            <Filters />
+            {/* <Filters /> */}
             {userVehicles.map((vehicle) => (
                 vehicle.auctionStatus && <VehicleCard key={vehicle.id} vehicle={vehicle} /> 
             ))}
