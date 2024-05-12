@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { checkIfVehicleLiked, fetchVehicle, toggleVehicleLike } from '../Redux/vehicleSlice';
-import { Input, Button, Divider, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Popover, PopoverTrigger, PopoverContent } from '@nextui-org/react';
+import { Input, Button, Divider, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Popover, PopoverTrigger, PopoverContent, Image } from '@nextui-org/react';
 import Vehicleinfo from '../components/Vehicleinfo';
 import { fetchBidData } from '../Redux/auctionSlice';
 import { placeBid } from '../Redux/bidSlice';
@@ -19,6 +19,8 @@ const VehicleDetail = () => {
   const vehicle = useSelector((state) => state.vehicle.onevehicle);
   const [startingBid, setStartingBid] = useState(null);
   const [highestBid, setHighestBid] = useState(null);
+
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -78,11 +80,12 @@ const VehicleDetail = () => {
     <div>
       <div className='flex mt-10'>
         <div className='w-1/2 flex flex-col items-center'>
-          <img width={600} isZoomed alt="NextUI hero Image" src={vehicle.imageUrl} />
+          <Image width={600} isZoomed alt="hero Image" src={selectedImage ? selectedImage : vehicle.vehiclePhotos[0]} />
+
           <div className='flex mt-2'>
-            {[...Array(5)].map((_, index) => (
-              <div key={index} className='mr-2'>
-                <img radius='sm' width={110} alt="NextUI hero Image" src="https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg" />
+            {vehicle.vehiclePhotos.map((photo, index) => (
+              <div key={index} className='mr-2' onClick={() => setSelectedImage(photo)}>
+                <img radius='sm' width={110} alt="NextUI hero Image" src={photo} />
               </div>
             ))}
           </div>
@@ -98,17 +101,17 @@ const VehicleDetail = () => {
             <ul className='flex gap-4'>
               {[...Array(4)].map((_, index) => (
                 <li key={index}>
-                  <Popover placement="right">
-                    <PopoverTrigger>
+                  <div placement="right">
+                    <div>
                       <Button>Open Popover</Button>
-                    </PopoverTrigger>
-                    <PopoverContent>
+                    </div>
+                    <div>
                       <div className="px-1 py-2">
                         <div className="text-small font-bold">Popover Content</div>
                         <div className="text-tiny">This is the popover content</div>
                       </div>
-                    </PopoverContent>
-                  </Popover>
+                    </div>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -137,7 +140,7 @@ const VehicleDetail = () => {
           </div>
         </div>
       </div>
-      <Vehicleinfo />
+      <Vehicleinfo Vehicleinfo={vehicle} />
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">Place your Bid</ModalHeader>

@@ -1,10 +1,7 @@
-// vehicleSlice.js
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { doc, setDoc, collection, query, getDocs, addDoc, updateDoc, getDoc, where, arrayUnion, deleteDoc, arrayRemove } from 'firebase/firestore';
-import { v4 as uuidv4 } from 'uuid';
 import { db, storage } from '../config/firebase';
-import { refFromURL, update } from 'firebase/database';
 
 
 
@@ -115,11 +112,14 @@ export const submitVehicleDetails = createAsyncThunk(
         const idProofRef = ref(storage, `idProofs/${userId}/${idProof.name}`);
         await uploadBytes(idProofRef, idProof);
         const idProofUrl = await getDownloadURL(idProofRef).catch(error => { throw error; }); // Handling Promise rejection
-
+        let brand=vehicleData.brand.toLowerCase();
+        let model=vehicleData.model.toLowerCase();
         const vehicleDocRef = await addDoc(collection(db, 'vehicles'), {
           userId,
           idProof: idProofUrl,
           ...vehicleData,
+          model,
+          brand,
           vehiclePhotos: photoUrls,
           auctionStatus: false,
           evaluationDone: false,
@@ -220,6 +220,36 @@ export const fetchUserSubmittedVehicles = createAsyncThunk(
   }
 );
 
+
+export const searchVehicles = (searchTerm) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const queryRef = collection(db, 'vehicles');
+      const querySnapshot = await getDocs(
+        query(
+          queryRef,
+          where('brand', '>=', searchTerm),
+          where('brand', '<', searchTerm.toLowerCase() + '\uf8ff')
+        )
+      );
+
+      const searchResults = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        console.log(data);
+        if (data.brand.toLowerCase().startsWith(searchTerm.toLowerCase())) {
+          searchResults.push({ id: doc.id, ...data });
+        }
+      });
+
+      console.log('Search result:', searchResults);
+      resolve(searchResults);
+    } catch (error) {
+      console.error('Error searching:', error);
+      reject(error);
+    }
+  });
+};
 
 
 
