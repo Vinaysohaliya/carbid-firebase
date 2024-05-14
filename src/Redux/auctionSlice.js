@@ -13,14 +13,14 @@ export const fetchAuctionDetails = createAsyncThunk(
       const vehicleDocSnapshot = await getDoc(vehicleDocRef);
       if (vehicleDocSnapshot.exists()) {
         const vehicleData = vehicleDocSnapshot.data();
-
         const auctionId = vehicleData.auctionId;
         if (auctionId) {
+          console.log(auctionId);
           const auctionDocRef = doc(db, 'auctions', auctionId);
           const auctionDocSnapshot = await getDoc(auctionDocRef);
           if (auctionDocSnapshot.exists()) {
             const auctionData = auctionDocSnapshot.data();
-            auctionData.auctionId = auctionId;
+            console.log(auctionData);
             return auctionData;
           } else {
             throw new Error('Auction details not found');

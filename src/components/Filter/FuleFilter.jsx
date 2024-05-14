@@ -27,6 +27,7 @@ const FuelType = ({  setFilterCriteria }) => {
     <div className="flex flex-col">
       {fuelTypes.map((fuelType) => (
         <Checkbox
+        radius="none"
           key={fuelType}
           onChange={(event) => handleCheckboxChange(fuelType, event.target.checked)}
         >

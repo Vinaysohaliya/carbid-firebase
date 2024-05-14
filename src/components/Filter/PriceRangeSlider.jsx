@@ -17,7 +17,7 @@ const PriceRangeSlider = ({ setFilter }) => {
   };
 
   return (
-    <div className="flex flex-col gap-2 w-full h-full max-w-md items-start justify-center">
+    <div className="flex flex-col gap-2 w-1/2 h-full max-w-md items-start justify-center">
       <Slider
         label="Select a price range"
         formatOptions={{ style: "currency", currency: "USD" }}

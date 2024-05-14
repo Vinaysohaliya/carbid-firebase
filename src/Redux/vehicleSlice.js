@@ -76,18 +76,23 @@ export const submitVehicleDetails = createAsyncThunk(
             const userVehiclesQuery = query(collection(db, 'auctions'), where('vehicleId', '==', vehicleId));
 
             const vehicleDocSnap = await getDoc(doc(db, 'vehicles', vehicleId));
-            if (vehicleDocSnap.exists()) {
+            if (vehicleDocSnap.exists()) {  
               await updateDoc(doc(db, 'vehicles', vehicleId), {
                 startingBid: startingBid,
                 agreeToTerms: agreeToTerms,
                 auctionStatus: true,
               });
+              const endTime = new Date();
+              console.log(endTime);
+              endTime.setDate(endTime.getDate() + 7);
 
-              // Update auctionStatus to true in the corresponding auction document
+
               const auctionQuerySnapshot = await getDocs(userVehiclesQuery);
               auctionQuerySnapshot.forEach(async (doc) => {
                 await updateDoc(doc.ref, {
-                  auctionStatus: true
+                  auctionStatus: true,
+                  endTime: endTime,
+
                 });
               });
 
@@ -112,8 +117,8 @@ export const submitVehicleDetails = createAsyncThunk(
         const idProofRef = ref(storage, `idProofs/${userId}/${idProof.name}`);
         await uploadBytes(idProofRef, idProof);
         const idProofUrl = await getDownloadURL(idProofRef).catch(error => { throw error; }); // Handling Promise rejection
-        let brand=vehicleData.brand.toLowerCase();
-        let model=vehicleData.model.toLowerCase();
+        let brand = vehicleData.brand.toLowerCase();
+        let model = vehicleData.model.toLowerCase();
         const vehicleDocRef = await addDoc(collection(db, 'vehicles'), {
           userId,
           idProof: idProofUrl,
@@ -131,6 +136,8 @@ export const submitVehicleDetails = createAsyncThunk(
         await updateDoc(doc(db, 'users', userId), {
           submittedVehicleId: arrayUnion(vehicleIdResult),
         });
+
+
 
         const auctionDoc = await addDoc(collection(db, 'auctions'), {
           vehicleId: vehicleIdResult,
@@ -203,7 +210,7 @@ export const fetchUserSubmittedVehicles = createAsyncThunk(
         // Fetch bids for this auction
         const bidsQuerySnapshot = await getDocs(collection(db, `auctions/${auctionId}/bids`));
         const auctionBids = bidsQuerySnapshot.docs.map(bidDoc => ({ id: bidDoc.id, ...bidDoc.data() }));
-        
+
         auctionBids.sort((a, b) => b.amount - a.amount);
 
         // Fetch vehicle data
@@ -384,7 +391,7 @@ export const fetchVehiclesByFilter = createAsyncThunk(
 
 export const toggleVehicleLike = createAsyncThunk(
   'vehicle/toggleLike',
-  async ({ vehicleId, userId }, thunkAPI) => {
+  async ({ vehicleId, userId }) => {
     try {
       // Fetch the user's document
       const userRef = doc(db, 'users', userId);

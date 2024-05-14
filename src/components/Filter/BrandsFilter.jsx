@@ -31,6 +31,7 @@ const BrandsFilter = ({ filterCriteria, setFilterCriteria }) => {
     <div className="flex flex-col">
       {popularBrands.map((brand) => (
         <Checkbox
+        radius="none"
           key={brand.value}
           onChange={(event) => handleCheckboxChange(brand.value, event.target.checked)}
         >

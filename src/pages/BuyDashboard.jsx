@@ -1,5 +1,5 @@
 import React from 'react';
-import VehicleList from '../pages/VehicleList';
+import VehicleList from '../components/VehicleList';
 import BuySearch from '../components/BuySearch';
 import HowToBuy from '../components/HowToBuy';
 import WhyPeopleChooseUs from '../components/WhyPeopleChooseUs';

@@ -35,18 +35,14 @@ const Filters = () => {
     e.preventDefault();
   };
 
-  // Function to clear all filters
   const clearFilters = () => {
-    // Reset filter criteria to empty arrays
     setFilterCriteria({
       vehicleType: [],
       fuelType: [],
       brand: [],
       transmission: [],
-      // Add any other filter criteria here
     });
 
-    // Uncheck all checkboxes
     setCarChecked(false);
     setFuelChecked(false);
     setBrandChecked(false);

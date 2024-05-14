@@ -10,6 +10,7 @@ import { CiHeart } from "react-icons/ci";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { IoHeartOutline } from "react-icons/io5";
 import toast from "react-hot-toast";
+import Clock from '../Clock'
 
 
 const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmount = null, bids = null }) => {
@@ -25,6 +26,7 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
   useEffect(() => {
     const fetchData = async () => {
       const isLiked = await dispatch(checkIfVehicleLiked({ vehicleId: id, userId }));
+      console.log(isLiked);
       setIsLiked(isLiked.payload);
 
       const bidData = await dispatch(fetchBidData({ auctionId: vehicle.auctionId, vehicleId: id }));
@@ -38,7 +40,7 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
     const res = await dispatch(toggleVehicleLike({ vehicleId: id, userId }));
     if (res.payload) {
       setIsLiked(true);
-      toast.success('Vehicle Liked!'); 
+      toast.success('Vehicle Liked!');
     } else {
       setIsLiked(false);
       toast.success('Vehicle disliked!');
@@ -49,13 +51,7 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
     navigate(`/vehicle/${id}`);
   };
 
-  const handleAddToAuctionClick = () => {
-    if (isonListed) {
-      // Handle delete listing logic here
-    } else {
-      onOpen();
-    }
-  };
+
 
   const handleDeleteListingClick = () => {
     try {
@@ -75,17 +71,17 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
     </ModalContent>
   );
 
-
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
         {renderModalContent()}
       </Modal>
-
       <Card shadow="dark-lg" className="w-[300px] flex flex-col rounded-xl overflow-hidden">
         <div className="relative h-48 overflow-hidden">
+          <Clock vehicle={vehicle} className="absolute top-0 right-0 mr-2  mt-2" />
           <Image alt={`${make} ${model}`} src={vehiclePhotos[0]} className="object-cover w-full h-full" />
         </div>
+
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-xl mb-4 ml-4"> {model}</h3>
           <div onClick={handleLike} style={{ fontSize: '24px', color: '#005BC4' }} className="mr-4">
@@ -119,7 +115,7 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
               </>
             ) : (
               <>
-                <Button variant="text" color="primary" onClick={handleAddToAuctionClick}>Add to Auction</Button>
+                <Button variant="text" color="primary" >Book Test Drive</Button>
                 <Button variant="text" color="error" onClick={handleViewDetailClick}>View Detail</Button>
               </>
             )}

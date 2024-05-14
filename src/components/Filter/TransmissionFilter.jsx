@@ -30,6 +30,7 @@ const TransmissionFilter = ({  setFilterCriteria }) => {
     <div className="flex flex-col">
       {transmissionTypes.map((transmission) => (
         <Checkbox
+        radius="none"
           key={transmission.value}
           onChange={(event) => handleCheckboxChange(transmission.value, event.target.checked)}
         >
