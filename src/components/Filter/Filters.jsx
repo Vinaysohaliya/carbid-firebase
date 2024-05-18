@@ -1,7 +1,8 @@
+// Filters.jsx
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchVehiclesByFilter } from '../../Redux/vehicleSlice.js';
-import CarType from './VehicleFilter.jsx';
+import CarType from '../Filter/VehicleFilter.jsx'; // Assuming you renamed the component
 import FuleType from './FuleFilter.jsx';
 import BrandsFilter from './BrandsFilter.jsx';
 import TransmissionFilter from './TransmissionFilter.jsx';
@@ -16,12 +17,6 @@ const Filters = () => {
     transmission: [],
     // Add any other filter criteria here
   });
-
-  // State variables to track checkbox states
-  const [carChecked, setCarChecked] = useState(false);
-  const [fuelChecked, setFuelChecked] = useState(false);
-  const [brandChecked, setBrandChecked] = useState(false);
-  const [transmissionChecked, setTransmissionChecked] = useState(false);
 
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -42,21 +37,18 @@ const Filters = () => {
       brand: [],
       transmission: [],
     });
-
-    setCarChecked(false);
-    setFuelChecked(false);
-    setBrandChecked(false);
-    setTransmissionChecked(false);
   };
 
   return (
     <div className="max-w-lg mx-auto">
       <form onSubmit={handleSubmit} className="space-y-4">
-        <CarType setFilterCriteria={setFilterCriteria} checked={carChecked} setChecked={setCarChecked} />
-        <FuleType setFilterCriteria={setFilterCriteria} checked={fuelChecked} setChecked={setFuelChecked} />
-        <BrandsFilter setFilterCriteria={setFilterCriteria} checked={brandChecked} setChecked={setBrandChecked} />
-        <TransmissionFilter setFilterCriteria={setFilterCriteria} checked={transmissionChecked} setChecked={setTransmissionChecked} />
+
+        <CarType filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
+        <FuleType filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
+        <BrandsFilter filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
+        <TransmissionFilter filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
         <PriceRangeSlider setFilter={setFilterCriteria} />
+
         <div className="flex justify-end">
           <button type="button" onClick={clearFilters} className="text-blue-500 hover:underline">
             Clear Filters

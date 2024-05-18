@@ -4,38 +4,31 @@ import { db } from '../config/firebase';
 
 
 
-// Async thunk for fetching auction details
+
 export const fetchAuctionDetails = createAsyncThunk(
   'vehicles/fetchAuctionDetails',
   async (vehicleId) => {
     try {
-      const vehicleDocRef = doc(db, 'vehicles', vehicleId);
-      const vehicleDocSnapshot = await getDoc(vehicleDocRef);
-      if (vehicleDocSnapshot.exists()) {
-        const vehicleData = vehicleDocSnapshot.data();
-        const auctionId = vehicleData.auctionId;
-        if (auctionId) {
-          console.log(auctionId);
-          const auctionDocRef = doc(db, 'auctions', auctionId);
-          const auctionDocSnapshot = await getDoc(auctionDocRef);
-          if (auctionDocSnapshot.exists()) {
-            const auctionData = auctionDocSnapshot.data();
-            console.log(auctionData);
-            return auctionData;
-          } else {
-            throw new Error('Auction details not found');
-          }
-        } else {
-          throw new Error('No auction associated with this vehicle');
-        }
+      // Query the auctions collection where vehicleId matches the provided vehicleId
+      const auctionQuery = query(collection(db, 'auctions'), where('vehicleId', '==', vehicleId));
+      const auctionSnapshot = await getDocs(auctionQuery);
+
+      if (!auctionSnapshot.empty) {
+        // Assuming there's only one auction per vehicle, take the first document
+        const auctionDoc = auctionSnapshot.docs[0];
+        const auctionData = auctionDoc.data();
+        auctionData.id = auctionDoc.id;
+
+        return auctionData;
       } else {
-        throw new Error('Vehicle not found');
+        throw new Error('No auction found for this vehicle');
       }
     } catch (error) {
       throw error;
     }
   }
 );
+
 
 
 
@@ -119,27 +112,6 @@ export const fetchBidData = createAsyncThunk(
 
 
 
-
-export const addToAuction = createAsyncThunk(
-  'auction/addToAuction',
-  async ({ rejectWithValue }) => {
-    try {
-      const auctionDocRef = await addDoc(collection(db, 'auctions'), {
-        startDate: new Date(),
-        endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        status: 'active'
-      });
-
-      const bidsCollectionRef = collection(db, `auctions/${auctionDocRef.id}/bids`);
-      const vehicleRef = doc(db, 'vehicles', vehicleId);
-      await updateDoc(vehicleRef, { auctionId: auctionDocRef.id, auctionStatus: true });
-
-      return vehicleId;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
 
 
 

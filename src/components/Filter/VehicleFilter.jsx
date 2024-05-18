@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+// CarType.jsx
+import React, { useEffect } from "react";
 import { Checkbox } from "@nextui-org/react";
 
-const CarType = ({ setFilterCriteria, checked, setChecked }) => {
+const CarType = ({ filterCriteria, setFilterCriteria }) => {
   const vehicleTypes = [
     { label: "Car", value: "car" },
     { label: "Scooter", value: "scooter" },
@@ -27,16 +28,21 @@ const CarType = ({ setFilterCriteria, checked, setChecked }) => {
   };
 
   useEffect(() => {
-    // Set the checked state of the checkbox based on the prop
-    setChecked(checked);
-  }, [checked, setChecked]);
+    // Reset checkbox states when filterCriteria changes
+    vehicleTypes.forEach((type) => {
+      document.getElementById(type.value).checked =
+        filterCriteria.vehicleType?.includes(type.value) || false;
+    });
+  }, [filterCriteria]);
+  console.log(filterCriteria);
 
   return (
     <div className="flex flex-col">
       {vehicleTypes.map((vehicleType) => (
         <Checkbox
           key={vehicleType.value}
-          checked // Pass the checked state as a prop
+          id={vehicleType.value}
+          isSelected={filterCriteria.vehicleType?.includes(vehicleType.value) || false}
           onChange={(event) =>
             handleCheckboxChange(vehicleType.value, event.target.checked)
           }

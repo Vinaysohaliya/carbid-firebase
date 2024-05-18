@@ -24,7 +24,7 @@ const BuySearch = () => {
           throw error;
         }
       } else {
-        setVehicles([]); // Clear vehicles when search term is empty
+        setVehicles([]);
       }
     }, debounceDelay);
 
@@ -44,62 +44,62 @@ const BuySearch = () => {
         style={{ height: '600px' }} // Set the height inline
       />
       <div className="absolute bottom-16 left-10 right-10 z-10">
-        <div className="flex flex-col">
+        <div className="flex flex-col w-1/3">
           <Input
-            value={searchTerm}
             onChange={handleSearchChange}
+            label="Search"
+            value={searchTerm}
             isClearable
-            className="mb-4 w-1/4 h-12"
             radius="lg"
             classNames={{
-              label: 'text-black/50 dark:text-white/90 ',
+              label: "text-black/50 dark:text-white/90",
               input: [
-                'bg-transparent',
-                'text-black/90 dark:text-white/90',
-                'placeholder:text-default-700/50 dark:placeholder:text-white/60',
+                "bg-transparent",
+                "text-black/90 dark:text-white/90",
+                "placeholder:text-default-700/50 dark:placeholder:text-white/60",
               ],
-              innerWrapper: 'bg-transparent',
+              innerWrapper: "bg-transparent",
               inputWrapper: [
-                'shadow-xl',
-                'bg-default-200/50',
-                'dark:bg-default/60',
-                'backdrop-blur-xl',
-                'backdrop-saturate-200',
-                'hover:bg-default-200/70',
-                'dark:hover:bg-default/70',
-                'group-data-[focused=true]:bg-default-200/50',
-                'dark:group-data-[focused=true]:bg-default/60',
-                '!cursor-text',
+                "shadow-xl",
+                "bg-default-200/50",
+                "dark:bg-default/60",
+                "backdrop-blur-xl",
+                "backdrop-saturate-200",
+                "hover:bg-default-200/70",
+                "dark:hover:bg-default/70",
+                "group-data-[focus=true]:bg-default-200/50",
+                "dark:group-data-[focus=true]:bg-default/60",
+                "!cursor-text",
               ],
             }}
             placeholder="Type to search..."
+            
           />
-        {vehicles.length > 0 && (
-  <ScrollShadow className="w-[400px] h-[200px]">
-    <div className="">
-      {vehicles.map((vehicle) => (
-        <Link key={vehicle.id} href={`/vehicle/${vehicle.id}`}>
-          <div
-            className="bg-white w-20 h-20  rounded-md flex items-center justify-center"
-          >
-            <Image
-              width={200}
-              height={100}
-              alt={`Vehicle Image ${vehicle.id}`}
-              src={vehicle.vehiclePhotos[0]}
-              className="w-full h-48 object-contain"
-            />
-            <div className="text-center mt-2">{vehicle.model}</div>
-            <div className="text-center mt-1">{vehicle.brand}</div>
-          </div>
-        </Link>
-      ))}
-    </div>
-  </ScrollShadow>
-)}
+          {vehicles.length > 0 && (
+            <ScrollShadow className="w-[400px] h-[200px]">
+              <div className="">
+                {vehicles.map((vehicle) => (
+                  <Link key={vehicle.id} href={`/vehicle/${vehicle.id}`}>
+                    <div
+                      className="bg-white w-20 h-20  rounded-md flex items-center justify-center"
+                    >
+                      <Image
+                        width={200}
+                        height={100}
+                        alt={`Vehicle Image ${vehicle.id}`}
+                        src={vehicle.vehiclePhotos[0]}
+                        className="w-full h-48 object-contain"
+                      />
+                      <div className="text-center mt-2">{vehicle.model}</div>
+                      <div className="text-center mt-1">{vehicle.brand}</div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </ScrollShadow>
+          )}
 
-          
-          {/* <Button className="ml-4">Search</Button> */}
+
         </div>
         <div className="mb-4 text-white font-semibold">Search By Brand</div>
         <div className="flex gap-4">

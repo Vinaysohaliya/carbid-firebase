@@ -24,7 +24,8 @@ function App() {
         <Route path="/signin" element={<Layout><SignIn /></Layout>} />
         <Route path="/sellvehicle" element={<Layout><SellDashboard /></Layout>} />
         <Route path="/buyvehicle" element={<Layout><BuyDashBoard /></Layout>} />
-        <Route path="/my" element={<Layout><MyVehicle /></Layout>} />
+        <Route path="/myvehicle" element={<Layout><MyVehicle /></Layout>} />
+        <Route path="/allvehicle" element={<Layout><Allvehicles /></Layout>} />
       </Routes>
     </>
   );

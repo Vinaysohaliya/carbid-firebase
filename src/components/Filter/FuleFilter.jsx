@@ -1,41 +1,62 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Checkbox } from "@nextui-org/react";
 
-const FuelType = ({  setFilterCriteria }) => {
-  const fuelTypes = ["CNG", "Petrol", "Diesel"];
-
+const FuelType = ({ filterCriteria, setFilterCriteria }) => {
+  const fuelTypes = [
+    { label: "CNG", value: "cng" },
+    { label: "Petrol", value: "petrol" },
+    { label: "Diesel", value: "diesel" }
+  ];
 
   const handleCheckboxChange = (value, checked) => {
-    let updatedTypes; 
     setFilterCriteria((prevCriteria) => {
+      let updatedTypes;
       if (checked) {
-        updatedTypes = [...(prevCriteria.fuelType || []), value];
+        updatedTypes = {
+          ...prevCriteria,
+          fuelType: [...(prevCriteria.fuelType || []), value]
+        };
       } else {
-        updatedTypes = (prevCriteria.fuelType || []).filter(type => type !== value);
+        updatedTypes = {
+          ...prevCriteria,
+          fuelType: (prevCriteria.fuelType || []).filter(
+            (type) => type !== value
+          )
+        };
       }
-  
+
       // Return the updated filter criteria
-      return {
-        ...prevCriteria,
-        fuelType: updatedTypes
-      };
+      return updatedTypes;
     });
   };
+
+  useEffect(() => {
+    // Reset checkbox states when filterCriteria changes
+    fuelTypes.forEach((type) => {
+      const checkboxElement = document.getElementById(type.value);
+      if (checkboxElement) {
+        checkboxElement.checked = filterCriteria.fuelType?.includes(type.value) || false;
+      }
+    });
+  }, [filterCriteria]);
   
 
   return (
     <div className="flex flex-col">
       {fuelTypes.map((fuelType) => (
         <Checkbox
-        radius="none"
-          key={fuelType}
-          onChange={(event) => handleCheckboxChange(fuelType, event.target.checked)}
+          radius="none"
+          key={fuelType.value}
+          isSelected={filterCriteria.fuelType?.includes(fuelType.value) || false}
+          onChange={(event) =>
+            handleCheckboxChange(fuelType.value, event.target.checked)
+          }
         >
-          {fuelType}
+          {fuelType.label}
         </Checkbox>
       ))}
     </div>
   );
-}
+};
 
 export default FuelType;

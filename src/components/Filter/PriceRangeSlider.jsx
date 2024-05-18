@@ -20,7 +20,7 @@ const PriceRangeSlider = ({ setFilter }) => {
     <div className="flex flex-col gap-2 w-1/2 h-full max-w-md items-start justify-center">
       <Slider
         label="Select a price range"
-        formatOptions={{ style: "currency", currency: "USD" }}
+        formatOptions={{ style: "currency", currency: "INR" }}
         step={100}
         size="sm"
         maxValue={1000}
@@ -30,11 +30,7 @@ const PriceRangeSlider = ({ setFilter }) => {
         onChange={handleChange}
         onChangeEnd={handleSliderChangeEnd} // Use the handleSliderChangeEnd function for onChangeEnd event
       />
-      <p className="text-default-500 font-medium text-small">
-        Selected price range:{" "}
-        {Array.isArray(priceRange) &&
-          priceRange.map((price) => `$${price}`).join(" – ")}
-      </p>
+     
     </div>
   );
 };

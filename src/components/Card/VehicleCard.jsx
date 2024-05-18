@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardBody, Button, Image, Divider, DateRangePicker, ModalBody } from "@nextui-org/react";
 import { useDispatch, useSelector } from 'react-redux';
-import { checkIfVehicleLiked, deleteListing, toggleVehicleLike } from '../../Redux/vehicleSlice';
+import { checkIfVehicleLiked, deleteVehicle, toggleVehicleLike } from '../../Redux/vehicleSlice';
 import { useNavigate } from "react-router-dom";
 import { Modal, ModalContent, ModalHeader, ModalFooter, useDisclosure } from "@nextui-org/react";
 import { fetchBidData } from '../../Redux/auctionSlice';
 import BidsTable from "../BidsTable";
-import { CiHeart } from "react-icons/ci";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { IoHeartOutline } from "react-icons/io5";
 import toast from "react-hot-toast";
 import Clock from '../Clock'
 
@@ -26,7 +24,6 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
   useEffect(() => {
     const fetchData = async () => {
       const isLiked = await dispatch(checkIfVehicleLiked({ vehicleId: id, userId }));
-      console.log(isLiked);
       setIsLiked(isLiked.payload);
 
       const bidData = await dispatch(fetchBidData({ auctionId: vehicle.auctionId, vehicleId: id }));
@@ -55,7 +52,7 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
 
   const handleDeleteListingClick = () => {
     try {
-      dispatch(deleteListing({ vehicleId: vehicle.id, userId: vehicle.userId }))
+      dispatch(deleteVehicle({ vehicleId: vehicle.id,userId }))
     } catch (error) {
       throw error;
     }
@@ -78,7 +75,7 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
       </Modal>
       <Card shadow="dark-lg" className="w-[300px] flex flex-col rounded-xl overflow-hidden">
         <div className="relative h-48 overflow-hidden">
-          <Clock vehicle={vehicle} className="absolute top-0 right-0 mr-2  mt-2" />
+          {/* <Clock vehicle={vehicle} className="absolute top-0 right-0 mr-2  mt-2" /> */}
           <Image alt={`${make} ${model}`} src={vehiclePhotos[0]} className="object-cover w-full h-full" />
         </div>
 

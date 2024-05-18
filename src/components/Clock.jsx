@@ -14,7 +14,7 @@ const Clock = ({ vehicle }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await dispatch(fetchAuctionDetails(id));
+                 const res = await dispatch(fetchAuctionDetails(id));
                 setauctionendTime(res.payload.endTime)
             } catch (error) {
                 console.error('Error fetching auction details:', error.message);

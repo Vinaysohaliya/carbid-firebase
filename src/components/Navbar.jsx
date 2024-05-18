@@ -1,29 +1,17 @@
 import React, { useState } from "react";
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, NavbarMenuToggle, NavbarMenu, NavbarMenuItem } from "@nextui-org/react";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Avatar } from "@nextui-org/react";
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../Redux/authSlice';
 
 const NavbarComponent = () => {
   const loggedIn = useSelector(state => state.auth.isLoggedIn);
-  const userData = useSelector(state => state.auth.data);
   const dispatch = useDispatch();
 
   const handleLogout = () => {
     dispatch(logout());
   };
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuItems = [
-    "Profile",
-    "Dashboard",
-    "Activity",
-    "Analytics",
-    "System",
-    "Deployments",
-    "My Settings",
-    "Team Settings",
-    "Help & Feedback",
-    "Log Out",
-  ];
+ 
 
   return (
     <Navbar shouldHideOnScroll onMenuOpenChange={setIsMenuOpen}>
@@ -37,7 +25,7 @@ const NavbarComponent = () => {
         </div>
       </NavbarBrand>
       <NavbarContent className="nav-links" justify="center">
-      <NavbarItem>
+        <NavbarItem>
           <Link color="foreground" href="/buyvehicle">
             Buy
           </Link>
@@ -47,31 +35,30 @@ const NavbarComponent = () => {
             Sell
           </Link>
         </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="/">
-            Home
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="/about">
-            About
-          </Link>
-        </NavbarItem>
         
+        <NavbarItem>
+          <Link color="foreground" href="/vehiclelist">
+            vehiclelist
+          </Link>
+        </NavbarItem>
+       
+
         {loggedIn ? (
           <>
-            <NavbarItem>
-              <Link color="foreground" href="/profile">
-                Profile
-              </Link>
-            </NavbarItem>
             <NavbarItem>
               <Button color="error" onClick={handleLogout}>
                 Logout
               </Button>
             </NavbarItem>
             <NavbarItem>
-              <span>Welcome, {userData.name}</span>
+              <Link color="foreground" href="/profile">
+                <Avatar src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
+              </Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Link color="foreground" href="/myvehicle">
+               MyVehicles
+              </Link>
             </NavbarItem>
           </>
         ) : (
@@ -89,22 +76,7 @@ const NavbarComponent = () => {
           </>
         )}
       </NavbarContent>
-      <NavbarMenu open={isMenuOpen} onChange={setIsMenuOpen}>
-        {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item}-${index}`}>
-            <Link
-              color={
-                index === 0 ? "primary" : index === menuItems.length - 1 ? "danger" : "foreground"
-              }
-              className="w-full"
-              href={`/${item}`}
-              size="lg"
-            >
-              {item}
-            </Link>
-          </NavbarMenuItem>
-        ))}
-      </NavbarMenu>
+      
     </Navbar>
   );
 };

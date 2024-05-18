@@ -1,7 +1,7 @@
 import React from "react";
 import { Checkbox } from "@nextui-org/react";
 
-const TransmissionFilter = ({  setFilterCriteria }) => {
+const TransmissionFilter = ({ filterCriteria, setFilterCriteria }) => {
   const transmissionTypes = [
     { label: "Automatic", value: "automatic" },
     { label: "Manual", value: "manual" },
@@ -24,14 +24,13 @@ const TransmissionFilter = ({  setFilterCriteria }) => {
       };
     });
   };
-  
 
   return (
     <div className="flex flex-col">
       {transmissionTypes.map((transmission) => (
         <Checkbox
-        radius="none"
           key={transmission.value}
+          isSelected={filterCriteria.transmission?.includes(transmission.value) || false}
           onChange={(event) => handleCheckboxChange(transmission.value, event.target.checked)}
         >
           {transmission.label}
