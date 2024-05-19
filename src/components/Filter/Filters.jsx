@@ -26,7 +26,7 @@ const Filters = () => {
     };
 
     fetchVehicles();
-  }, [filterCriteria, dispatch]); // Run effect when filterCriteria or dispatch change
+  }, [filterCriteria, dispatch]); 
 
   
   const clearFilters = () => {

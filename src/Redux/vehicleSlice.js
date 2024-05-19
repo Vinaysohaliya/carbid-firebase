@@ -348,7 +348,7 @@ export const fetchVehiclesByFilter = createAsyncThunk(
   'vehicles/fetchByFilter',
   async (filterCriteria) => {
     try {
-      // Destructure filter criteria properties with default values
+      console.log(filterCriteria);
       const {
         brand = [],
         distanceTraveled = [],
@@ -372,6 +372,7 @@ export const fetchVehiclesByFilter = createAsyncThunk(
       if (distanceTraveledValues.length > 0) {
         queryRef = query(queryRef, where('distanceTraveled', 'in', distanceTraveledValues));
       }
+      console.log(fuelTypeValues);
       if (fuelTypeValues.length > 0) {
         queryRef = query(queryRef, where('fuelType', 'in', fuelTypeValues));
       }

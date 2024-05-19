@@ -37,7 +37,7 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
     dealershipName: '',
     website: '',
     vehicleType: 'car',
-    'fuleType': 'petrol'
+    'fuelType': 'petrol'
   });
 
 
@@ -88,7 +88,7 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
       if (!formData.travelDistance) missingFields.push('Travel Distance');
       if (!idProof) missingFields.push('ID Proof');
       if (!formData.vehicleType) missingFields.push('vehicleType');
-      if (!formData.fuleType) missingFields.push('fuleType');
+      if (!formData.fuelType) missingFields.push('fuelType');
       if (vehiclePhotos.length === 0) missingFields.push('Vehicle Photos');
 
       if (formData.sellerType === 'dealer') {
@@ -126,7 +126,7 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
         pickupLocation: '',
         dealershipName: '',
         website: '',
-        'fuleType': 'petrol',
+        'fuelType': 'petrol',
         'vehicleType': 'car'
       });
       setStage(1);
@@ -329,14 +329,14 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
 
 
                 <div>
-                  <label value="">Select fuleType </label>
+                  <label value="">Select fuelType </label>
                   <select
-                    value={formData.fuleType}
-                    onChange={(e) => setFormData({ ...formData, fuleType: e.target.value })}
+                    value={formData.fuelType}
+                    onChange={(e) => setFormData({ ...formData, fuelType: e.target.value })}
                     className='mt-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
                   >
                     <option value="petrol">Petrol</option>
-                    <option value="deisel">Deisel</option>
+                    <option value="diesel">Diesel</option>
                     <option value="cng">CNG</option>
                   </select>
                 </div>
