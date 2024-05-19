@@ -10,22 +10,32 @@ import Layout from './Layouts/Layout';
 import BuyDashBoard from './pages/BuyDashboard';
 import SellDashboard from './pages/SellDashboard';
 import Allvehicles from './pages/Allvehicles';
+import AuthLayout from './Layouts/AuthLayout';
 
 
 function App() {
 
   return (
     <>
-      <Routes>
+    <Routes>
         <Route path="/" element={<Layout><Home /></Layout>} />
         <Route path="/vehiclelist" element={<Layout><Allvehicles /></Layout>} />
         <Route path="/signup" element={<Layout><Signup /></Layout>} />
         <Route path="/vehicle/:id" element={<Layout><VehicleDetail /></Layout>} />
         <Route path="/signin" element={<Layout><SignIn /></Layout>} />
-        <Route path="/sellvehicle" element={<Layout><SellDashboard /></Layout>} />
-        <Route path="/buyvehicle" element={<Layout><BuyDashBoard /></Layout>} />
-        <Route path="/myvehicle" element={<Layout><MyVehicle /></Layout>} />
-        <Route path="/allvehicle" element={<Layout><Allvehicles /></Layout>} />
+        <Route
+          path="/sellvehicle"
+          element={<AuthLayout><Layout><SellDashboard /></Layout></AuthLayout>}
+        />
+        <Route
+          path="/buyvehicle"
+          element={<AuthLayout><Layout><BuyDashBoard /></Layout></AuthLayout>}
+        />
+        <Route
+          path="/myvehicle"
+          element={<AuthLayout><Layout><MyVehicle /></Layout></AuthLayout>}
+        />
+        
       </Routes>
     </>
   );

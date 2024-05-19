@@ -15,8 +15,10 @@ const Filters = () => {
     fuelType: [],
     brand: [],
     transmission: [],
-    // Add any other filter criteria here
+    maxPrice:0,
+    minPrice:0
   });
+  console.log(filterCriteria);
 
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -26,10 +28,7 @@ const Filters = () => {
     fetchVehicles();
   }, [filterCriteria, dispatch]); // Run effect when filterCriteria or dispatch change
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
-
+  
   const clearFilters = () => {
     setFilterCriteria({
       vehicleType: [],
@@ -41,20 +40,20 @@ const Filters = () => {
 
   return (
     <div className="max-w-lg mx-auto">
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-4">
 
         <CarType filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
         <FuleType filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
         <BrandsFilter filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
         <TransmissionFilter filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
-        <PriceRangeSlider setFilter={setFilterCriteria} />
+        <PriceRangeSlider filterCriteria={filterCriteria} setFilter={setFilterCriteria} />
 
         <div className="flex justify-end">
           <button type="button" onClick={clearFilters} className="text-blue-500 hover:underline">
             Clear Filters
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 };

@@ -10,7 +10,7 @@ const VehicleSellingForm = ({ vehicle, onAddNewVehicle }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [evaluationDone, setEvaluationDone] = useState(false);
   const [auctionStatus, setAuctionStatus] = useState(false);
-  const [startingBid, setStartingBid] = useState('');
+  const [startingBid, setStartingBid] = useState(0);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [stage, setStage] = useState(5);
   const [isLoding, setisLoding] = useState(false);
@@ -59,7 +59,7 @@ const VehicleSellingForm = ({ vehicle, onAddNewVehicle }) => {
       setisLoding(false);
     }
   };
-  console.log(vehicle);
+  console.log(startingBid);
   return (
     <>
       <div>
@@ -140,7 +140,7 @@ By using Indian Auto Auction (IAA), you acknowledge that you have read, understo
                         <div>
                           <h2>Enter Starting Bid</h2>
                           <Input
-                            type="text"
+                            type="number"
                             placeholder="Enter starting bid"
                             value={startingBid}
                             onChange={(e) => setStartingBid(e.target.value)}

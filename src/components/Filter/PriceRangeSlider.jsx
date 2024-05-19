@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Slider } from "@nextui-org/react";
 
-const PriceRangeSlider = ({ setFilter }) => {
+const PriceRangeSlider = ({ filterCriteria,setFilter }) => {
   const [priceRange, setPriceRange] = useState([0, 1000]);
 
   const handleChange = (newValue) => {

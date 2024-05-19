@@ -77,8 +77,9 @@ export const submitVehicleDetails = createAsyncThunk(
 
             const vehicleDocSnap = await getDoc(doc(db, 'vehicles', vehicleId));
             if (vehicleDocSnap.exists()) {
+              const parsedStartingBid = parseFloat(startingBid); // Parse startingBid as a number
               await updateDoc(doc(db, 'vehicles', vehicleId), {
-                startingBid: startingBid,
+                startingBid: parsedStartingBid,
                 agreeToTerms: agreeToTerms,
                 auctionStatus: true,
               });
@@ -211,7 +212,7 @@ export const fetchUserSubmittedVehicles = createAsyncThunk(
 
         auctionBids.sort((a, b) => b.amount - a.amount);
 
-        
+
         // Fetch vehicle data
         const vehicleDoc = await getDoc(doc(db, 'vehicles', auctionData.vehicleId));
         const vehicleData = vehicleDoc.data();
@@ -296,7 +297,7 @@ export const deleteVehicle = createAsyncThunk(
         console.log('Vehicle not found');
         throw new Error('Vehicle not found');
       }
-      
+
       const vehicleData = vehicleDocSnapshot.data();
       console.log(vehicleData);
 
@@ -356,7 +357,7 @@ export const fetchVehiclesByFilter = createAsyncThunk(
         maxPrice,
         minPrice
       } = filterCriteria || {};
-
+      console.log(minPrice, maxPrice);
       // Convert filter criteria properties to lowercase arrays
       const brandValues = brand.map(value => value.toLowerCase());
       const distanceTraveledValues = distanceTraveled.map(value => value.toLowerCase());
