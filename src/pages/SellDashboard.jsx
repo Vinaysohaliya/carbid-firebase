@@ -2,7 +2,6 @@ import { Image } from '@nextui-org/react';
 import React from 'react';
 import WhyPeopleChooseUs from '../components/WhyPeopleChooseUs';
 import Sellform from '../components/Sellform';
-import SimpleVehicleForm from '../components/SimpleVehicleForm';
 
 const SellDashboard = () => {
   return (

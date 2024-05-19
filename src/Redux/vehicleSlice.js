@@ -358,7 +358,6 @@ export const fetchVehiclesByFilter = createAsyncThunk(
         minPrice
       } = filterCriteria || {};
       console.log(minPrice, maxPrice);
-      // Convert filter criteria properties to lowercase arrays
       const brandValues = brand.map(value => value.toLowerCase());
       const distanceTraveledValues = distanceTraveled.map(value => value.toLowerCase());
       const fuelTypeValues = fuelType.map(value => value.toLowerCase());

@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { createAccount } from '../Redux/authSlice.js';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 
 const SignUp = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -15,8 +18,10 @@ const SignUp = () => {
     e.preventDefault();
     try {
       await dispatch(createAccount({ email, password, name, role }));
+      navigate('/buyvehicle');
     } catch (error) {
       setError(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -47,7 +52,7 @@ const SignUp = () => {
         <p>
           Already have an account?{' '}
           <Link to="/signin" className="text-blue-500 hover:text-blue-700">
-            Sign Up
+            Sign In
           </Link>
         </p>
       </form>

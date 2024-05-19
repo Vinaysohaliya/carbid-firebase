@@ -7,7 +7,7 @@ import LoadingButton from './LoadingButton ';
 
 import toast from 'react-hot-toast';
 
-const SimpleVehicleForm = ({ vehicle, onAddNewVehicle }) => {
+const SimpleVehicleForm = ({ onAddNewVehicle }) => {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.auth.data.uid);
   const [isLoading, setisLoding] = useState(false);
@@ -32,9 +32,12 @@ const SimpleVehicleForm = ({ vehicle, onAddNewVehicle }) => {
     ownerType: '',
     carLocation: '',
     modification: '',
+    'modificationDetails':'',
     pickupLocation: '',
     dealershipName: '',
     website: '',
+    vehicleType: 'car',
+    'fuleType': 'petrol'
   });
 
 
@@ -84,6 +87,8 @@ const SimpleVehicleForm = ({ vehicle, onAddNewVehicle }) => {
       if (!formData.transmission) missingFields.push('Transmission');
       if (!formData.travelDistance) missingFields.push('Travel Distance');
       if (!idProof) missingFields.push('ID Proof');
+      if (!formData.vehicleType) missingFields.push('vehicleType');
+      if (!formData.fuleType) missingFields.push('fuleType');
       if (vehiclePhotos.length === 0) missingFields.push('Vehicle Photos');
 
       if (formData.sellerType === 'dealer') {
@@ -94,7 +99,7 @@ const SimpleVehicleForm = ({ vehicle, onAddNewVehicle }) => {
       if (missingFields.length > 0) {
         const missingFieldsString = missingFields.join(', ');
         toast.error(`Please fill all required fields: ${missingFieldsString}`);
-        return; // Return to prevent further execution if required fields are not filled
+        return;
       }
 
       await dispatch(submitVehicleDetails({
@@ -121,6 +126,8 @@ const SimpleVehicleForm = ({ vehicle, onAddNewVehicle }) => {
         pickupLocation: '',
         dealershipName: '',
         website: '',
+        'fuleType': 'petrol',
+        'vehicleType': 'car'
       });
       setStage(1);
       onAddNewVehicle(true);
@@ -283,6 +290,7 @@ const SimpleVehicleForm = ({ vehicle, onAddNewVehicle }) => {
                   <option value="Honda">Honda</option>
                   <option value="Ford">Ford</option>
                 </select>
+
                 <select
                   value={formData.model}
                   onChange={(e) => setFormData({ ...formData, model: e.target.value })}
@@ -299,11 +307,44 @@ const SimpleVehicleForm = ({ vehicle, onAddNewVehicle }) => {
                     <>
                       <option value="Civic">Civic</option>
                       <option value="Accord">Accord</option>
-                      {/* Add more options as needed */}
                     </>
                   )}
                 </select>
               </div>
+
+              <div className=' flex items-center justify-between my-2'>
+
+                <div>
+                  <label value="">Select vehicleType </label>
+                  <select
+                    value={formData.vehicleType}
+                    onChange={(e) => setFormData({ ...formData, vehicleType: e.target.value })}
+                    className='mt-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
+                  >
+                    <option value="car">Car</option>
+                    <option value="bike">Bike</option>
+                    <option value="scooty">Scooty</option>
+                  </select>
+                </div>
+
+
+                <div>
+                  <label value="">Select fuleType </label>
+                  <select
+                    value={formData.fuleType}
+                    onChange={(e) => setFormData({ ...formData, fuleType: e.target.value })}
+                    className='mt-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
+                  >
+                    <option value="petrol">Petrol</option>
+                    <option value="deisel">Deisel</option>
+                    <option value="cng">CNG</option>
+                  </select>
+                </div>
+
+
+              </div>
+
+
 
             </div>
             <div className=' flex items-center w-full justify-between mb-2'>
@@ -364,6 +405,15 @@ const SimpleVehicleForm = ({ vehicle, onAddNewVehicle }) => {
                 <Radio value="no" className='mx-2'>No</Radio>
               </div>
             </RadioGroup>
+            {formData.modification === 'yes' && (
+            <Input
+              type="text"
+              placeholder="Enter modification details"
+              value={formData.modificationDetails}
+              radius='sm'
+              onChange={(e) => setFormData({ ...formData, modificationDetails: e.target.value })}
+            />
+          )}
 
           </ScrollShadow>
 

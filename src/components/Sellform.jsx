@@ -28,7 +28,6 @@ const Sellform = () => {
   }, [dispatch, userId, shouldRefetch]);
 
   const handleAddNewVehicle = (shouldRefetch) => {
-    console.log("Should refetch:", shouldRefetch);
     if (shouldRefetch) {
       setShouldRefetch(shouldRefetch);
     }

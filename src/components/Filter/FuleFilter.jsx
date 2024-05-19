@@ -25,13 +25,11 @@ const FuelType = ({ filterCriteria, setFilterCriteria }) => {
         };
       }
 
-      // Return the updated filter criteria
       return updatedTypes;
     });
   };
 
   useEffect(() => {
-    // Reset checkbox states when filterCriteria changes
     fuelTypes.forEach((type) => {
       const checkboxElement = document.getElementById(type.value);
       if (checkboxElement) {

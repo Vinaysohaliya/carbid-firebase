@@ -1,24 +1,23 @@
-// VehicleDetail.js
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { checkIfVehicleLiked, fetchVehicle, toggleVehicleLike } from '../Redux/vehicleSlice';
-import { Input, Button, Divider, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Popover, PopoverTrigger, PopoverContent, Image } from '@nextui-org/react';
+import { Input, Button, Divider, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Popover, PopoverTrigger, PopoverContent, Image, ScrollShadow } from '@nextui-org/react';
 import Vehicleinfo from '../components/Vehicleinfo';
 import { fetchBidData } from '../Redux/auctionSlice';
 import { placeBid } from '../Redux/bidSlice';
 import LoadingButton from '../components/LoadingButton ';
+import toast from 'react-hot-toast';
 
 
 const VehicleDetail = () => {
   const userName = useSelector((state) => state.auth.data.displayName);
   const [isLiked, setIsLiked] = useState(false);
-  const [isPlacingBid, setIsPlacingBid] = useState(false); 
+  const [isPlacingBid, setIsPlacingBid] = useState(false);
   const { id } = useParams();
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [bidAmount, setBidAmount] = useState(0);
-  const [message, setMessage] = useState('');
   const userId = useSelector((state) => state.auth.data.uid);
   const vehicle = useSelector((state) => state.vehicle.onevehicle);
   const [startingBid, setStartingBid] = useState(null);
@@ -39,10 +38,7 @@ const VehicleDetail = () => {
     const fetchBidAmounts = async () => {
       if (vehicle) {
         try {
-          // Fetch bid data directly here
           const res = await dispatch(fetchBidData({ auctionId: vehicle.auctionId, vehicleId: vehicle.id }));
-          console.log(res);
-          // Assuming 'res.payload' contains the 'highestBid' and 'firstBid' objects
           setStartingBid(res.payload.firstBid);
           setHighestBid(res.payload.highestBid);
         } catch (error) {
@@ -67,20 +63,20 @@ const VehicleDetail = () => {
 
   const handlePlaceBid = async () => {
     try {
-      setIsPlacingBid(true); 
+      setIsPlacingBid(true);
       const res = await dispatch(placeBid({ auctionId: vehicle.auctionId, bidAmount: parseFloat(bidAmount), userId, userName }));
-      setMessage(res.payload.message);
+      toast(res.payload.message);
       onClose();
       const bidData = await dispatch(fetchBidData({ auctionId: vehicle.auctionId, vehicleId: id }));
       setStartingBid(bidData.payload.firstBid);
       setHighestBid(bidData.payload.highestBid);
     } catch (error) {
-      setMessage(error.message);
+      toast(error.message);
     } finally {
-      setIsPlacingBid(false); 
+      setIsPlacingBid(false);
     }
   };
-  
+
 
   if (!vehicle) {
     return <div>No auction details found</div>;
@@ -92,13 +88,16 @@ const VehicleDetail = () => {
         <div className='w-1/2 flex flex-col items-center'>
           <Image width={600} isZoomed alt="hero Image" src={selectedImage ? selectedImage : vehicle.vehiclePhotos[0]} />
 
-          <div className='flex mt-2'>
-            {vehicle.vehiclePhotos.map((photo, index) => (
-              <div key={index} className='mr-2' onClick={() => setSelectedImage(photo)}>
-                <img radius='sm' width={110} alt="NextUI hero Image" src={photo} />
-              </div>
-            ))}
-          </div>
+          <ScrollShadow className="w-[600px] h-[75px]" orientation='horizontal' hideScrollBar={true}>
+            <div className='flex mt-2' style={{ minWidth: `${vehicle.vehiclePhotos.length * 120}px` }}>
+              {vehicle.vehiclePhotos.map((photo, index) => (
+                <div key={index} className='mr-2' onClick={() => setSelectedImage(photo)}>
+                  <img className="rounded-md" width={110} alt="NextUI hero Image" src={photo} />
+                </div>
+              ))}
+            </div>
+          </ScrollShadow>
+
         </div>
         <div className='w-1/2'>
           <div className='flex justify-between m-2'>
@@ -156,7 +155,7 @@ const VehicleDetail = () => {
                 <div>
                   <div>{highestBid}</div>
                   <div className='font-light'>Current bid</div>
-                  {isPlacingBid ? ( // Render the LoadingButton component when placing the bid
+                  {isPlacingBid ? (
                     <LoadingButton />
                   ) : (
                     <Button onPress={onOpen} fullWidth>Place Bid</Button>
@@ -191,7 +190,7 @@ const VehicleDetail = () => {
           </ModalBody>
           <ModalFooter>
             <Button color="danger" variant="light" onPress={onClose}>Close</Button>
-            {isPlacingBid ? ( // Render the LoadingButton component when placing the bid
+            {isPlacingBid ? (
               <LoadingButton />
             ) : (
               <Button color="primary" onPress={handlePlaceBid}>Place Bid</Button>
@@ -199,7 +198,7 @@ const VehicleDetail = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </div>
+    </div >
   );
 };
 
