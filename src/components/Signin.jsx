@@ -13,7 +13,8 @@ const SignIn = () => {
 
   const handleSignIn = async () => {
     try {
-      await dispatch(login({ email, password })).unwrap(); // Ensure to use unwrap if using Redux Toolkit
+    const res= await dispatch(login({ email, password })); // Ensure to use unwrap if using Redux Toolkit
+    console.log(res);
       navigate('/buyvehicle'); // Redirect on successful login
     } catch (error) {
       toast.error('Login failed. Please check your credentials and try again.'); // Show error toast

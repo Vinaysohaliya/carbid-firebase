@@ -42,12 +42,6 @@ const SignUp = () => {
           <label htmlFor="password" className="block">Password</label>
           <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full border rounded-md py-2 px-3" />
         </div>
-        <div>
-          <label htmlFor="role" className="block">Role</label>
-          <select id="role" value={role} onChange={(e) => setRole(e.target.value)} className="w-full border rounded-md py-2 px-3">
-            <option value="buyer">Buyer&Seller</option>
-          </select>
-        </div>
         <button type="submit" className="w-full bg-blue-500 text-white py-2 px-4 rounded-md">Sign Up</button>
         <p>
           Already have an account?{' '}

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import {  createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import {  doc, setDoc, getDoc } from 'firebase/firestore';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
 
 
@@ -13,11 +13,12 @@ const initialState = {
 };
 
 
-export const createAccount = createAsyncThunk("/auth/signup", async (data) => {
+export const createAccount = createAsyncThunk("/auth/signup", async ({ email, password, name, role }) => {
     try {
-        const { email, password, name, role } = data;
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        console.log(userCredential);
+        console.log(userCredential.user.uid);
         await setDoc(doc(db, 'users', userCredential.user.uid), {
             name: name,
             role: role
@@ -34,9 +35,9 @@ export const createAccount = createAsyncThunk("/auth/signup", async (data) => {
 });
 
 
-export const login = createAsyncThunk("/auth/login", async (data) => {
+
+export const login = createAsyncThunk('/auth/login', async ({ email, password }) => {
     try {
-        const { email, password } = data;
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
         const userDocRef = doc(db, 'users', userCredential.user.uid);
@@ -45,7 +46,7 @@ export const login = createAsyncThunk("/auth/login", async (data) => {
         if (userDocSnap.exists()) {
             const userData = userDocSnap.data();
             userCredential.user.displayName = userData.name;
-
+            console.log(userData);
             return { user: userCredential.user, role: userData };
         } else {
             return { user: userCredential.user, userData: null };
@@ -54,6 +55,7 @@ export const login = createAsyncThunk("/auth/login", async (data) => {
         throw error;
     }
 });
+
 
 export const logout = createAsyncThunk("/auth/logout", async () => {
     try {
