@@ -9,90 +9,41 @@ import {
   getKeyValue,
   Button,
 } from "@nextui-org/react";
-import { useDispatch } from "react-redux";
+import { useDispatch} from "react-redux";
 import { fetchVehiclesWithUsers } from "../Redux/vehicleSlice";
-
-const rows1 = [
-  {
-    key: "1",
-    name: "Tony Reichert",
-    role: "CEO",
-    status: "Active",
-  },
-  {
-    key: "2",
-    name: "Zoey Lang",
-    role: "Technical Lead",
-    status: "Paused",
-  },
-];
-
-const rows2 = [
-  {
-    key: "3",
-    name: "Jane Fisher",
-    role: "Senior Developer",
-    status: "Active",
-  },
-  {
-    key: "4",
-    name: "William Howard",
-    role: "Community Manager",
-    status: "Vacation",
-  },
-];
-
-const rows3 = [
-  {
-    key: "1",
-    name: "Tony Reichert",
-    role: "CEO",
-    status: "Active",
-  },
-  {
-    key: "3",
-    name: "Jane Fisher",
-    role: "Senior Developer",
-    status: "Active",
-  },
-  {
-    key: "4",
-    name: "William Howard",
-    role: "Community Manager",
-    status: "Vacation",
-  },
-];
 
 const columns = [
   {
-    key: "name",
-    label: "NAME",
+    key: "model",
+    label: "MODEL",
   },
   {
-    key: "role",
-    label: "ROLE",
+    key: "userName",
+    label: "SELLER NAME",
   },
   {
-    key: "status",
-    label: "STATUS",
+    key: "userEmail",
+    label: "EMAIL",
   },
 ];
 
 export default function EvaluterDashboard() {
   const [activeTable, setActiveTable] = useState(1);
-const dispatch=useDispatch();
-  const handleButtonClick = (tableNumber) => {
-    setActiveTable(tableNumber);
-  };
+  const dispatch = useDispatch();
 
- 
   useEffect(() => {
     const fetchVehicles = async () => {
       const res = await dispatch(fetchVehiclesWithUsers());
-      console.log(res);
+      setVehicleData(res.payload);
     };
     fetchVehicles();
   }, [dispatch]);
+
+  const [vehicleData, setVehicleData] = useState([]);
+
+  const handleButtonClick = (tableNumber) => {
+    setActiveTable(tableNumber);
+  };
 
   return (
     <div>
@@ -104,20 +55,6 @@ const dispatch=useDispatch();
         >
           Table 1
         </Button>
-        <Button
-          color={activeTable === 2 ? "primary" : "secondary"}
-          size="sm"
-          onClick={() => handleButtonClick(2)}
-        >
-          Table 2
-        </Button>
-        <Button
-          color={activeTable === 3 ? "primary" : "secondary"}
-          size="sm"
-          onClick={() => handleButtonClick(3)}
-        >
-          Table 3
-        </Button>
       </div>
       <Table aria-label="Example table with dynamic content">
         <TableHeader columns={columns}>
@@ -125,19 +62,9 @@ const dispatch=useDispatch();
             <TableColumn key={column.key}>{column.label}</TableColumn>
           )}
         </TableHeader>
-        <TableBody
-          items={
-            activeTable === 1
-              ? rows1
-              : activeTable === 2
-              ? rows2
-              : activeTable === 3
-              ? rows3
-              : []
-          }
-        >
+        <TableBody items={vehicleData}>
           {(item) => (
-            <TableRow key={item.key}>
+            <TableRow key={item.vehicleId}>
               {(columnKey) => (
                 <TableCell>{getKeyValue(item, columnKey)}</TableCell>
               )}
