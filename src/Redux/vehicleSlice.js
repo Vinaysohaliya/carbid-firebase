@@ -21,6 +21,37 @@ export const fetchAllVehicles = createAsyncThunk(
   }
 );
 
+export const fetchVehiclesWithUsers = createAsyncThunk(
+  'vehicles/fetchWithUsers',
+  async () => {
+    try {
+      const vehiclesSnapshot = await getDocs(collection(db, 'vehicles'));
+      const vehiclesWithUsers = await Promise.all(
+        vehiclesSnapshot.docs.map(async (vehicleDoc) => {
+          const vehicleData = vehicleDoc.data();
+          const userDocRef = doc(db, 'users', vehicleData.userId);
+          const userDocSnapshot = await getDoc(userDocRef);
+          if (userDocSnapshot.exists()) {
+            const userData = userDocSnapshot.data();
+            return {
+              vehicleId: vehicleDoc.id,
+              ...vehicleData,
+              userId: vehicleData.userId,
+              userName: userData.name,
+              userEmail: userData.email,
+            };
+          } else {
+            throw new Error(`User document not found for vehicle ${vehicleDoc.id}`);
+          }
+        })
+      );
+      return vehiclesWithUsers;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
 
 export const fetchUserAuctions = createAsyncThunk(
   'auctions/fetchUserAuctions',

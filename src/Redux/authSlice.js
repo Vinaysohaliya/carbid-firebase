@@ -17,8 +17,6 @@ export const createAccount = createAsyncThunk("/auth/signup", async ({ email, pa
     try {
 
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        console.log(userCredential);
-        console.log(userCredential.user.uid);
         await setDoc(doc(db, 'users', userCredential.user.uid), {
             name: name,
             role: role

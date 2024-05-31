@@ -11,6 +11,7 @@ import BuyDashBoard from './pages/BuyDashboard';
 import SellDashboard from './pages/SellDashboard';
 import Allvehicles from './pages/Allvehicles';
 import AuthLayout from './Layouts/AuthLayout';
+import EvaluterDashboard from './pages/EvaluterDashboard';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <Route path="/signup" element={<Layout><Signup /></Layout>} />
         <Route path="/vehicle/:id" element={<Layout><VehicleDetail /></Layout>} />
         <Route path="/signin" element={<Layout><SignIn /></Layout>} />
+        <Route path="/e" element={<Layout><EvaluterDashboard /></Layout>} />
         <Route
           path="/sellvehicle"
           element={<AuthLayout><Layout><SellDashboard /></Layout></AuthLayout>}
