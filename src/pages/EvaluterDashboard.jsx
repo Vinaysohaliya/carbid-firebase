@@ -9,8 +9,10 @@ import {
   getKeyValue,
   Button,
 } from "@nextui-org/react";
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import { fetchVehiclesWithUsers } from "../Redux/vehicleSlice";
+import { Modal, ModalContent, ModalHeader, ModalBody } from "@nextui-org/react";
+import VehicleEditForm from "../components/VehicleEditForm";
 
 const columns = [
   {
@@ -30,6 +32,8 @@ const columns = [
 export default function EvaluterDashboard() {
   const [activeTable, setActiveTable] = useState(1);
   const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
 
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -43,6 +47,21 @@ export default function EvaluterDashboard() {
 
   const handleButtonClick = (tableNumber) => {
     setActiveTable(tableNumber);
+  };
+
+  const handleEditClick = (vehicle) => {
+    setSelectedVehicle(vehicle);
+    setIsOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsOpen(false);
+  };
+
+  const handleSave = (updatedVehicle) => {
+    // Save the updated vehicle data
+    console.log("Updated Vehicle Data:", updatedVehicle);
+    setIsOpen(false);
   };
 
   return (
@@ -66,12 +85,35 @@ export default function EvaluterDashboard() {
           {(item) => (
             <TableRow key={item.vehicleId}>
               {(columnKey) => (
-                <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+                <TableCell>
+                  {getKeyValue(item, columnKey)}
+                  <Button
+                    color="danger"
+                    size="sm"
+                    onClick={() => handleEditClick(item)}
+                  >
+                    Edit
+                  </Button>
+                </TableCell>
               )}
             </TableRow>
           )}
         </TableBody>
       </Table>
+      <Modal isOpen={isOpen} onClose={handleModalClose}>
+        <ModalContent>
+          <ModalHeader>Edit Vehicle</ModalHeader>
+          <ModalBody>
+            {selectedVehicle && (
+              <VehicleEditForm
+                selectedVehicle={selectedVehicle}
+                onSave={handleSave}
+                onClose={handleModalClose}
+              />
+            )}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </div>
   );
 }
