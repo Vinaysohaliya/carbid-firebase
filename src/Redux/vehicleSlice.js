@@ -108,7 +108,7 @@ export const submitVehicleDetails = createAsyncThunk(
 
             const vehicleDocSnap = await getDoc(doc(db, 'vehicles', vehicleId));
             if (vehicleDocSnap.exists()) {
-              const parsedStartingBid = parseFloat(startingBid); // Parse startingBid as a number
+              const parsedStartingBid = parseFloat(startingBid);
               await updateDoc(doc(db, 'vehicles', vehicleId), {
                 startingBid: parsedStartingBid,
                 agreeToTerms: agreeToTerms,
@@ -157,8 +157,10 @@ export const submitVehicleDetails = createAsyncThunk(
           model,
           brand,
           vehiclePhotos: photoUrls,
+          safetyRating:"",
           auctionStatus: false,
-          evaluationDone: false,
+          evaluationDone: "",
+          adminApprove: "",
           createdAt: new Date(),
         });
 
@@ -188,7 +190,7 @@ export const submitVehicleDetails = createAsyncThunk(
 
       return { vehicleId: vehicleIdResult };
     } catch (error) {
-      console.error(error); // Logging the error for debugging
+      console.error(error);
       throw error;
     }
   }
@@ -315,6 +317,35 @@ export const fetchUserSubmittedVehiclesbutnotonAuction = createAsyncThunk(
 
 
 
+export const updateVehicleDetails = createAsyncThunk(
+  'vehicles/updateDetails',
+  async ({ vehicleId, updatedData }, { rejectWithValue }) => {
+    try {
+      const vehicleDocRef = doc(db, 'vehicles', vehicleId);
+
+      // Fetch the existing vehicle document
+      const vehicleDocSnapshot = await getDoc(vehicleDocRef);
+      
+      if (!vehicleDocSnapshot.exists()) {
+        throw new Error('Vehicle not found');
+      }
+
+
+      // Update the vehicle document in Firestore with new data
+      await updateDoc(vehicleDocRef, {
+        ...updatedData,
+      });
+      return { vehicleId, ...updatedData, vehiclePhotos: updatedPhotoUrls, idProof: updatedIdProofUrl };
+    } catch (error) {
+      console.error('Error updating vehicle details:', error.message);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+
+
+
 export const deleteVehicle = createAsyncThunk(
   'vehicles/deleteVehicle',
   async ({ vehicleId, userId }, { rejectWithValue }) => {
@@ -330,7 +361,6 @@ export const deleteVehicle = createAsyncThunk(
       }
 
       const vehicleData = vehicleDocSnapshot.data();
-      console.log(vehicleData);
 
       // Delete vehicle photos from storage
       const photoDeletionPromises = vehicleData.vehiclePhotos.map((photoUrl) => {

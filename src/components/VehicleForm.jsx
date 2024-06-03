@@ -9,7 +9,6 @@ const VehicleSellingForm = ({ vehicle, onAddNewVehicle }) => {
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [evaluationDone, setEvaluationDone] = useState(false);
-  const [auctionStatus, setAuctionStatus] = useState(false);
   const [startingBid, setStartingBid] = useState(0);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [stage, setStage] = useState(5);
@@ -22,7 +21,6 @@ const VehicleSellingForm = ({ vehicle, onAddNewVehicle }) => {
         try {
           const res = await dispatch(fetchVehicle({ vehicleId: vehicle.id }));
           setEvaluationDone(res.payload.evaluationDone);
-          setAuctionStatus(res.payload.auctionStatus);
         } catch (error) {
           console.error('Error fetching vehicle data:', error.message);
         }
@@ -59,7 +57,6 @@ const VehicleSellingForm = ({ vehicle, onAddNewVehicle }) => {
       setisLoding(false);
     }
   };
-  console.log(startingBid);
   return (
     <>
       <div>

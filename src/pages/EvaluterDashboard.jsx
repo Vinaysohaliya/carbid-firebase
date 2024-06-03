@@ -27,6 +27,10 @@ const columns = [
     key: "userEmail",
     label: "EMAIL",
   },
+  {
+    key: "Status",
+    label: "status",
+  }
 ];
 
 export default function EvaluterDashboard() {
@@ -38,6 +42,7 @@ export default function EvaluterDashboard() {
   useEffect(() => {
     const fetchVehicles = async () => {
       const res = await dispatch(fetchVehiclesWithUsers());
+      console.log(res);
       setVehicleData(res.payload);
     };
     fetchVehicles();
@@ -58,11 +63,6 @@ export default function EvaluterDashboard() {
     setIsOpen(false);
   };
 
-  const handleSave = (updatedVehicle) => {
-    // Save the updated vehicle data
-    console.log("Updated Vehicle Data:", updatedVehicle);
-    setIsOpen(false);
-  };
 
   return (
     <div>
@@ -102,12 +102,10 @@ export default function EvaluterDashboard() {
       </Table>
       <Modal isOpen={isOpen} onClose={handleModalClose}>
         <ModalContent>
-          <ModalHeader>Edit Vehicle</ModalHeader>
           <ModalBody>
             {selectedVehicle && (
               <VehicleEditForm
                 selectedVehicle={selectedVehicle}
-                onSave={handleSave}
                 onClose={handleModalClose}
               />
             )}

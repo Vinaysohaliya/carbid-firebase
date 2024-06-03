@@ -1,14 +1,29 @@
 import React, { useState } from 'react';
-import { Input, Button, ModalBody, RadioGroup, Radio, Checkbox, Image, ScrollShadow, RadioGroupProvider } from '@nextui-org/react';
+import {
+  Input,
+  Button,
+  ModalBody,
+  RadioGroup,
+  Radio,
+  Checkbox,
+  Image,
+  ScrollShadow,
+  RadioGroupProvider,
+} from '@nextui-org/react';
+import { updateVehicleDetails } from '../Redux/vehicleSlice';
+import { useDispatch } from 'react-redux';
 
-const VehicleEditForm = ({ selectedVehicle, onSave, onClose }) => {
+const VehicleEditForm = ({ selectedVehicle, onClose }) => {
   const [stage, setStage] = useState(1);
-  const [formData, setFormData] = useState(selectedVehicle);
+  const [formData, setFormData] = useState({
+    ...selectedVehicle
+  });
+  const dispatch = useDispatch();
   const [photoPreviews, setPhotoPreviews] = useState({
     interior: [],
     exterior: [],
     features: [],
-    imperfections: []
+    imperfections: [],
   });
   const [idPreviews, setIdPreviews] = useState([]);
 
@@ -17,11 +32,11 @@ const VehicleEditForm = ({ selectedVehicle, onSave, onClose }) => {
     const previews = photoFiles.map((file) => URL.createObjectURL(file));
     setPhotoPreviews({
       ...photoPreviews,
-      [section]: [...photoPreviews[section], ...previews]
+      [section]: [...photoPreviews[section], ...previews],
     });
     setFormData({
       ...formData,
-      [section]: [...(formData[section] || []), ...photoFiles]
+      [section]: [...(formData[section] || []), ...photoFiles],
     });
   };
 
@@ -209,17 +224,44 @@ const VehicleEditForm = ({ selectedVehicle, onSave, onClose }) => {
             {renderPhotoSection('Imperfections', 'imperfections')}
           </div>
         );
+      case 5:
+        return (
+          <div>
+            <h3>Status</h3>
+            <RadioGroup
+              value={formData.evaluationDone}
+              label="Status"
+              onChange={(e) => setFormData({ ...formData, evaluationDone: e.target.value })}
+            >
+              <Radio value="APPROVE">Approve</Radio>
+              <Radio value="DECLINE">Decline</Radio>
+            </RadioGroup>
+          </div>
+        );
       default:
         return null;
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const { userEmail,userName,vehicleId, ...updatedDataWithoutEmailNameAndvehicleId } = formData;
+
+      await dispatch(updateVehicleDetails({ vehicleId:selectedVehicle.vehicleId, updatedData: updatedDataWithoutEmailNameAndvehicleId }));
+      alert("Vehicle details updated successfully");
+    } catch (err) {
+      console.error('Failed to update vehicle details:', err);
+      alert('Failed to update vehicle details');
+    }
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       {renderStage()}
       <Button onClick={() => setStage(stage > 1 ? stage - 1 : 1)}>Previous</Button>
-      <Button onClick={() => setStage(stage < 4 ? stage + 1 : 4)}>Next</Button>
-      {stage === 4 && <Button onClick={() => onSave(formData)}>Confirm & proceed</Button>}
+      <Button onClick={() => setStage(stage < 5 ? stage + 1 : 5)}>Next</Button>
+      {stage === 5 && <Button type="submit">Confirm & Proceed</Button>}
       <Button onClick={onClose}>Close</Button>
     </form>
   );
