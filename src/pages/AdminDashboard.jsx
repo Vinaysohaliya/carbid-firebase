@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, ScrollShadow } from '@nextui-org/react';
-import { fetchAllVehicles, updateVehicleDetails } from '../Redux/vehicleSlice';
+import { fetchAllVehicles, updateAdminVehicleStatus, updateVehicleDetails } from '../Redux/vehicleSlice';
 
 export const AdminDashboard = () => {
   const dispatch = useDispatch();
@@ -29,14 +29,15 @@ export const AdminDashboard = () => {
   const handleAccept = async () => {
     console.log("Accepted", selectedVehicle);
     const updatedData = { ...selectedVehicle, adminApprove: "ACCEPT" };
-    await dispatch(updateVehicleDetails({ vehicleId: selectedVehicle.id, updatedData }));
+    await dispatch(updateAdminVehicleStatus({ vehicleId: selectedVehicle.id, status:updatedData.adminApprove }));
     onOpenChange();
   };
 
   const handleDecline = async () => {
     console.log("Declined", selectedVehicle);
     const updatedData = { ...selectedVehicle, adminApprove: "DECLINE" };
-    await dispatch(updateVehicleDetails({ vehicleId: selectedVehicle.id, updatedData }));
+    await dispatch(updateAdminVehicleStatus({ vehicleId: selectedVehicle.id, status:updatedData.adminApprove }));
+
     onOpenChange();
   };
 

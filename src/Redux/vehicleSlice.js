@@ -316,6 +316,31 @@ export const fetchUserSubmittedVehiclesbutnotonAuction = createAsyncThunk(
 );
 
 
+export const updateAdminVehicleStatus = createAsyncThunk(
+  'vehicles/updateStatus',
+  async ({ vehicleId, status }, { rejectWithValue }) => {
+    try {
+      const vehicleDocRef = doc(db, 'vehicles', vehicleId);
+
+      const vehicleDocSnapshot = await getDoc(vehicleDocRef);
+      if (!vehicleDocSnapshot.exists()) {
+        throw new Error('Vehicle not found');
+      }
+
+      await updateDoc(vehicleDocRef, {
+        adminApprove:status
+      });
+
+      return { vehicleId, status };
+    } catch (error) {
+      console.error('Error updating vehicle status:', error.message);
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+
+
 
 export const updateVehicleDetails = createAsyncThunk(
   'vehicles/updateDetails',
