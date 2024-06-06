@@ -325,16 +325,43 @@ export const updateVehicleDetails = createAsyncThunk(
 
       // Fetch the existing vehicle document
       const vehicleDocSnapshot = await getDoc(vehicleDocRef);
-      
       if (!vehicleDocSnapshot.exists()) {
         throw new Error('Vehicle not found');
       }
 
+      const existingVehicleData = vehicleDocSnapshot.data();
+      const existingPhotoUrls = existingVehicleData.vehiclePhotos || [];
+
+      // Upload vehicle photos to Firebase Storage
+      let newPhotoUrls = [];
+      if (updatedData?.vehiclePhotos) {
+        const uploadPromises = updatedData.vehiclePhotos.map(async (file) => {
+          const storageRef = ref(storage, `vehiclePhotos/${vehicleId}/${file.name}`);
+          await uploadBytes(storageRef, file);
+          const downloadURL = await getDownloadURL(storageRef);
+          return downloadURL;
+        });
+        newPhotoUrls = await Promise.all(uploadPromises);
+      }
+
+      // Combine existing photos with new photos
+      const updatedPhotoUrls = [...existingPhotoUrls, ...newPhotoUrls];
+
+      // Upload ID proof to Firebase Storage
+      let updatedIdProofUrl = existingVehicleData.idProof || '';
+      if (updatedData?.idProof) {
+        const idProofRef = ref(storage, `idProofs/${vehicleId}/${updatedData.idProof.name}`);
+        await uploadBytes(idProofRef, updatedData.idProof);
+        updatedIdProofUrl = await getDownloadURL(idProofRef);
+      }
 
       // Update the vehicle document in Firestore with new data
       await updateDoc(vehicleDocRef, {
         ...updatedData,
+        vehiclePhotos: updatedPhotoUrls,
+        idProof: updatedIdProofUrl,
       });
+
       return { vehicleId, ...updatedData, vehiclePhotos: updatedPhotoUrls, idProof: updatedIdProofUrl };
     } catch (error) {
       console.error('Error updating vehicle details:', error.message);
@@ -342,7 +369,6 @@ export const updateVehicleDetails = createAsyncThunk(
     }
   }
 );
-
 
 
 

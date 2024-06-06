@@ -46,7 +46,6 @@ export default function EvaluterDashboard() {
   useEffect(() => {
     const fetchVehicles = async () => {
       const res = await dispatch(fetchVehiclesWithUsers());
-      console.log(res);
       setVehicleData(res.payload);
     };
     fetchVehicles();

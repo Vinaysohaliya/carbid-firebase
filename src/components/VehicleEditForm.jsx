@@ -10,6 +10,7 @@ import {
   ScrollShadow,
   RadioGroupProvider,
 } from '@nextui-org/react';
+import { IoCloseSharp } from "react-icons/io5";
 import { updateVehicleDetails } from '../Redux/vehicleSlice';
 import { useDispatch } from 'react-redux';
 
@@ -19,40 +20,36 @@ const VehicleEditForm = ({ selectedVehicle, onClose }) => {
     ...selectedVehicle
   });
   const dispatch = useDispatch();
-  const [photoPreviews, setPhotoPreviews] = useState({
-    interior: [],
-    exterior: [],
-    features: [],
-    imperfections: [],
-  });
-  const [idPreviews, setIdPreviews] = useState([]);
+  const [interiorPhotos, setInteriorPhotos] = useState([]);
+  const [interiorPreviews, setInteriorPreviews] = useState([]);
 
-  const handlePhotoUpload = (section, files) => {
+
+  const handlePhotoUpload = (files) => {
     const photoFiles = Array.from(files);
     const previews = photoFiles.map((file) => URL.createObjectURL(file));
-    setPhotoPreviews({
-      ...photoPreviews,
-      [section]: [...photoPreviews[section], ...previews],
-    });
-    setFormData({
-      ...formData,
-      [section]: [...(formData[section] || []), ...photoFiles],
-    });
+    setInteriorPhotos((prevPhotos) => [...prevPhotos, ...photoFiles]);
+    setInteriorPreviews((prevPreviews) => [...prevPreviews, ...previews]);
   };
+  
+  const handleRemovePhoto = (index) => {
+    const updatedPhotos = [...interiorPhotos];
+    updatedPhotos.splice(index, 1);
+    setInteriorPhotos(updatedPhotos);
+
+    const updatedPreviews = [...interiorPreviews];
+    updatedPreviews.splice(index, 1);
+    setInteriorPreviews(updatedPreviews);
+  };
+
 
   const handleIdProofUpload = (file) => {
     const preview = URL.createObjectURL(file);
     setIdPreviews([preview]);
     setFormData({ ...formData, idProof: file });
   };
-  
 
-  const handleRemovePhoto = (section, index) => {
-    const updatedPreviews = photoPreviews[section].filter((_, i) => i !== index);
-    const updatedFiles = (formData[section] || []).filter((_, i) => i !== index);
-    setPhotoPreviews({ ...photoPreviews, [section]: updatedPreviews });
-    setFormData({ ...formData, [section]: updatedFiles });
-  };
+
+
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -61,30 +58,6 @@ const VehicleEditForm = ({ selectedVehicle, onClose }) => {
       [name]: type === 'checkbox' ? checked : value,
     });
   };
-
-  const renderPhotoSection = (label, section) => (
-    <div>
-      <h3>{label}</h3>
-      <div className="flex gap-2">
-        {photoPreviews[section].map((preview, index) => (
-          <div key={index} className="relative">
-            <Image src={preview} alt={`${label} Photo ${index + 1}`} className="w-20 h-20 object-cover rounded-md" />
-            <Button size="small" auto flat onClick={() => handleRemovePhoto(section, index)} className="absolute top-0 right-0">
-              X
-            </Button>
-          </div>
-        ))}
-        <input type="file" multiple onChange={(e) => handlePhotoUpload(section, e.target.files)} className="hidden" id={`${section}-upload`} />
-        <label htmlFor={`${section}-upload`} className="cursor-pointer">
-          <div className="w-20 h-20 flex items-center justify-center border-2 border-dashed border-gray-400 rounded-md">
-            +
-          </div>
-        </label>
-      </div>
-    </div>
-  );
-
-  console.log(selectedVehicle);
 
   const renderStage = () => {
     switch (stage) {
@@ -121,7 +94,7 @@ const VehicleEditForm = ({ selectedVehicle, onClose }) => {
               onChange={handleChange}
             />
             <input type="file" onChange={(e) => handleIdProofUpload(e.target.files[0])} />
-              <Image  src={formData.idProof} alt={'ID Proof'} className="w-20 h-20 object-cover rounded-md" />
+            <Image src={formData.idProof} alt={'ID Proof'} className="w-20 h-20 object-cover rounded-md" />
             <Input
               type="text"
               label="Registration Year"
@@ -219,8 +192,28 @@ const VehicleEditForm = ({ selectedVehicle, onClose }) => {
       case 4:
         return (
           <div>
-            {renderPhotoSection('Interior', 'interior')}
+          <h3>Photos</h3>
+          <div className="flex gap-2">
+            {formData.vehiclePhotos.map((photo, index) => (
+              <div key={index} className="relative">
+                <Image src={photo} alt={`Vehicle Photo ${index + 1}`} className="w-20 h-20 object-cover rounded-md" />
+              </div>
+            ))}
+
+            {interiorPreviews.map((preview, index) => (
+              <div key={index} className="relative">
+                <Image src={preview} alt={`Interior Photo ${index + 1}`} className="w-20 h-20 object-cover rounded-md" />
+                <IoCloseSharp onClick={() => handleRemovePhoto(index)} className="absolute z-10 top-0 right-0 bg-red-600 rounded-md cursor-pointer" />
+              </div>
+            ))}
+            <input type="file" multiple onChange={(e) => handlePhotoUpload(e.target.files)} className="hidden" id="interior-upload" />
+            <label htmlFor="interior-upload" className="cursor-pointer">
+              <div className="w-20 h-20 flex items-center justify-center border-2 border-dashed border-gray-400 rounded-md">
+                +
+              </div>
+            </label>
           </div>
+        </div>
         );
       case 5:
         return (
@@ -236,18 +229,19 @@ const VehicleEditForm = ({ selectedVehicle, onClose }) => {
             </RadioGroup>
           </div>
         );
-      default:
-        return null;
+
     }
   };
-
+  console.log(interiorPhotos);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const { userEmail, userName, vehicleId, ...updatedDataWithoutEmailNameAndvehicleId } = formData;
 
-      await dispatch(updateVehicleDetails({ vehicleId: selectedVehicle.vehicleId, updatedData: updatedDataWithoutEmailNameAndvehicleId }));
-      alert("Vehicle details updated successfully");
+      await dispatch(updateVehicleDetails({
+        vehicleId: selectedVehicle.vehicleId,
+        updatedData: { ...updatedDataWithoutEmailNameAndvehicleId, vehiclePhotos: interiorPhotos }
+      }));
     } catch (err) {
       console.error('Failed to update vehicle details:', err);
       alert('Failed to update vehicle details');
@@ -256,7 +250,7 @@ const VehicleEditForm = ({ selectedVehicle, onClose }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <ScrollShadow  className="w-full sm:w-[450px] sm:h-[400px] max-w-full max-h-[75vh] overflow-auto">
+      <ScrollShadow className="w-full sm:w-[450px] sm:h-[400px] max-w-full max-h-[75vh] overflow-auto">
 
         {renderStage()}
         <Button onClick={() => setStage(stage > 1 ? stage - 1 : 1)}>Previous</Button>

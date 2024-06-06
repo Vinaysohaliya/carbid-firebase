@@ -76,7 +76,7 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
       <Card shadow="dark-lg" className="w-[300px] flex flex-col rounded-xl overflow-hidden">
         <div className="relative h-48 overflow-hidden">
           {/* <Clock vehicle={vehicle} className="absolute top-0 right-0 mr-2  mt-2" /> */}
-          <Image alt={`${make} ${model}`} src={vehiclePhotos[0]} className="object-cover w-full h-full" />
+          <Image alt={`${make} ${model}`} src={vehiclePhotos} className="object-cover w-full h-full" />
         </div>
 
         <div className="flex items-center justify-between">

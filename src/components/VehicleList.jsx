@@ -5,13 +5,11 @@ import { fetchAllVehicles } from '../Redux/vehicleSlice.js';
 
 const VehicleList = () => {
     const dispatch = useDispatch();
-    const userId = useSelector((state) => state.auth.data.uid);
     const vehicles = useSelector((state) => state.vehicle.vehicles) || [];
 
     useEffect(() => {
         dispatch(fetchAllVehicles());
     }, [dispatch]);
-    console.log(vehicles);
 
     return (
         <div className=' my-10'>
