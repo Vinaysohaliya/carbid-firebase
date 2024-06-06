@@ -12,6 +12,7 @@ import SellDashboard from './pages/SellDashboard';
 import Allvehicles from './pages/Allvehicles';
 import AuthLayout from './Layouts/AuthLayout';
 import EvaluterDashboard from './pages/EvaluterDashboard';
+import AdminDashboard from './pages/AdminDashboard';
 
 
 function App() {
@@ -37,7 +38,10 @@ function App() {
           path="/myvehicle"
           element={<AuthLayout><Layout><MyVehicle /></Layout></AuthLayout>}
         />
-        
+         <Route
+          path="/a"
+          element={<AuthLayout><Layout><AdminDashboard /></Layout></AuthLayout>}
+        />
       </Routes>
     </>
   );
