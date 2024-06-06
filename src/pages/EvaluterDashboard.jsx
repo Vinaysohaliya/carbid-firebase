@@ -30,6 +30,10 @@ const columns = [
   {
     key: "Status",
     label: "status",
+  },
+  {
+    key: "Edit",
+    label: "Edit",
   }
 ];
 
@@ -87,13 +91,14 @@ export default function EvaluterDashboard() {
               {(columnKey) => (
                 <TableCell>
                   {getKeyValue(item, columnKey)}
-                  <Button
+                 {columnKey=='Edit' &&  <Button
                     color="danger"
                     size="sm"
                     onClick={() => handleEditClick(item)}
                   >
                     Edit
-                  </Button>
+                  </Button>}
+                  {columnKey=='Status' && <div>{item.evaluationDone}</div> }
                 </TableCell>
               )}
             </TableRow>

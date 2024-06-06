@@ -45,6 +45,7 @@ const VehicleEditForm = ({ selectedVehicle, onClose }) => {
     setIdPreviews([preview]);
     setFormData({ ...formData, idProof: file });
   };
+  
 
   const handleRemovePhoto = (section, index) => {
     const updatedPreviews = photoPreviews[section].filter((_, i) => i !== index);
@@ -83,6 +84,8 @@ const VehicleEditForm = ({ selectedVehicle, onClose }) => {
     </div>
   );
 
+  console.log(selectedVehicle);
+
   const renderStage = () => {
     switch (stage) {
       case 1:
@@ -118,9 +121,7 @@ const VehicleEditForm = ({ selectedVehicle, onClose }) => {
               onChange={handleChange}
             />
             <input type="file" onChange={(e) => handleIdProofUpload(e.target.files[0])} />
-            {idPreviews.map((preview, index) => (
-              <Image key={index} src={preview} alt={`ID Proof Preview ${index + 1}`} className="w-20 h-20 object-cover rounded-md" />
-            ))}
+              <Image  src={formData.idProof} alt={'ID Proof'} className="w-20 h-20 object-cover rounded-md" />
             <Input
               type="text"
               label="Registration Year"
@@ -219,9 +220,6 @@ const VehicleEditForm = ({ selectedVehicle, onClose }) => {
         return (
           <div>
             {renderPhotoSection('Interior', 'interior')}
-            {renderPhotoSection('Exterior', 'exterior')}
-            {renderPhotoSection('Features', 'features')}
-            {renderPhotoSection('Imperfections', 'imperfections')}
           </div>
         );
       case 5:
@@ -246,9 +244,9 @@ const VehicleEditForm = ({ selectedVehicle, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { userEmail,userName,vehicleId, ...updatedDataWithoutEmailNameAndvehicleId } = formData;
+      const { userEmail, userName, vehicleId, ...updatedDataWithoutEmailNameAndvehicleId } = formData;
 
-      await dispatch(updateVehicleDetails({ vehicleId:selectedVehicle.vehicleId, updatedData: updatedDataWithoutEmailNameAndvehicleId }));
+      await dispatch(updateVehicleDetails({ vehicleId: selectedVehicle.vehicleId, updatedData: updatedDataWithoutEmailNameAndvehicleId }));
       alert("Vehicle details updated successfully");
     } catch (err) {
       console.error('Failed to update vehicle details:', err);
@@ -258,11 +256,14 @@ const VehicleEditForm = ({ selectedVehicle, onClose }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {renderStage()}
-      <Button onClick={() => setStage(stage > 1 ? stage - 1 : 1)}>Previous</Button>
-      <Button onClick={() => setStage(stage < 5 ? stage + 1 : 5)}>Next</Button>
-      {stage === 5 && <Button type="submit">Confirm & Proceed</Button>}
-      <Button onClick={onClose}>Close</Button>
+      <ScrollShadow  className="w-full sm:w-[450px] sm:h-[400px] max-w-full max-h-[75vh] overflow-auto">
+
+        {renderStage()}
+        <Button onClick={() => setStage(stage > 1 ? stage - 1 : 1)}>Previous</Button>
+        <Button onClick={() => setStage(stage < 5 ? stage + 1 : 5)}>Next</Button>
+        {stage === 5 && <Button type="submit">Confirm & Proceed</Button>}
+        <Button onClick={onClose}>Close</Button>
+      </ScrollShadow>
     </form>
   );
 };
