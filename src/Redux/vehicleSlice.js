@@ -157,10 +157,10 @@ export const submitVehicleDetails = createAsyncThunk(
           model,
           brand,
           vehiclePhotos: photoUrls,
-          safetyRating:"",
+          safetyRating: "",
           auctionStatus: false,
-          evaluationDone: "",
-          adminApprove: "",
+          evaluationDone: "PENDING",
+          adminApprove: "PENDING",
           createdAt: new Date(),
         });
 
@@ -328,7 +328,7 @@ export const updateAdminVehicleStatus = createAsyncThunk(
       }
 
       await updateDoc(vehicleDocRef, {
-        adminApprove:status
+        adminApprove: status
       });
 
       return { vehicleId, status };
@@ -344,8 +344,9 @@ export const updateAdminVehicleStatus = createAsyncThunk(
 
 export const updateVehicleDetails = createAsyncThunk(
   'vehicles/updateDetails',
-  async ({ vehicleId, updatedData }, { rejectWithValue }) => {
+  async ({ vehicleId, updatedData, idProofEvaluterPanel }, { rejectWithValue }) => {
     try {
+      console.log(idProofEvaluterPanel);
       const vehicleDocRef = doc(db, 'vehicles', vehicleId);
 
       // Fetch the existing vehicle document
@@ -361,6 +362,7 @@ export const updateVehicleDetails = createAsyncThunk(
       let newPhotoUrls = [];
       if (updatedData?.vehiclePhotos) {
         const uploadPromises = updatedData.vehiclePhotos.map(async (file) => {
+          console.log(file);
           const storageRef = ref(storage, `vehiclePhotos/${vehicleId}/${file.name}`);
           await uploadBytes(storageRef, file);
           const downloadURL = await getDownloadURL(storageRef);
@@ -369,16 +371,27 @@ export const updateVehicleDetails = createAsyncThunk(
         newPhotoUrls = await Promise.all(uploadPromises);
       }
 
-      // Combine existing photos with new photos
       const updatedPhotoUrls = [...existingPhotoUrls, ...newPhotoUrls];
+      let updatedIdProofUrl = existingVehicleData.idProof;
 
       // Upload ID proof to Firebase Storage
-      let updatedIdProofUrl = existingVehicleData.idProof || '';
-      if (updatedData?.idProof) {
+      if (idProofEvaluterPanel && updatedData?.idProof) {
         const idProofRef = ref(storage, `idProofs/${vehicleId}/${updatedData.idProof.name}`);
-        await uploadBytes(idProofRef, updatedData.idProof);
+
+        // If an existing ID proof URL exists, delete the existing file from Firebase Storage
+        if (existingVehicleData.idProof) {
+          const existingIdProofRef = ref(storage, existingVehicleData.idProof);
+          await deleteObject(existingIdProofRef).catch((error) => {
+            console.error('Error deleting existing ID proof:', error);
+          });
+        }
+
+        // Upload the new ID proof
+        await uploadBytes(idProofRef, idProofEvaluterPanel.idProof);
         updatedIdProofUrl = await getDownloadURL(idProofRef);
       }
+
+      console.log(updatedIdProofUrl);
 
       // Update the vehicle document in Firestore with new data
       await updateDoc(vehicleDocRef, {

@@ -16,7 +16,7 @@ const VehicleList = () => {
             <h2 className='font-bold my-4'>Vehicles on auction</h2>
             <div className=' flex gap-4'>
                 {vehicles.map((vehicle) => (
-                    vehicle.adminApprove === 'ACCEPT' && vehicle.evaluationDone === 'APPROVE' && <VehicleCard key={vehicle.id} vehicle={vehicle} />
+                    vehicle.adminApprove === 'ACCEPT' && vehicle.evaluationDone === 'APPROVE' && vehicle.auctionStatus && <VehicleCard key={vehicle.id} vehicle={vehicle} />
                 ))}
             </div>
         </div>

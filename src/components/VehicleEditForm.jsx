@@ -22,7 +22,8 @@ const VehicleEditForm = ({ selectedVehicle, onClose }) => {
   const dispatch = useDispatch();
   const [interiorPhotos, setInteriorPhotos] = useState([]);
   const [interiorPreviews, setInteriorPreviews] = useState([]);
-
+const [idProofEvaluterPanel, setidProofEvaluterPanel] = useState();
+const [IdPreviews , setIdPreviews ] = useState();
 
   const handlePhotoUpload = (files) => {
     const photoFiles = Array.from(files);
@@ -45,7 +46,7 @@ const VehicleEditForm = ({ selectedVehicle, onClose }) => {
   const handleIdProofUpload = (file) => {
     const preview = URL.createObjectURL(file);
     setIdPreviews([preview]);
-    setFormData({ ...formData, idProof: file });
+    setidProofEvaluterPanel({  idProof: file });
   };
 
 
@@ -94,6 +95,8 @@ const VehicleEditForm = ({ selectedVehicle, onClose }) => {
               onChange={handleChange}
             />
             <input type="file" onChange={(e) => handleIdProofUpload(e.target.files[0])} />
+            <Image src={IdPreviews} alt={'ID Proof'} className="w-20 h-20 object-cover rounded-md" />
+
             <Image src={formData.idProof} alt={'ID Proof'} className="w-20 h-20 object-cover rounded-md" />
             <Input
               type="text"
@@ -232,7 +235,7 @@ const VehicleEditForm = ({ selectedVehicle, onClose }) => {
 
     }
   };
-  console.log(interiorPhotos);
+  console.log(formData);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -240,6 +243,7 @@ const VehicleEditForm = ({ selectedVehicle, onClose }) => {
 
       await dispatch(updateVehicleDetails({
         vehicleId: selectedVehicle.vehicleId,
+        idProofEvaluterPanel,
         updatedData: { ...updatedDataWithoutEmailNameAndvehicleId, vehiclePhotos: interiorPhotos }
       }));
     } catch (err) {
