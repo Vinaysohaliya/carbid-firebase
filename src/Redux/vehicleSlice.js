@@ -102,7 +102,7 @@ export const submitVehicleDetails = createAsyncThunk(
       let vehicleIdResult;
       if (stage === 7) {
         try {
-          if (startingBid !== undefined  && agreeToTerms) {
+          if (startingBid !== undefined && agreeToTerms) {
             const userVehiclesQuery = query(collection(db, 'auctions'), where('vehicleId', '==', vehicleId));
 
             const vehicleDocSnap = await getDoc(doc(db, 'vehicles', vehicleId));
@@ -157,7 +157,7 @@ export const submitVehicleDetails = createAsyncThunk(
           brand,
           vehiclePhotos: photoUrls,
           safetyRating: "",
-          startingBid:0,
+          startingBid: 0,
           auctionStatus: false,
           evaluationDone: "PENDING",
           adminApprove: "PENDING",
@@ -414,7 +414,7 @@ export const deleteVehicle = createAsyncThunk(
   'vehicles/deleteVehicle',
   async ({ vehicleId, userId }, { rejectWithValue }) => {
     try {
-console.log(vehicleId,userId);
+      console.log(vehicleId, userId);
       console.log(`Deleting vehicle with ID: ${vehicleId},${userId}`);
       const vehicleDocRef = doc(db, 'vehicles', vehicleId);
       const vehicleDocSnapshot = await getDoc(vehicleDocRef);
@@ -488,7 +488,7 @@ export const fetchVehiclesByFilter = createAsyncThunk(
       const vehicleTypeValues = vehicleType?.map(value => value.toLowerCase());
 
       let queryRef = collection(db, 'vehicles');
-
+      console.log(fuelType);
       // Add conditions for brand, distance traveled, fuel type, and vehicle type
       if (brandValues.length > 0) {
         queryRef = query(queryRef, where('brand', 'in', brandValues));
@@ -496,26 +496,21 @@ export const fetchVehiclesByFilter = createAsyncThunk(
       if (distanceTraveledValues.length > 0) {
         queryRef = query(queryRef, where('distanceTraveled', 'in', distanceTraveledValues));
       }
-      console.log(fuelTypeValues);
       if (fuelTypeValues.length > 0) {
-        queryRef = query(queryRef, where('fuelType', 'in', fuelTypeValues));
+        queryRef = query(queryRef, where('fuelType', 'in', fuelType));
       }
       if (vehicleTypeValues.length > 0) {
         queryRef = query(queryRef, where('vehicleType', 'in', vehicleTypeValues));
       }
-      if (!!city) {
-        queryRef =query(queryRef,where('city','>=',city))
+      if (city) {
+        queryRef = query(queryRef, where('city', '>=', city), where('city', '<', city + '\uf8ff'));
       }
-
+console.log(filterCriteria);
 
       // Add conditions for price range
-      if (minPrice !== undefined && maxPrice !== undefined) {
+      if (!!minPrice  && !!maxPrice ) {
         queryRef = query(queryRef, where('price', '>=', minPrice), where('price', '<=', maxPrice));
-      } else if (minPrice !== undefined) {
-        queryRef = query(queryRef, where('price', '>=', minPrice));
-      } else if (maxPrice !== undefined) {
-        queryRef = query(queryRef, where('price', '<=', maxPrice));
-      }
+      } 
 
       const querySnapshot = await getDocs(queryRef);
 
@@ -523,7 +518,7 @@ export const fetchVehiclesByFilter = createAsyncThunk(
       querySnapshot.forEach((doc) => {
         vehicles.push({ id: doc.id, ...doc.data() });
       });
-
+      console.log(vehicles);
       return vehicles;
     } catch (error) {
       throw error;

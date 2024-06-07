@@ -1,4 +1,3 @@
-// Filters.jsx
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchVehiclesByFilter } from '../../Redux/vehicleSlice.js';
@@ -15,10 +14,9 @@ const Filters = () => {
     fuelType: [],
     brand: [],
     transmission: [],
-    maxPrice:0,
-    minPrice:0
+    maxPrice:undefined,
+    minPrice:undefined
   });
-  console.log(filterCriteria);
 
   useEffect(() => {
     const fetchVehicles = async () => {
