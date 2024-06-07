@@ -1,11 +1,10 @@
-// CarType.jsx
 import React, { useEffect } from "react";
 import { Checkbox } from "@nextui-org/react";
 
 const CarType = ({ filterCriteria, setFilterCriteria }) => {
   const vehicleTypes = [
     { label: "Car", value: "car" },
-    { label: "Scooter", value: "scooter" },
+    { label: "Scooter", value: "scooty" },
     { label: "Bike", value: "bike" }
   ];
 
@@ -28,13 +27,11 @@ const CarType = ({ filterCriteria, setFilterCriteria }) => {
   };
 
   useEffect(() => {
-    // Reset checkbox states when filterCriteria changes
     vehicleTypes.forEach((type) => {
       document.getElementById(type.value).checked =
         filterCriteria.vehicleType?.includes(type.value) || false;
     });
   }, [filterCriteria]);
-  console.log(filterCriteria);
 
   return (
     <div className="flex flex-col">

@@ -5,7 +5,7 @@ import Filters from '../components/Filter/Filters';
 const Allvehicles = () => {
   return (
     <div className="flex">
-      <div className="w-1/4 pr-4">
+      <div className="w-1/6 pr-4">
         <Filters />
       </div>
       <div className="w-3/4">

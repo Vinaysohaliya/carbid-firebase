@@ -23,9 +23,13 @@ const PriceRangeSlider = ({ filterCriteria, setFilter }) => {
   };
 
   return (
-    <div className="flex flex-col gap-2 w-1/2 h-full max-w-md items-start justify-center">
+    <div className="flex flex-col gap-2  h-full max-w-md items-start justify-center">
+      <div className=" flex items-center w-full justify-between">
+        <div> ₹{priceRange[0]}</div>
+        <div> ₹{priceRange[1]}</div>
+      </div>
       <Slider
-        label="Select a price range"
+        label=""
         formatOptions={{ style: "currency", currency: "INR" }}
         step={100}
         size="sm"

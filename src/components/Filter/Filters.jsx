@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchVehiclesByFilter } from '../../Redux/vehicleSlice.js';
-import CarType from '../Filter/VehicleFilter.jsx'; 
+import CarType from '../Filter/VehicleFilter.jsx';
 import FuleType from './FuleFilter.jsx';
 import BrandsFilter from './BrandsFilter.jsx';
 import TransmissionFilter from './TransmissionFilter.jsx';
 import PriceRangeSlider from './PriceRangeSlider.jsx';
-import DistanceFilter from './DistanceFilter.jsx'; 
+import DistanceFilter from './DistanceFilter.jsx';
+import { Card, CardBody } from '@nextui-org/react';
 
 const Filters = () => {
   const dispatch = useDispatch();
@@ -17,7 +18,7 @@ const Filters = () => {
     transmission: [],
     maxPrice: undefined,
     minPrice: undefined,
-    distanceTraveled: [] 
+    distanceTraveled: []
   });
 
   useEffect(() => {
@@ -26,9 +27,8 @@ const Filters = () => {
     };
 
     fetchVehicles();
-  }, [filterCriteria, dispatch]); 
+  }, [filterCriteria, dispatch]);
 
-  
   const clearFilters = () => {
     setFilterCriteria({
       vehicleType: [],
@@ -37,26 +37,44 @@ const Filters = () => {
       transmission: [],
       maxPrice: 1000,
       minPrice: 0,
-      distanceTraveled: [] 
+      distanceTraveled: []
     });
   };
 
   return (
-    <div className="max-w-lg mx-auto">
-      <div className="space-y-4">
-        <CarType filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
-        <FuleType filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
-        <BrandsFilter filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
-        <TransmissionFilter filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
-        <PriceRangeSlider filterCriteria={filterCriteria} setFilter={setFilterCriteria} />
-        <DistanceFilter filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} /> 
-        <div className="flex justify-end">
+    <Card className="max-w-lg mx-auto">
+      <CardBody className="flex flex-wrap  justify-center">
+        <div className="flex flex-col ">
+          <h2 className="font-bold">Vehicle</h2>
+          <CarType filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
+        </div>
+        <div className="flex flex-col ">
+          <h2 className="font-bold">Fuel Type</h2>
+          <FuleType filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
+        </div>
+        <div className="flex flex-col ">
+          <h2 className="font-bold">Brands</h2>
+          <BrandsFilter filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
+        </div>
+        <div className="flex flex-col ">
+          <h2 className="font-bold">Transmission</h2>
+          <TransmissionFilter filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
+        </div>
+        <div className="flex flex-col ">
+          <h2 className="font-bold">Price Range</h2>
+          <PriceRangeSlider filterCriteria={filterCriteria} setFilter={setFilterCriteria} />
+        </div>
+        <div className="flex flex-col ">
+          <h2 className="font-bold">Distance Traveled</h2>
+          <DistanceFilter filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
+        </div>
+        <div className="flex justify-end w-full">
           <button type="button" onClick={clearFilters} className="text-blue-500 hover:underline">
             Clear Filters
           </button>
         </div>
-      </div>
-    </div>
+      </CardBody>
+    </Card>
   );
 };
 

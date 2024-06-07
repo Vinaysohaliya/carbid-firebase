@@ -1,3 +1,4 @@
+import { Checkbox } from '@nextui-org/react';
 import React from 'react';
 
 const DistanceFilter = ({ filterCriteria, setFilterCriteria }) => {
@@ -24,7 +25,7 @@ const DistanceFilter = ({ filterCriteria, setFilterCriteria }) => {
       <h3 className="text-lg font-medium">Distance Traveled</h3>
       {distanceOptions.map((option) => (
         <div key={option.value} className="flex items-center">
-          <input
+          <Checkbox
             type="checkbox"
             id={option.value}
             name="distanceTraveled"

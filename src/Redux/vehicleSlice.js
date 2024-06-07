@@ -522,7 +522,8 @@ export const fetchVehiclesByFilter = createAsyncThunk(
 
       // Add conditions for price range
       if (!!minPrice  && !!maxPrice ) {
-        queryRef = query(queryRef, where('price', '>=', minPrice), where('price', '<=', maxPrice));
+        console.log(minPrice,maxPrice);
+        queryRef = query(queryRef, where('startingBid', '>=', minPrice), where('startingBid', '<=', maxPrice));
       } 
 
       const querySnapshot = await getDocs(queryRef);
