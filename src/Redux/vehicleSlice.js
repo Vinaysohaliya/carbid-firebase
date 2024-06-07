@@ -473,20 +473,19 @@ export const fetchVehiclesByFilter = createAsyncThunk(
   'vehicles/fetchByFilter',
   async (filterCriteria) => {
     try {
-      console.log(filterCriteria);
-      const {
+      let {
         brand = [],
         distanceTraveled = [],
         fuelType = [],
         vehicleType = [],
         maxPrice,
-        minPrice
+        minPrice,
+        city
       } = filterCriteria || {};
-      console.log(minPrice, maxPrice);
-      const brandValues = brand.map(value => value.toLowerCase());
-      const distanceTraveledValues = distanceTraveled.map(value => value.toLowerCase());
-      const fuelTypeValues = fuelType.map(value => value.toLowerCase());
-      const vehicleTypeValues = vehicleType.map(value => value.toLowerCase());
+      const brandValues = brand?.map(value => value.toLowerCase());
+      const distanceTraveledValues = distanceTraveled?.map(value => value.toLowerCase());
+      const fuelTypeValues = fuelType?.map(value => value.toLowerCase());
+      const vehicleTypeValues = vehicleType?.map(value => value.toLowerCase());
 
       let queryRef = collection(db, 'vehicles');
 
@@ -503,6 +502,9 @@ export const fetchVehiclesByFilter = createAsyncThunk(
       }
       if (vehicleTypeValues.length > 0) {
         queryRef = query(queryRef, where('vehicleType', 'in', vehicleTypeValues));
+      }
+      if (!!city) {
+        queryRef =query(queryRef,where('city','>=',city))
       }
 
 

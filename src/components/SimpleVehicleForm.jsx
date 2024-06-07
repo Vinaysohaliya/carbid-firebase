@@ -32,10 +32,11 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
     ownerType: '',
     carLocation: '',
     modification: '',
-    'modificationDetails':'',
+    'modificationDetails': '',
     pickupLocation: '',
     dealershipName: '',
     website: '',
+    city: '',
     vehicleType: 'car',
     'fuelType': 'petrol'
   });
@@ -89,6 +90,7 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
       if (!idProof) missingFields.push('ID Proof');
       if (!formData.vehicleType) missingFields.push('vehicleType');
       if (!formData.fuelType) missingFields.push('fuelType');
+      if (!formData.city) missingFields.push('city');
       if (vehiclePhotos.length === 0) missingFields.push('Vehicle Photos');
 
       if (formData.sellerType === 'dealer') {
@@ -126,6 +128,7 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
         pickupLocation: '',
         dealershipName: '',
         website: '',
+        city: '',
         'fuelType': 'petrol',
         'vehicleType': 'car'
       });
@@ -278,6 +281,20 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
                     </option>
                   ))}
                 </select>
+
+                <select
+                  value={formData.city}
+                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                  className="mt-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                >
+                  <option value="">City</option>
+                  {['bengaluru'].map((city) => (
+                    <option key={city} value={city}>
+                      {city}
+                    </option>
+                  ))}
+                </select>
+
               </div>
               <div className=' flex items-center justify-between my-2'>
                 <select
@@ -406,14 +423,14 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
               </div>
             </RadioGroup>
             {formData.modification === 'yes' && (
-            <Input
-              type="text"
-              placeholder="Enter modification details"
-              value={formData.modificationDetails}
-              radius='sm'
-              onChange={(e) => setFormData({ ...formData, modificationDetails: e.target.value })}
-            />
-          )}
+              <Input
+                type="text"
+                placeholder="Enter modification details"
+                value={formData.modificationDetails}
+                radius='sm'
+                onChange={(e) => setFormData({ ...formData, modificationDetails: e.target.value })}
+              />
+            )}
 
           </ScrollShadow>
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Avatar } from "@nextui-org/react";
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../Redux/authSlice';
+import  SearchByCity from '../components/SearchByCity';
 
 const NavbarComponent = () => {
   const loggedIn = useSelector(state => state.auth.isLoggedIn);
@@ -35,7 +36,9 @@ const NavbarComponent = () => {
             Sell
           </Link>
         </NavbarItem>
-        
+        <NavbarItem>
+          <SearchByCity/>
+        </NavbarItem>
         <NavbarItem>
           <Link color="foreground" href="/vehiclelist">
             vehiclelist
