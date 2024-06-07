@@ -488,7 +488,6 @@ export const fetchVehiclesByFilter = createAsyncThunk(
       const vehicleTypeValues = vehicleType?.map(value => value.toLowerCase());
 
       let queryRef = collection(db, 'vehicles');
-      console.log(fuelType);
       // Add conditions for brand, distance traveled, fuel type, and vehicle type
       if (brandValues.length > 0) {
         queryRef = query(queryRef, where('brand', 'in', brandValues));
@@ -505,7 +504,6 @@ export const fetchVehiclesByFilter = createAsyncThunk(
       if (city) {
         queryRef = query(queryRef, where('city', '>=', city), where('city', '<', city + '\uf8ff'));
       }
-console.log(filterCriteria);
 
       // Add conditions for price range
       if (!!minPrice  && !!maxPrice ) {
@@ -518,7 +516,6 @@ console.log(filterCriteria);
       querySnapshot.forEach((doc) => {
         vehicles.push({ id: doc.id, ...doc.data() });
       });
-      console.log(vehicles);
       return vehicles;
     } catch (error) {
       throw error;

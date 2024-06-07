@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchVehiclesByFilter } from '../../Redux/vehicleSlice.js';
-import CarType from '../Filter/VehicleFilter.jsx'; // Assuming you renamed the component
+import CarType from '../Filter/VehicleFilter.jsx'; 
 import FuleType from './FuleFilter.jsx';
 import BrandsFilter from './BrandsFilter.jsx';
 import TransmissionFilter from './TransmissionFilter.jsx';
@@ -33,6 +33,8 @@ const Filters = () => {
       fuelType: [],
       brand: [],
       transmission: [],
+      maxPrice:1000,
+      minPrice:0
     });
   };
 

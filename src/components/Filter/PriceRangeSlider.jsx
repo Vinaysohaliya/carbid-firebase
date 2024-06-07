@@ -1,8 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Slider } from "@nextui-org/react";
 
-const PriceRangeSlider = ({ filterCriteria,setFilter }) => {
+const PriceRangeSlider = ({ filterCriteria, setFilter }) => {
   const [priceRange, setPriceRange] = useState([0, 1000]);
+
+  useEffect(() => {
+    if (filterCriteria.minPrice !== undefined && filterCriteria.maxPrice !== undefined) {
+      setPriceRange([filterCriteria.minPrice, filterCriteria.maxPrice]);
+    }
+  }, [filterCriteria]);
 
   const handleChange = (newValue) => {
     setPriceRange(newValue);
@@ -28,9 +34,8 @@ const PriceRangeSlider = ({ filterCriteria,setFilter }) => {
         value={priceRange}
         className="max-w-md"
         onChange={handleChange}
-        onChangeEnd={handleSliderChangeEnd} // Use the handleSliderChangeEnd function for onChangeEnd event
+        onChangeEnd={handleSliderChangeEnd}
       />
-     
     </div>
   );
 };

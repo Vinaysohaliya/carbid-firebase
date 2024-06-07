@@ -11,10 +11,8 @@ const TransmissionFilter = ({ filterCriteria, setFilterCriteria }) => {
     setFilterCriteria((prevCriteria) => {
       let updatedTransmission;
       if (checked) {
-        // Add the selected transmission type to the filter criteria array
         updatedTransmission = [...(prevCriteria.transmission || []), value];
       } else {
-        // Remove the deselected transmission type from the filter criteria array
         updatedTransmission = (prevCriteria.transmission || []).filter(type => type !== value);
       }
   
