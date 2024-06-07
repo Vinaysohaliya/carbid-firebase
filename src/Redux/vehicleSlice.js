@@ -414,7 +414,7 @@ export const deleteVehicle = createAsyncThunk(
   'vehicles/deleteVehicle',
   async ({ vehicleId, userId }, { rejectWithValue }) => {
     try {
-
+console.log(vehicleId,userId);
       console.log(`Deleting vehicle with ID: ${vehicleId},${userId}`);
       const vehicleDocRef = doc(db, 'vehicles', vehicleId);
       const vehicleDocSnapshot = await getDoc(vehicleDocRef);
