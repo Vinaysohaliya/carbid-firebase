@@ -16,6 +16,7 @@ import { useDispatch } from 'react-redux';
 
 const VehicleEditForm = ({ selectedVehicle, onClose }) => {
   const [stage, setStage] = useState(1);
+
   const [formData, setFormData] = useState({
     ...selectedVehicle
   });
@@ -222,6 +223,13 @@ const [IdPreviews , setIdPreviews ] = useState();
         return (
           <div>
             <h3>Status</h3>
+            <Input
+              type="number"
+              label="Name"
+              name="name"
+              value={formData.startingBid}
+              onChange={(e) => setFormData({ ...formData, startingBid: e.target.value })}
+            />
             <RadioGroup
               value={formData.evaluationDone}
               label="Status"

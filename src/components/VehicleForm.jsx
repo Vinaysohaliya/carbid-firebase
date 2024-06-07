@@ -29,9 +29,6 @@ const VehicleSellingForm = ({ vehicle, onAddNewVehicle }) => {
 
     fetchData();
   }, [dispatch, vehicle]);
-  const isFormValid = () => {
-    
-  };
 
   const handleSubmit = async () => {
     try {
@@ -129,6 +126,8 @@ const VehicleSellingForm = ({ vehicle, onAddNewVehicle }) => {
                       )}
                       {stage === 7 && (
                         <div>
+                          <h2>Expected Starting Bid</h2>
+                          <div>{vehicle.startingBid}</div>
                           <h2>Enter Starting Bid</h2>
                           <Input
                             type="number"

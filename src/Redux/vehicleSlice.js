@@ -100,10 +100,9 @@ export const submitVehicleDetails = createAsyncThunk(
   async ({ vehicleData, vehiclePhotos, userId, idProof, startingBid, agreeToTerms, stage, vehicleId }) => {
     try {
       let vehicleIdResult;
-
       if (stage === 7) {
         try {
-          if (startingBid !== undefined && startingBid.trim() !== '' && agreeToTerms) {
+          if (startingBid !== undefined  && agreeToTerms) {
             const userVehiclesQuery = query(collection(db, 'auctions'), where('vehicleId', '==', vehicleId));
 
             const vehicleDocSnap = await getDoc(doc(db, 'vehicles', vehicleId));
@@ -158,6 +157,7 @@ export const submitVehicleDetails = createAsyncThunk(
           brand,
           vehiclePhotos: photoUrls,
           safetyRating: "",
+          startingBid:0,
           auctionStatus: false,
           evaluationDone: "PENDING",
           adminApprove: "PENDING",
@@ -346,7 +346,7 @@ export const updateVehicleDetails = createAsyncThunk(
   'vehicles/updateDetails',
   async ({ vehicleId, updatedData, idProofEvaluterPanel }, { rejectWithValue }) => {
     try {
-      console.log(idProofEvaluterPanel);
+      console.log(updatedData);
       const vehicleDocRef = doc(db, 'vehicles', vehicleId);
 
       // Fetch the existing vehicle document
