@@ -6,6 +6,7 @@ import FuleType from './FuleFilter.jsx';
 import BrandsFilter from './BrandsFilter.jsx';
 import TransmissionFilter from './TransmissionFilter.jsx';
 import PriceRangeSlider from './PriceRangeSlider.jsx';
+import DistanceFilter from './DistanceFilter.jsx'; 
 
 const Filters = () => {
   const dispatch = useDispatch();
@@ -14,8 +15,9 @@ const Filters = () => {
     fuelType: [],
     brand: [],
     transmission: [],
-    maxPrice:undefined,
-    minPrice:undefined
+    maxPrice: undefined,
+    minPrice: undefined,
+    distanceTraveled: [] 
   });
 
   useEffect(() => {
@@ -33,21 +35,21 @@ const Filters = () => {
       fuelType: [],
       brand: [],
       transmission: [],
-      maxPrice:1000,
-      minPrice:0
+      maxPrice: 1000,
+      minPrice: 0,
+      distanceTraveled: [] 
     });
   };
 
   return (
     <div className="max-w-lg mx-auto">
       <div className="space-y-4">
-
         <CarType filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
         <FuleType filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
         <BrandsFilter filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
         <TransmissionFilter filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} />
         <PriceRangeSlider filterCriteria={filterCriteria} setFilter={setFilterCriteria} />
-
+        <DistanceFilter filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria} /> 
         <div className="flex justify-end">
           <button type="button" onClick={clearFilters} className="text-blue-500 hover:underline">
             Clear Filters

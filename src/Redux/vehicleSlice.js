@@ -141,23 +141,21 @@ export const submitVehicleDetails = createAsyncThunk(
         const photoUrls = await Promise.all(vehiclePhotos.map(async (photoFile) => {
           const photoRef = ref(storage, `vehiclePhotos/${userId}/${photoFile.name}`);
           await uploadBytes(photoRef, photoFile);
-          return getDownloadURL(photoRef).catch(error => { throw error; }); // Handling Promise rejection
+          return getDownloadURL(photoRef).catch(error => { throw error; }); 
         }));
 
         const idProofRef = ref(storage, `idProofs/${userId}/${idProof.name}`);
         await uploadBytes(idProofRef, idProof);
-        const idProofUrl = await getDownloadURL(idProofRef).catch(error => { throw error; }); // Handling Promise rejection
-        let brand = vehicleData.brand.toLowerCase();
-        let model = vehicleData.model.toLowerCase();
+        const idProofUrl = await getDownloadURL(idProofRef).catch(error => { throw error; }); 
+        console.log(vehicleData);
         const vehicleDocRef = await addDoc(collection(db, 'vehicles'), {
           userId,
           idProof: idProofUrl,
           ...vehicleData,
-          model,
-          brand,
           vehiclePhotos: photoUrls,
           safetyRating: "",
           startingBid: 0,
+          travelDistance:Number(vehicleData.travelDistance) || 0,
           auctionStatus: false,
           evaluationDone: "PENDING",
           adminApprove: "PENDING",
@@ -478,12 +476,12 @@ export const fetchVehiclesByFilter = createAsyncThunk(
         distanceTraveled = [],
         fuelType = [],
         vehicleType = [],
+        transmission=[],
         maxPrice,
         minPrice,
         city
       } = filterCriteria || {};
       const brandValues = brand?.map(value => value.toLowerCase());
-      const distanceTraveledValues = distanceTraveled?.map(value => value.toLowerCase());
       const fuelTypeValues = fuelType?.map(value => value.toLowerCase());
       const vehicleTypeValues = vehicleType?.map(value => value.toLowerCase());
 
@@ -492,14 +490,31 @@ export const fetchVehiclesByFilter = createAsyncThunk(
       if (brandValues.length > 0) {
         queryRef = query(queryRef, where('brand', 'in', brandValues));
       }
-      if (distanceTraveledValues.length > 0) {
-        queryRef = query(queryRef, where('distanceTraveled', 'in', distanceTraveledValues));
+      if (distanceTraveled.length > 0) {
+        let finalminDistance=Number.MAX_SAFE_INTEGER;
+        let finalmaxDistance=0;
+        distanceTraveled.forEach(range => {
+          const [minDistance, maxDistance] = range.split('-');
+          if (maxDistance>finalmaxDistance) {
+            finalmaxDistance=maxDistance
+          }
+          if (minDistance<finalminDistance) {
+            finalminDistance=minDistance
+          }
+          console.log(minDistance,maxDistance);
+        });
+        console.log(finalminDistance,finalmaxDistance);
+          queryRef = query(queryRef, where('travelDistance', '>=', parseInt(finalminDistance)), where('travelDistance', '<=', parseInt(finalmaxDistance)));
+          queryRef = query(queryRef, where('travelDistance', '>=', parseInt(finalminDistance)));
       }
       if (fuelTypeValues.length > 0) {
         queryRef = query(queryRef, where('fuelType', 'in', fuelType));
       }
       if (vehicleTypeValues.length > 0) {
         queryRef = query(queryRef, where('vehicleType', 'in', vehicleTypeValues));
+      }
+      if (transmission.length > 0) {
+        queryRef = query(queryRef, where('transmission', 'in', transmission));
       }
       if (city) {
         queryRef = query(queryRef, where('city', '>=', city), where('city', '<', city + '\uf8ff'));

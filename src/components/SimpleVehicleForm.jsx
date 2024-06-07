@@ -27,7 +27,7 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
     registrationYear: '',
     brand: '',
     model: '',
-    travelDistance: '',
+    travelDistance: 0,
     transmission: '',
     ownerType: '',
     carLocation: '',
