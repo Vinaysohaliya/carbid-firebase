@@ -8,17 +8,17 @@ import { Card, CardHeader } from '@nextui-org/react';
 
 const Sellform = () => {
   const [vehicles, setVehicles] = useState([]);
-  const [shouldRefetch, setShouldRefetch] = useState(false); //  state for triggering refetch
+  const [shouldRefetch, setShouldRefetch] = useState(false); 
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.auth.data.uid);
 
   useEffect(() => {
     async function fetchUserVehicles() {
-      if (userId || shouldRefetch) { // Check if userId is defined or shouldRefetch is true
+      if (userId || shouldRefetch) { 
         try {
           const res = await dispatch(fetchUserSubmittedVehiclesbutnotonAuction(userId));
           setVehicles(res.payload);
-          setShouldRefetch(false); // Reset shouldRefetch after fetching
+          setShouldRefetch(false); 
         } catch (error) {
           console.error('Error fetching user vehicles:', error.message);
         }

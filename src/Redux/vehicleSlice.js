@@ -337,7 +337,11 @@ export const updateAdminVehicleStatus = createAsyncThunk(
   }
 );
 
-
+export const fetchBrands = createAsyncThunk('brands/fetchBrands', async () => {
+  const querySnapshot = await getDocs(collection(db, 'brands'));
+  const brandsData = querySnapshot.docs.map(doc => doc.data());
+  return brandsData;
+});
 
 
 export const updateVehicleDetails = createAsyncThunk(
@@ -481,14 +485,13 @@ export const fetchVehiclesByFilter = createAsyncThunk(
         minPrice,
         city
       } = filterCriteria || {};
-      const brandValues = brand?.map(value => value.toLowerCase());
       const fuelTypeValues = fuelType?.map(value => value.toLowerCase());
       const vehicleTypeValues = vehicleType?.map(value => value.toLowerCase());
 
       let queryRef = collection(db, 'vehicles');
-      // Add conditions for brand, distance traveled, fuel type, and vehicle type
-      if (brandValues.length > 0) {
-        queryRef = query(queryRef, where('brand', 'in', brandValues));
+      console.log(brand);
+      if (brand.length > 0) {
+        queryRef = query(queryRef, where('brand', 'in', brand));
       }
       if (distanceTraveled.length > 0) {
         let finalminDistance=Number.MAX_SAFE_INTEGER;
@@ -501,9 +504,7 @@ export const fetchVehiclesByFilter = createAsyncThunk(
           if (minDistance<finalminDistance) {
             finalminDistance=minDistance
           }
-          console.log(minDistance,maxDistance);
         });
-        console.log(finalminDistance,finalmaxDistance);
           queryRef = query(queryRef, where('travelDistance', '>=', parseInt(finalminDistance)), where('travelDistance', '<=', parseInt(finalmaxDistance)));
           queryRef = query(queryRef, where('travelDistance', '>=', parseInt(finalminDistance)));
       }
@@ -520,7 +521,6 @@ export const fetchVehiclesByFilter = createAsyncThunk(
         queryRef = query(queryRef, where('city', '>=', city), where('city', '<', city + '\uf8ff'));
       }
 
-      // Add conditions for price range
       if (!!minPrice  && !!maxPrice ) {
         console.log(minPrice,maxPrice);
         queryRef = query(queryRef, where('startingBid', '>=', minPrice), where('startingBid', '<=', maxPrice));

@@ -3,9 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { submitVehicleDetails } from '../Redux/vehicleSlice.js';
 import { Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Radio, RadioGroup, Input, Divider, Checkbox, ScrollShadow, Image } from '@nextui-org/react';
 import LoadingButton from './LoadingButton ';
+import useBrandModels from '../hooks/useBrandModels.jsx';
+
 
 
 import toast from 'react-hot-toast';
+import useBrands from '../hooks/useBrands.jsx';
 
 const SimpleVehicleForm = ({ onAddNewVehicle }) => {
   const dispatch = useDispatch();
@@ -42,8 +45,8 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
   });
 
 
-
-
+  const brands = useBrands();
+  const models = useBrandModels(formData.brand);
 
   const handlepickup = (e) => {
     if (e.target.checked) {
@@ -303,10 +306,11 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
                   className='mt-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
                 >
                   <option value="">Select vehicle brand</option>
-                  <option value="Toyota">Toyota</option>
-                  <option value="Honda">Honda</option>
-                  <option value="Ford">Ford</option>
+                  {brands.map((brand) => (
+                    <option key={brand} value={brand}>{brand}</option>
+                  ))}
                 </select>
+
 
                 <select
                   value={formData.model}
@@ -314,18 +318,11 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
                   className='mt-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
                 >
                   <option value="">Select vehicle model</option>
-                  {formData.brand === 'Toyota' && (
-                    <>
-                      <option value="Corolla">Corolla</option>
-                      <option value="Camry">Camry</option>
-                    </>
-                  )}
-                  {formData.brand === 'Honda' && (
-                    <>
-                      <option value="Civic">Civic</option>
-                      <option value="Accord">Accord</option>
-                    </>
-                  )}
+                  {models.map((model) => (
+                    <option key={model} value={model}>
+                      {model}
+                    </option>
+                  ))}
                 </select>
               </div>
 

@@ -11,7 +11,6 @@ const useBidAmounts = ({vehicleId,auctionId}) => {
       if (vehicleId && auctionId) {
         try {
           const res = await dispatch(fetchBidData({ auctionId,vehicleId }));
-          // Assuming 'res.payload' contains the 'highestBid' and 'firstBid' objects
           setHighestBid(res.payload.highestBid.amount);
           setStartingBid(res.payload.firstBid.amount);
         } catch (error) {

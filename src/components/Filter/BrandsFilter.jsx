@@ -1,41 +1,32 @@
-import React from "react";
-import { Checkbox } from "@nextui-org/react";
+import React from 'react';
+import { Checkbox } from '@nextui-org/react';
+import useBrands from '../../hooks/useBrands';
 
 const BrandsFilter = ({ filterCriteria, setFilterCriteria }) => {
-  const popularBrands = [
-    { label: "Maruti Suzuki", value: "maruti" },
-    { label: "Hyundai", value: "hyundai" },
-    { label: "Tata", value: "tata" },
-    { label: "Mahindra", value: "mahindra" },
-    { label: "Honda", value: "honda" },
-    // Add more popular Indian brands as needed
-  ];
+  const popularBrands = useBrands(); 
 
-  const handleCheckboxChange = (value, checked) => {
+  const handleCheckboxChange = (brand, checked) => {
     if (checked) {
-      // Add the selected brand to the filter criteria array
       setFilterCriteria((prevCriteria) => ({
         ...prevCriteria,
-        brand: [...(prevCriteria.brand || []), value]
+        brand: [...(prevCriteria.brand || []), brand]
       }));
     } else {
-      // Remove the deselected brand from the filter criteria array
       setFilterCriteria((prevCriteria) => ({
         ...prevCriteria,
-        brand: (prevCriteria.brand || []).filter(brand => brand !== value)
+        brand: (prevCriteria.brand || []).filter(b => b !== brand)
       }));
     }
   };
-
   return (
     <div className="flex flex-col">
       {popularBrands.map((brand) => (
         <Checkbox
-          key={brand.value}
-          isSelected={filterCriteria.brand?.includes(brand.value) || false}
-          onChange={(event) => handleCheckboxChange(brand.value, event.target.checked)}
+          key={brand}
+          isSelected={filterCriteria.brand?.includes(brand) || false}
+          onChange={(event) => handleCheckboxChange(brand, event.target.checked)}
         >
-          {brand.label}
+          {brand}
         </Checkbox>
       ))}
     </div>

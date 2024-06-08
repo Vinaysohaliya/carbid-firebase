@@ -52,7 +52,7 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
 
   const handleDeleteListingClick = () => {
     try {
-      dispatch(deleteVehicle({ vehicleId: vehicle.id,userId }))
+      dispatch(deleteVehicle({ vehicleId: vehicle.id, userId }))
     } catch (error) {
       throw error;
     }
@@ -75,8 +75,10 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
       </Modal>
       <Card shadow="dark-lg" className="w-[300px] flex flex-col rounded-xl overflow-hidden">
         <div className="relative h-48 overflow-hidden">
-          {/* <Clock vehicle={vehicle} className="absolute top-0 right-0 mr-2  mt-2" /> */}
-          <Image alt={`${make} ${model}`} src={vehiclePhotos} className="object-cover w-full h-full" />
+          <div className="absolute z-10 top-2 right-2 bg-red-600 text-white rounded-md px-2" >
+            {/* <Clock vehicle={vehicle} /> */}
+          </div>
+          <Image radius="none" alt={`${make} ${model}`} src={vehiclePhotos} className="object-cover w-full h-full z-0" />
         </div>
 
         <div className="flex items-center justify-between">
