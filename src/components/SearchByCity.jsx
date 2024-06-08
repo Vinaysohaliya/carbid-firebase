@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react';
 import { useDispatch } from 'react-redux';
-import { fetchVehiclesByFilter } from '../Redux/vehicleSlice';
+import { fetchByCity } from '../Redux/vehicleSlice';
 
 const SearchByCity = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -13,9 +13,8 @@ const SearchByCity = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await dispatch(fetchVehiclesByFilter(filterCriteria));
-        console.log(res);
-        setResults(res.payload); // Adjust if necessary based on your action's return structure
+        const res = await dispatch(fetchByCity(filterCriteria));
+        setResults(res.payload); 
       } catch (error) {
         console.error('Error fetching search results:', error);
       }
@@ -62,7 +61,7 @@ const SearchByCity = () => {
                   {results.length > 0 ? (
                     <ul>
                       {results.map((result, index) => (
-                        <li key={index}>{result.model}</li> // Adjust based on your data structure
+                        <li key={index}>{result.model}</li> 
                       ))}
                     </ul>
                   ) : (

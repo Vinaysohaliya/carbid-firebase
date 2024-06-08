@@ -141,12 +141,12 @@ export const submitVehicleDetails = createAsyncThunk(
         const photoUrls = await Promise.all(vehiclePhotos.map(async (photoFile) => {
           const photoRef = ref(storage, `vehiclePhotos/${userId}/${photoFile.name}`);
           await uploadBytes(photoRef, photoFile);
-          return getDownloadURL(photoRef).catch(error => { throw error; }); 
+          return getDownloadURL(photoRef).catch(error => { throw error; });
         }));
 
         const idProofRef = ref(storage, `idProofs/${userId}/${idProof.name}`);
         await uploadBytes(idProofRef, idProof);
-        const idProofUrl = await getDownloadURL(idProofRef).catch(error => { throw error; }); 
+        const idProofUrl = await getDownloadURL(idProofRef).catch(error => { throw error; });
         console.log(vehicleData);
         const vehicleDocRef = await addDoc(collection(db, 'vehicles'), {
           userId,
@@ -155,7 +155,7 @@ export const submitVehicleDetails = createAsyncThunk(
           vehiclePhotos: photoUrls,
           safetyRating: "",
           startingBid: 0,
-          travelDistance:Number(vehicleData.travelDistance) || 0,
+          travelDistance: Number(vehicleData.travelDistance) || 0,
           auctionStatus: false,
           evaluationDone: "PENDING",
           adminApprove: "PENDING",
@@ -261,6 +261,35 @@ export const fetchUserSubmittedVehicles = createAsyncThunk(
 );
 
 
+export const fetchByCity = createAsyncThunk(
+  'vehicles/fetchByCity',
+  async (filterCriteria) => {
+    try {
+      let {
+        city
+      } = filterCriteria || {};
+
+      let queryRef = collection(db, 'vehicles');
+      
+      if (city) {
+        queryRef = query(queryRef, where('city', '>=', city), where('city', '<', city + '\uf8ff'));
+      }
+
+     
+      const querySnapshot = await getDocs(queryRef);
+
+      const vehicles = [];
+      querySnapshot.forEach((doc) => {
+        vehicles.push({ id: doc.id, ...doc.data() });
+      });
+      return vehicles;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+
 export const searchVehicles = (searchTerm) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -269,7 +298,7 @@ export const searchVehicles = (searchTerm) => {
         query(
           queryRef,
           where('brand', '>=', searchTerm),
-          where('brand', '<', searchTerm.toLowerCase() + '\uf8ff')
+          where('brand', '<', searchTerm + '\uf8ff')
         )
       );
 
@@ -480,33 +509,31 @@ export const fetchVehiclesByFilter = createAsyncThunk(
         distanceTraveled = [],
         fuelType = [],
         vehicleType = [],
-        transmission=[],
+        transmission = [],
         maxPrice,
         minPrice,
-        city
       } = filterCriteria || {};
       const fuelTypeValues = fuelType?.map(value => value.toLowerCase());
       const vehicleTypeValues = vehicleType?.map(value => value.toLowerCase());
 
       let queryRef = collection(db, 'vehicles');
-      console.log(brand);
       if (brand.length > 0) {
         queryRef = query(queryRef, where('brand', 'in', brand));
       }
       if (distanceTraveled.length > 0) {
-        let finalminDistance=Number.MAX_SAFE_INTEGER;
-        let finalmaxDistance=0;
+        let finalminDistance = Number.MAX_SAFE_INTEGER;
+        let finalmaxDistance = 0;
         distanceTraveled.forEach(range => {
           const [minDistance, maxDistance] = range.split('-');
-          if (maxDistance>finalmaxDistance) {
-            finalmaxDistance=maxDistance
+          if (maxDistance > finalmaxDistance) {
+            finalmaxDistance = maxDistance
           }
-          if (minDistance<finalminDistance) {
-            finalminDistance=minDistance
+          if (minDistance < finalminDistance) {
+            finalminDistance = minDistance
           }
         });
-          queryRef = query(queryRef, where('travelDistance', '>=', parseInt(finalminDistance)), where('travelDistance', '<=', parseInt(finalmaxDistance)));
-          queryRef = query(queryRef, where('travelDistance', '>=', parseInt(finalminDistance)));
+        queryRef = query(queryRef, where('travelDistance', '>=', parseInt(finalminDistance)), where('travelDistance', '<=', parseInt(finalmaxDistance)));
+        queryRef = query(queryRef, where('travelDistance', '>=', parseInt(finalminDistance)));
       }
       if (fuelTypeValues.length > 0) {
         queryRef = query(queryRef, where('fuelType', 'in', fuelType));
@@ -517,14 +544,11 @@ export const fetchVehiclesByFilter = createAsyncThunk(
       if (transmission.length > 0) {
         queryRef = query(queryRef, where('transmission', 'in', transmission));
       }
-      if (city) {
-        queryRef = query(queryRef, where('city', '>=', city), where('city', '<', city + '\uf8ff'));
-      }
-
-      if (!!minPrice  && !!maxPrice ) {
-        console.log(minPrice,maxPrice);
+      
+      if (!!minPrice && !!maxPrice) {
+        console.log(minPrice, maxPrice);
         queryRef = query(queryRef, where('startingBid', '>=', minPrice), where('startingBid', '<=', maxPrice));
-      } 
+      }
 
       const querySnapshot = await getDocs(queryRef);
 
@@ -684,16 +708,16 @@ const vehicleSlice = createSlice({
       .addCase(fetchVehicle.pending, (state) => {
         state.loading = true;
         state.error = null;
-        state.onevehicle = null; // Reset the vehicle state
+        state.onevehicle = null; 
       })
       .addCase(fetchVehicle.fulfilled, (state, action) => {
         state.loading = false;
-        state.onevehicle = action.payload; // Set the fetched vehicle data to the state
+        state.onevehicle = action.payload; 
       })
       .addCase(fetchVehicle.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        state.onevehicle = null; // Reset the vehicle state
+        state.onevehicle = null; 
       })
       .addCase(fetchVehiclesByFilter.pending, (state) => {
         state.loading = true;
