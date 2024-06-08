@@ -1,9 +1,22 @@
 import { useEffect, useState } from 'react';
-import { Button, Image, Input, Link, ScrollShadow } from '@nextui-org/react';
+import { Button, Divider, Image, Input, Link, ScrollShadow } from '@nextui-org/react';
 import { useDispatch } from 'react-redux';
+import carimg from '../assets/f402d1e9bd1077179c11d5502a3180a1.jpg'
 import { searchVehicles } from '../Redux/vehicleSlice';
+import b1 from '../assets/374c24fdbbb811e3fe494f27ae695992.png'
+import b2 from '../assets/6a2c6d1d7a63e9b0b4c51c016d3d96a8.png'
+import b3 from '../assets/6b887207aa943cdf23bdff721988238b.png'
+import b4 from '../assets/71a56f0bf6e78b7ca53ba588013427c5.png'
+import b5 from '../assets/a9fe987ee1edd3fa351dee20689382da.png'
+import b6 from '../assets/aac85f63ec516ad9f9038d1e9864160b.png'
+import b7 from '../assets/bc3d6ddc5983ce11ad42ba78b28716ca.png'
+import b8 from '../assets/c3e37bcf2700ab5e993594e2e31f0852.png'
+import b9 from '../assets/d0202be409abd6ce3bc3cb03884c56e7.jpg'
+import b10 from '../assets/dd574ce9ae4551ed764f80ff3e7addc1.png'
 
 const BuySearch = () => {
+
+  const brands =[b1,b2,b3,b4,b5,b6,b7,b8,b9,b10]
   const [searchTerm, setSearchTerm] = useState('');
   const [vehicles, setVehicles] = useState([]);
   const dispatch = useDispatch();
@@ -37,11 +50,10 @@ const BuySearch = () => {
     <div className="relative">
       <Image
         width={1600}
-        src="https://s3-alpha-sig.figma.com/img/9069/7cb8/f402d1e9bd1077179c11d5502a3180a1?Expires=1716163200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=GxxhHJrK~fSBF41as6U1q9vB34LqjHOdYVCFIJxAumpYh1T8-pzO~GKUp5l1thmgob1-4LxMQYa7-qMbwz-eOjJiUW-xi2DZHDOSCJl6ol0jug2JRh5ukd0aGMsO7lZ8oXjUrgyYVNK3aD6qU6P8U5EZxT~4sueH4ZEXdpzzlPm1L16lpaN47loafIGvYvabX7F5hj-tPhYUx-7wV5c7BB2nUjBiTqotKdMG8mnFxluqwY96UZduOBjdcYAB5t3PK39MJucazYtyqortZtZxhAZlv2~BTBb4~NVRIMBSqrApjmdgb08wYaWZP79XNEHSbo3q3ZvZF2yqSmkeUMgwPg__"
+        src={carimg}
         alt="Big Image"
-        radius="none"
         className="object-cover"
-        style={{ height: '600px' }} // Set the height inline
+        style={{ height: '600px' }}
       />
       <div className="absolute bottom-16 left-10 right-10 z-10">
         <div className="flex flex-col w-1/3">
@@ -73,26 +85,28 @@ const BuySearch = () => {
               ],
             }}
             placeholder="Type to search..."
-            
+
           />
+
           {vehicles.length > 0 && (
-            <ScrollShadow className="w-[400px] h-[200px]">
-              <div className="">
+            <ScrollShadow className="w-full max-w-[470px] h-[200px]">
+              <div className="flex flex-col w-full">
                 {vehicles.map((vehicle) => (
-                  <Link key={vehicle.id} href={`/vehicle/${vehicle.id}`}>
-                    <div
-                      className="bg-white w-20 h-20  rounded-md flex items-center justify-center"
-                    >
+                  <Link className="flex flex-col" key={vehicle.id} href={`/vehicle/${vehicle.id}`}>
+                    <div className="bg-white w-full h-auto gap-2  py-1 px-2 rounded-md flex flex-col sm:flex-row items-center justify-start">
                       <Image
-                        width={200}
-                        height={100}
+                        width={50}
+                        height={50}
                         alt={`Vehicle Image ${vehicle.id}`}
                         src={vehicle.vehiclePhotos[0]}
-                        className="w-full h-48 object-contain"
+                        className="w-12 h-12 object-contain sm:w-16 sm:h-16"
                       />
-                      <div className="text-center mt-2">{vehicle.model}</div>
-                      <div className="text-center mt-1">{vehicle.brand}</div>
+                      <div className="text-center flex items-center justify-center gap-2 mt-2 sm:mt-0 sm:ml-4">
+                        <div className='text-black'>{vehicle.model}</div>
+                        <div className=" text-black">{vehicle.brand}</div>
+                      </div>
                     </div>
+                    <Divider className="" />
                   </Link>
                 ))}
               </div>
@@ -100,10 +114,11 @@ const BuySearch = () => {
           )}
 
 
+
         </div>
         <div className="mb-4 text-white font-semibold">Search By Brand</div>
         <div className="flex gap-4">
-          {[...Array(9)].map((_, index) => (
+          {brands.map((b, index) => (
             <div
               key={index}
               className="bg-white rounded-md w-24 h-16 sm:w-20 sm:h-12 flex items-center justify-center"
@@ -117,7 +132,7 @@ const BuySearch = () => {
                 height={50}
                 width={50}
                 radius="none"
-                src="https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
+                src={b}
               />
             </div>
           ))}

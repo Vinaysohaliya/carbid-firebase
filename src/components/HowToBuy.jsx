@@ -1,6 +1,11 @@
 import { Image } from '@nextui-org/react'
 import React from 'react'
 
+import img1 from '../assets/2800e9d2f0c3779e5e866d8fcc5734cb.png'
+import img2 from '../assets/1c4224a67b9cf43cfbdb253c88d924e6.png'
+
+import img3 from '../assets/8c083c9b23917bd7f8dd0ea86c1f4cb1.jpg'
+
 const HowToBuy = () => {
     return (
         <div className=' flex flex-col ml-10 my-6 '>
@@ -9,7 +14,7 @@ const HowToBuy = () => {
                 <Image
                     width={200}
                     height={200}
-                    src="https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
+                    src={img1}
 
                 />
                 <div className='ml-4'>
@@ -21,7 +26,7 @@ const HowToBuy = () => {
                 <Image
                     width={200}
                     height={200}
-                    src="https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
+                    src={img2}
 
                 />
                 <div className='ml-4'>
@@ -33,7 +38,7 @@ const HowToBuy = () => {
                 <Image
                     width={200}
                     height={200}
-                    src="https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
+                    src={img3}
 
                 />
                 <div className='ml-4'>

@@ -22,7 +22,6 @@ const DistanceFilter = ({ filterCriteria, setFilterCriteria }) => {
 
   return (
     <div className="space-y-2">
-      <h3 className="text-lg font-medium">Distance Traveled</h3>
       {distanceOptions.map((option) => (
         <div key={option.value} className="flex items-center">
           <Checkbox

@@ -1,5 +1,9 @@
 import { Card, CardBody, CardHeader, Image } from '@nextui-org/react';
 import React from 'react';
+import img3 from '../assets/1a9c42d01cf72371704af07c46e34140.png'
+import img4 from '../assets/495528890e54b73580a5a2806034cba0.png'
+import img1 from '../assets/7fcbee5c95df2b932dfef97100b5b60d.png'
+import img2 from '../assets/2edaeed9d6ab36cf9fda13375d439b8c.png'
 
 const WhyPeopleChooseUs = () => {
     return (
@@ -9,8 +13,8 @@ const WhyPeopleChooseUs = () => {
                     <Image
                         alt="Card background"
                         className="object-cover rounded-xl"
-                        src="https://nextui.org/images/hero-card-complete.jpeg"
-                        width={270}
+                        src={img1}
+                        width={330}
                     />
                 </CardHeader>
                 <CardBody className="overflow-visible py-2">
@@ -23,8 +27,8 @@ const WhyPeopleChooseUs = () => {
                     <Image
                         alt="Card background"
                         className="object-cover rounded-xl"
-                        src="https://nextui.org/images/hero-card-complete.jpeg"
-                        width={270}
+                        src={img2}
+                        width={330}
                     />
                 </CardHeader>
                 <CardBody className="overflow-visible py-2">
@@ -37,8 +41,8 @@ const WhyPeopleChooseUs = () => {
                     <Image
                         alt="Card background"
                         className="object-cover rounded-xl"
-                        src="https://nextui.org/images/hero-card-complete.jpeg"
-                        width={270}
+                        src={img3}
+                        width={330}
                     />
                 </CardHeader>
                 <CardBody className="overflow-visible py-2">
@@ -51,8 +55,8 @@ const WhyPeopleChooseUs = () => {
                     <Image
                         alt="Card background"
                         className="object-cover rounded-xl"
-                        src="https://nextui.org/images/hero-card-complete.jpeg"
-                        width={270}
+                        src={img4}
+                        width={330}
                     />
                 </CardHeader>
                 <CardBody className="overflow-visible py-2">
