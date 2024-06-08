@@ -6,13 +6,17 @@ import  SearchByCity from '../components/SearchByCity';
 
 const NavbarComponent = () => {
   const loggedIn = useSelector(state => state.auth.isLoggedIn);
+  const profilePic = useSelector(state => state.auth.data.profilePicURL);
   const dispatch = useDispatch();
-
   const handleLogout = () => {
-    dispatch(logout());
-  };
+    try {
+      dispatch(logout());
+      
+    }finally{
+      window.location.reload()
+    }
+  }
   const [isMenuOpen, setIsMenuOpen] = useState(false);
- 
 
   return (
     <Navbar shouldHideOnScroll onMenuOpenChange={setIsMenuOpen}>
@@ -55,7 +59,7 @@ const NavbarComponent = () => {
             </NavbarItem>
             <NavbarItem>
               <Link color="foreground" href="/editprofile">
-                <Avatar src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
+                <Avatar src={profilePic}/>
               </Link>
             </NavbarItem>
             <NavbarItem>

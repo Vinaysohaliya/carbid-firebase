@@ -16,7 +16,6 @@ const initialState = {
 
 export const createAccount = createAsyncThunk("/auth/signup", async ({ email, password, name, role, profilePic }) => {
     try {
-        console.log(email,password,profilePic,role,name);
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
         let profilePicURL = null;
@@ -60,13 +59,13 @@ export const updateProfile = createAsyncThunk('/auth/updateProfile', async ({ ui
             throw new Error('User not found');
         }
         const userData = userDocSnap.data();
-
-        if (userData.profilePicURL) {
+console.log(userData);
+        if (!!userData.profilePicURL) {
             const oldProfilePicRef = ref(storage, userData.profilePicURL);
             await deleteObject(oldProfilePicRef);
         }
 
-        if (profilePic) {
+        if (!!profilePic) {
             const profilePicRef = ref(storage, `profile_pics/${uid}`);
             const snapshot = await uploadBytes(profilePicRef, profilePic);
             profilePicURL = await getDownloadURL(snapshot.ref);
@@ -110,7 +109,6 @@ export const login = createAsyncThunk('/auth/login', async ({ email, password })
         if (userDocSnap.exists()) {
             const userData = userDocSnap.data();
             userCredential.user.displayName = userData.name;
-            console.log(userData);
             return { user: userCredential.user, role: userData };
         } else {
             return { user: userCredential.user, userData: null };
@@ -129,7 +127,6 @@ export const logout = createAsyncThunk("/auth/logout", async () => {
     }
 });
 
-// Redux slice
 const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -152,13 +149,25 @@ const authSlice = createSlice({
                 state.role = "";
             })
             .addCase(createAccount.fulfilled, (state, action) => {
-                localStorage.setItem("data", JSON.stringify(action?.payload?.user));
+                console.log(action.payload);
+                localStorage.setItem("data", JSON.stringify({
+                    ...action.payload.user,
+                    profilePicURL: action.payload.profilePicURL
+                }));
                 localStorage.setItem("isLoggedIn", true);
-                localStorage.setItem("role", action?.payload?.role);
+                localStorage.setItem("role", action.payload.role);
                 state.isLoggedIn = true;
-                state.data = action?.payload?.user;
-                state.role = action?.payload?.role
-            });
+                state.data = {
+                    ...action.payload.user,
+                    profilePicURL: action.payload.profilePicURL 
+                };
+                state.role = action.payload.role;
+            })
+            .addCase(updateProfile.fulfilled, (state, action) => {
+                localStorage.setItem("data", JSON.stringify({ ...state.data, name: action.payload.name, profilePicURL: action.payload.profilePicURL }));
+                state.data = { ...state.data, name: action.payload.name, profilePicURL: action.payload.profilePicURL };
+                state.role = action.payload.role;
+            })
     }
 });
 
