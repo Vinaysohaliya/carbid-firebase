@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../config/firebase';
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import { auth, db, storage } from '../config/firebase';
+import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 
 
@@ -13,25 +14,90 @@ const initialState = {
 };
 
 
-export const createAccount = createAsyncThunk("/auth/signup", async ({ email, password, name, role }) => {
+export const createAccount = createAsyncThunk("/auth/signup", async ({ email, password, name, role, profilePic }) => {
     try {
-
+        console.log(email,password,profilePic,role,name);
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+        let profilePicURL = null;
+        if (profilePic) {
+            const profilePicRef = ref(storage, `profile_pics/${userCredential.user.uid}`);
+            const snapshot = await uploadBytes(profilePicRef, profilePic);
+            profilePicURL = await getDownloadURL(snapshot.ref);
+        }
+
         await setDoc(doc(db, 'users', userCredential.user.uid), {
             name: name,
-            role: role
+            role: role,
+            profilePicURL: profilePicURL
         });
+
+
         userCredential.user.displayName = name;
+
         return {
             user: userCredential.user,
             name: name,
-            role: role
+            email: email,
+            role: role,
+            profilePicURL: profilePicURL
         };
     } catch (error) {
         throw error;
     }
 });
 
+
+
+export const updateProfile = createAsyncThunk('/auth/updateProfile', async ({ uid, name, role, profilePic }) => {
+    try {
+        console.log(uid,name,role,profilePic);
+        const userDocRef = doc(db, 'users', uid);
+        let profilePicURL = null;
+
+        const userDocSnap = await getDoc(userDocRef);
+        if (!userDocSnap.exists()) {
+            throw new Error('User not found');
+        }
+        const userData = userDocSnap.data();
+
+        if (userData.profilePicURL) {
+            const oldProfilePicRef = ref(storage, userData.profilePicURL);
+            await deleteObject(oldProfilePicRef);
+        }
+
+        if (profilePic) {
+            const profilePicRef = ref(storage, `profile_pics/${uid}`);
+            const snapshot = await uploadBytes(profilePicRef, profilePic);
+            profilePicURL = await getDownloadURL(snapshot.ref);
+        }
+
+        const updateData = { name, role };
+        if (profilePicURL) updateData.profilePicURL = profilePicURL;
+
+        await updateDoc(userDocRef, updateData);
+
+        return { uid, name, role, profilePicURL };
+    } catch (error) {
+        throw error;
+    }
+});
+
+
+export const getProfile = createAsyncThunk('/auth/getProfile', async (uid) => {
+    try {
+        const userDocRef = doc(db, 'users', uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+            return userDocSnap.data();
+        } else {
+            throw new Error("User not found");
+        }
+    } catch (error) {
+        throw error;
+    }
+})
 
 
 export const login = createAsyncThunk('/auth/login', async ({ email, password }) => {

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { createAccount } from '../Redux/authSlice.js';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { createAccount } from '../Redux/authSlice';
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -12,12 +12,18 @@ const SignUp = () => {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [role, setRole] = useState('buyer');
+  const [profilePic, setProfilePic] = useState(null);
   const [error, setError] = useState('');
+
+  const handleProfilePicChange = (e) => {
+    setProfilePic(e.target.files[0]);
+  };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(createAccount({ email, password, name, role }));
+     
+      await dispatch(createAccount({email,password,name,role,profilePic}));
       navigate('/buyvehicle');
     } catch (error) {
       setError(error.message);
@@ -41,6 +47,10 @@ const SignUp = () => {
         <div>
           <label htmlFor="password" className="block">Password</label>
           <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full border rounded-md py-2 px-3" />
+        </div>
+        <div>
+          <label htmlFor="profilePic" className="block">Profile Picture</label>
+          <input type="file" id="profilePic" onChange={handleProfilePicChange} required className="w-full border rounded-md py-2 px-3" />
         </div>
         <button type="submit" className="w-full bg-blue-500 text-white py-2 px-4 rounded-md">Sign Up</button>
         <p>

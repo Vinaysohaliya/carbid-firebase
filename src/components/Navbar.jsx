@@ -54,7 +54,7 @@ const NavbarComponent = () => {
               </Button>
             </NavbarItem>
             <NavbarItem>
-              <Link color="foreground" href="/profile">
+              <Link color="foreground" href="/editprofile">
                 <Avatar src="https://i.pravatar.cc/150?u=a042581f4e29026024d" />
               </Link>
             </NavbarItem>

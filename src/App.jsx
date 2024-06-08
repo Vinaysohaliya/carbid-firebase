@@ -13,6 +13,7 @@ import Allvehicles from './pages/Allvehicles';
 import AuthLayout from './Layouts/AuthLayout';
 import EvaluterDashboard from './pages/EvaluterDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import EditProfile from './pages/EditProfile';
 
 
 function App() {
@@ -41,6 +42,10 @@ function App() {
          <Route
           path="/a"
           element={<AuthLayout><Layout><AdminDashboard /></Layout></AuthLayout>}
+        />
+        <Route
+          path="/editprofile"
+          element={<AuthLayout><Layout><EditProfile /></Layout></AuthLayout>}
         />
       </Routes>
     </>
