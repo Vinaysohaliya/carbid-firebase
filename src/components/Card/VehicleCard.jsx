@@ -113,10 +113,10 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
                 <Button variant="text" color="error" onClick={handleDeleteListingClick}>Delete Listing</Button>
               </>
             ) : (
-              <>
-                <Button variant="text" color="primary" >Book Test Drive</Button>
+              <div className="flex justify-center">
+                {/* <Button variant="text" color="primary" >Book Test Drive Comming Soon...</Button> */}
                 <Button variant="text" color="error" onClick={handleViewDetailClick}>View Detail</Button>
-              </>
+              </div>
             )}
           </div>
         </CardBody>

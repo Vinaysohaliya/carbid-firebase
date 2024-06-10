@@ -148,7 +148,7 @@ const VehicleDetail = () => {
                 <div>
                   <div>{startingBid}</div>
                   <div className='font-light'>Starting Bid</div>
-                  <Button fullWidth>Book Test Drive</Button>
+                  <Button fullWidth>Book Test Drive Comming Soon ...</Button>
                 </div>
               </div>
               <div style={{ width: '30%' }}>
