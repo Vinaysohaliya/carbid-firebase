@@ -21,6 +21,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 
+const firestore = firebase.firestore();
+firebase.firestore().settings({ experimentalAutoDetectLongPolling: true});
+firebase.firestore.setLogLevel('debug');
+
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
