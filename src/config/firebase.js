@@ -6,15 +6,17 @@ import { getStorage } from "firebase/storage";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDUg8BNNbzNfllCLg1h60ugBH6e151Ft0o",
-  authDomain: "carbid-780e6.firebaseapp.com",
-  projectId: "carbid-780e6",
-  storageBucket: "carbid-780e6.appspot.com",
-  messagingSenderId: "263223047989",
-  appId: "1:263223047989:web:bb3b68590963b3327cfe7c"
+  apiKey: String(import.meta.env.VITE_API_KEY),
+  authDomain: String(import.meta.env.VITE_AUTH_DOMAIN),
+  projectId: String(import.meta.env.VITE_PROJECT_ID),
+  storageBucket: String(import.meta.env.VITE_STORAGE_BUCKET),
+  messagingSenderId: String(import.meta.env.VITE_MESSAGING_SENDER_ID),
+  appId: String(import.meta.env.VITE_APP_ID)
 };
+
 
 const app = initializeApp(firebaseConfig);
 

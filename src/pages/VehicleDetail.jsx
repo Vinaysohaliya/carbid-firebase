@@ -146,14 +146,14 @@ const VehicleDetail = () => {
             <div className='flex mt-5'>
               <div className='mr-14' style={{ width: '30%' }}>
                 <div>
-                  <div>{startingBid}</div>
+                  <div className='font-extrabold text-large'>{startingBid}</div>
                   <div className='font-light'>Starting Bid</div>
                   <Button fullWidth>Book Test Drive Comming Soon ...</Button>
                 </div>
               </div>
               <div style={{ width: '30%' }}>
                 <div>
-                  <div>{highestBid}</div>
+                  <div  className='font-extrabold text-large'>{highestBid}</div>
                   <div className='font-light'>Current bid</div>
                   {isPlacingBid ? (
                     <LoadingButton />

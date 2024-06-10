@@ -73,14 +73,14 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
       <Modal isOpen={isOpen} onClose={onClose}>
         {renderModalContent()}
       </Modal>
-      <Card shadow="dark-lg" className="w-[300px] flex flex-col rounded-xl overflow-hidden">
+      <Card shadow="dark-lg" className="w-[600px] flex flex-col rounded-xl overflow-hidden">
         <div className="relative h-48 overflow-hidden">
           <div className="absolute z-10 top-2 right-2 bg-red-600 text-white rounded-md px-2" >
             {/* <Clock vehicle={vehicle} /> */}
           </div>
           <Image radius="none" alt={`${make} ${model}`} src={vehiclePhotos} className="object-cover w-full h-full z-0" />
         </div>
-
+  
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-xl mb-4 ml-4"> {model}</h3>
           <div onClick={handleLike} style={{ fontSize: '24px', color: '#005BC4' }} className="mr-4">
@@ -90,7 +90,8 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
         <CardBody className="flex flex-col p-4">
           <div className=" flex items-center justify-between">
             {!isonMyBid ? <div>startingBid {startingBid}</div> : <div>Your Bid {MyBidAmount}</div>}
-            <div>HighestBid {highestBid}</div>
+            <div>{highestBid}</div>
+            <div>HighestBid </div>
           </div>
           <div className="flex mb-2">
             <div className="mr-4">
@@ -105,7 +106,7 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
             <div>
               <p className="font-semibold">{distanceTraveled}</p>
             </div>
-          </div>
+          </div>   
           <div className="flex justify-between">
             {isonListed ? (
               <>
@@ -115,7 +116,7 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
             ) : (
               <div className="flex justify-center">
                 {/* <Button variant="text" color="primary" >Book Test Drive Comming Soon...</Button> */}
-                <Button variant="text" color="error" onClick={handleViewDetailClick}>View Detail</Button>
+                <Button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 items-center mt-2" variant="text" color="error" onClick={handleViewDetailClick}>View Detail</Button>
               </div>
             )}
           </div>
