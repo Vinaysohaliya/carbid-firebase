@@ -10,15 +10,15 @@ import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: String(import.meta.env.VITE_API_KEY),
-  authDomain: String(import.meta.env.VITE_AUTH_DOMAIN),
-  projectId: String(import.meta.env.VITE_PROJECT_ID),
-  storageBucket: String(import.meta.env.VITE_STORAGE_BUCKET),
-  messagingSenderId: String(import.meta.env.VITE_MESSAGING_SENDER_ID),
-  appId: String(import.meta.env.VITE_APP_ID)
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_API_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_API_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_API_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_API_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_API_APP_ID
 };
 
-
+console.log(firebaseConfig);
 const app = initializeApp(firebaseConfig);
 
 

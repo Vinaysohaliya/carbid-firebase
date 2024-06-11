@@ -17,7 +17,6 @@ import EditProfile from './pages/EditProfile';
 
 
 function App() {
-
   return (
     <>
     <Routes>

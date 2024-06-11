@@ -7,7 +7,7 @@ const BidsTable = ({ bids, handleSelectBid }) => {
 
   const handleBidSelection = (bid) => {
     setSelectedBid(bid);
-    setConfirmationModalOpen(true);
+    setConfirmationModalOpen(true);    
   };
 
   const handleConfirmSelection = () => {
