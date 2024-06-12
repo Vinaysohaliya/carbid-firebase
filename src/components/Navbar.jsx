@@ -8,7 +8,6 @@ const NavbarComponent = () => {
   const loggedIn = useSelector(state => state.auth.isLoggedIn);
   const profilePic = useSelector(state => state.auth.data.profilePicURL);
   const dispatch = useDispatch();
-
   const handleLogout = () => {
     try {
       dispatch(logout());

@@ -7,18 +7,15 @@ import {  Image } from '@nextui-org/react';
 const EditProfile = () => {
   const dispatch = useDispatch();
   const { data, isLoggedIn } = useSelector((state) => state.auth);
-
   const [name, setName] = useState(data.displayName || '');
   const [role, setRole] = useState(data.role || '');
   const [profilePic, setProfilePic] = useState(null);
-  const [previewPic, setPreviewPic] = useState(data.photoURL || '');
-  const [error ,setError] = useState(null)
+  const [previewPic, setPreviewPic] = useState(data.profilePicURL || '');
   useEffect(() => {
     const fetchProfile = async () => {
       if (isLoggedIn) {
         try {
           const res = await dispatch(getProfile(data.uid));
-          console.log(res);
           if (res.payload) {
             setName(res.payload.name);
             setRole(res.payload.role);
@@ -37,7 +34,6 @@ const EditProfile = () => {
     setProfilePic(file);
     setPreviewPic(URL.createObjectURL(file));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const uid = data.uid;
@@ -49,7 +45,6 @@ const EditProfile = () => {
 
     } catch (error) {
       console.error('Error updating profile:', error);
-      setError(error.message);
     }
   };
   return (

@@ -272,7 +272,7 @@ export const fetchByCity = createAsyncThunk(
       let queryRef = collection(db, 'vehicles');
       
       if (city) {
-        queryRef = query(queryRef, where('city', '>=', city), where('city', '<', city + '\uf8ff'));
+        queryRef = query(queryRef, where('city', '>=', city), where('city', '<', city + '\uf8ff'));  
       }
 
      
@@ -280,7 +280,10 @@ export const fetchByCity = createAsyncThunk(
 
       const vehicles = [];
       querySnapshot.forEach((doc) => {
-        vehicles.push({ id: doc.id, ...doc.data() });
+        const data = doc.data();
+        if (data.auctionStatus === true) {
+          vehicles.push({ id: doc.id, ...data });
+        }
       });
       return vehicles;
     } catch (error) {
@@ -305,13 +308,12 @@ export const searchVehicles = (searchTerm) => {
       const searchResults = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        console.log(data);
-        if (data.brand.toLowerCase().startsWith(searchTerm.toLowerCase())) {
+        if (data.auctionStatus===true && data.brand.toLowerCase().startsWith(searchTerm.toLowerCase())) {
+          console.log(data.auctionStatus);
           searchResults.push({ id: doc.id, ...data });
         }
       });
 
-      console.log('Search result:', searchResults);
       resolve(searchResults);
     } catch (error) {
       console.error('Error searching:', error);

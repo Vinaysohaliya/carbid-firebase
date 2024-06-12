@@ -10,42 +10,55 @@ import Layout from './Layouts/Layout';
 import BuyDashBoard from './pages/BuyDashboard';
 import SellDashboard from './pages/SellDashboard';
 import Allvehicles from './pages/Allvehicles';
-import AuthLayout from './Layouts/AuthLayout';
 import EvaluterDashboard from './pages/EvaluterDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import EditProfile from './pages/EditProfile';
+import RoleLayout from './Layouts/RoleLayout';
+import Denied from './pages/Denied';
 
 
 function App() {
   return (
     <>
-    <Routes>
+      <Routes>
         <Route path="/" element={<Layout><Home /></Layout>} />
         <Route path="/vehiclelist" element={<Layout><Allvehicles /></Layout>} />
         <Route path="/signup" element={<Layout><Signup /></Layout>} />
         <Route path="/vehicle/:id" element={<Layout><VehicleDetail /></Layout>} />
         <Route path="/signin" element={<Layout><SignIn /></Layout>} />
-        <Route path="/e" element={<Layout><EvaluterDashboard /></Layout>} />
-        <Route
-          path="/sellvehicle"
-          element={<AuthLayout><Layout><SellDashboard /></Layout></AuthLayout>}
-        />
-        <Route
-          path="/buyvehicle"
-          element={<AuthLayout><Layout><BuyDashBoard /></Layout></AuthLayout>}
-        />
-        <Route
-          path="/myvehicle"
-          element={<AuthLayout><Layout><MyVehicle /></Layout></AuthLayout>}
-        />
-         <Route
-          path="/a"
-          element={<AuthLayout><Layout><AdminDashboard /></Layout></AuthLayout>}
-        />
-        <Route
-          path="/editprofile"
-          element={<AuthLayout><Layout><EditProfile /></Layout></AuthLayout>}
-        />
+        <Route path="/denied" element={<Layout><Denied /></Layout>} />
+
+
+        <Route element={<RoleLayout allowedRoles={["buyer","ADMIN"]} />}>
+          <Route
+            path="/sellvehicle"
+            element={<Layout><SellDashboard /></Layout>}
+          />
+          <Route
+            path="/buyvehicle"
+            element={<Layout><BuyDashBoard /></Layout>}
+          />
+          <Route
+            path="/myvehicle"
+            element={<Layout><MyVehicle /></Layout>}
+          />
+
+          <Route
+            path="/editprofile"
+            element={<Layout><EditProfile /></Layout>}
+          />
+        </Route>
+
+
+        <Route element={<RoleLayout allowedRoles={["ADMIN"]} />}>
+
+          <Route
+            path="/admindashboard"
+            element={<Layout><AdminDashboard /></Layout>}
+          />
+          <Route path="/evaluterdashboard" element={<Layout><EvaluterDashboard /></Layout>} />
+        </Route>
+
       </Routes>
     </>
   );

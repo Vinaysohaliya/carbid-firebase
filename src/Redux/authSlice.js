@@ -48,39 +48,40 @@ export const createAccount = createAsyncThunk("/auth/signup", async ({ email, pa
 
 
 
-export const updateProfile = createAsyncThunk('/auth/updateProfile', async ({ uid, name, role, profilePic }) => {
-    try {
-        console.log(uid,name,role,profilePic);
-        const userDocRef = doc(db, 'users', uid);
-        let profilePicURL = null;
 
-        const userDocSnap = await getDoc(userDocRef);
-        if (!userDocSnap.exists()) {
-            throw new Error('User not found');
+export const updateProfile = createAsyncThunk(
+    '/auth/updateProfile',
+    async ({ uid, name, role, profilePic }) => {
+        try {
+            console.log(uid, name, role, profilePic);
+            const userDocRef = doc(db, 'users', uid);
+            let profilePicURL = null;
+
+            const userDocSnap = await getDoc(userDocRef);
+            if (!userDocSnap.exists()) {
+                throw new Error('User not found');
+            }
+
+            const userData = userDocSnap.data();
+
+            if (profilePic) {
+                const profilePicRef = ref(storage, `profile_pics/${uid}`);
+                const snapshot = await uploadBytes(profilePicRef, profilePic);
+                profilePicURL = await getDownloadURL(snapshot.ref);
+            }
+
+            const updateData = { name, role };
+            if (profilePicURL) updateData.profilePicURL = profilePicURL;
+
+            await updateDoc(userDocRef, updateData);
+
+            return { uid, name, role, profilePicURL };
+        } catch (error) {
+            throw error;
         }
-        const userData = userDocSnap.data();
-console.log(userData);
-        if (!!userData.profilePicURL) {
-            const oldProfilePicRef = ref(storage, userData.profilePicURL);
-            await deleteObject(oldProfilePicRef);
-        }
-
-        if (!!profilePic) {
-            const profilePicRef = ref(storage, `profile_pics/${uid}`);
-            const snapshot = await uploadBytes(profilePicRef, profilePic);
-            profilePicURL = await getDownloadURL(snapshot.ref);
-        }
-
-        const updateData = { name, role };
-        if (profilePicURL) updateData.profilePicURL = profilePicURL;
-
-        await updateDoc(userDocRef, updateData);
-
-        return { uid, name, role, profilePicURL };
-    } catch (error) {
-        throw error;
     }
-});
+);
+
 
 
 export const getProfile = createAsyncThunk('/auth/getProfile', async (uid) => {
@@ -159,7 +160,7 @@ const authSlice = createSlice({
                 state.isLoggedIn = true;
                 state.data = {
                     ...action.payload.user,
-                    profilePicURL: action.payload.profilePicURL 
+                    profilePicURL: action.payload.profilePicURL
                 };
                 state.role = action.payload.role;
             })

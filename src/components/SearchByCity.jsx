@@ -9,7 +9,6 @@ const SearchByCity = () => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -24,10 +23,10 @@ const SearchByCity = () => {
     };
 
     const timer = setTimeout(() => {
-      if (filterCriteria.city && isOpen) { // Check if city is entered and modal is open
+      if (filterCriteria.city && isOpen) { 
         fetchData();
       }
-    }, 2000);
+    }, 1000);
 
     return () => {
       clearTimeout(timer);
@@ -63,7 +62,7 @@ const SearchByCity = () => {
                 <div className="mt-4 flex justify-center">
                   {loading ? (
                     <CircularProgress aria-label="Loading..." />
-                  ) : results.length > 0 ? (
+                  ) : results.length  ? (
                     <ul>
                       {results.map((result, index) => (
                         <li key={index}>{result.model}</li> 

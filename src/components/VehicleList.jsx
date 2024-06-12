@@ -4,21 +4,23 @@ import { fetchAllVehicles } from '../Redux/vehicleSlice.js';
 import { Card, Skeleton } from '@nextui-org/react';
 import VehicleCard from './Card/VehicleCard.jsx';
 
-const VehicleList = () => {
+const VehicleList = (fs) => {
+    console.log(fs);
     const dispatch = useDispatch();
     const vehicles = useSelector((state) => state.vehicle.vehicles) || [];
     const loading = useSelector((state) => state.vehicle.loading);
+    const uId = useSelector((state) => state.auth.data.uid);
 
     useEffect(() => {
+        console.log("fsfsfsa");
         dispatch(fetchAllVehicles());
-    }, [dispatch]);
-
+    }, []);
+console.log(uId);
     return (
         <div className='my-10'>
             <h2 className='font-bold my-4'>Vehicles on auction</h2>
             <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 justify-center'>
                 {loading ? (
-                    // Display Skeleton loaders while loading
                     Array.from({ length: 6 }).map((_, index) => (
                         <Card key={index} className="w-[200px] space-y-5 p-4" radius="lg">
                             <Skeleton className="rounded-lg">
@@ -39,7 +41,7 @@ const VehicleList = () => {
                     ))
                 ) : (
                     vehicles.map((vehicle) => (
-                        vehicle.adminApprove === 'ACCEPT' && vehicle.evaluationDone === 'APPROVE' && vehicle.auctionStatus && (
+                        vehicle.adminApprove === 'ACCEPT' && vehicle.evaluationDone === 'APPROVE' && vehicle.auctionStatus && (vehicle.userId!==uId) &&(
                             <VehicleCard key={vehicle.id} vehicle={vehicle} />
                         )
                     ))
