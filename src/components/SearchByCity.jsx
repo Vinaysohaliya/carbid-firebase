@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react';
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, CircularProgress } from '@nextui-org/react';
 import { useDispatch } from 'react-redux';
 import { fetchByCity } from '../Redux/vehicleSlice';
 
@@ -7,21 +7,24 @@ const SearchByCity = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [filterCriteria, setFilterCriteria] = useState({ city: '' });
   const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const res = await dispatch(fetchByCity(filterCriteria));
         setResults(res.payload); 
       } catch (error) {
         console.error('Error fetching search results:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
     const timer = setTimeout(() => {
-      if (filterCriteria.city) {
+      if (filterCriteria.city && isOpen) { // Check if city is entered and modal is open
         fetchData();
       }
     }, 2000);
@@ -29,7 +32,7 @@ const SearchByCity = () => {
     return () => {
       clearTimeout(timer);
     };
-  }, [filterCriteria, dispatch]);
+  }, [filterCriteria, isOpen, dispatch]);
 
   const handleInputChange = (e) => {
     setFilterCriteria({ ...filterCriteria, city: e.target.value });
@@ -37,7 +40,7 @@ const SearchByCity = () => {
 
   return (
     <>
-      <Button onPress={onOpen}>Open Search By City</Button>
+      <Button onPress={onOpen} className='w-full'>Serch Vehicle </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
@@ -57,8 +60,10 @@ const SearchByCity = () => {
                     />
                   </div>
                 </form>
-                <div className="mt-4">
-                  {results.length > 0 ? (
+                <div className="mt-4 flex justify-center">
+                  {loading ? (
+                    <CircularProgress aria-label="Loading..." />
+                  ) : results.length > 0 ? (
                     <ul>
                       {results.map((result, index) => (
                         <li key={index}>{result.model}</li> 

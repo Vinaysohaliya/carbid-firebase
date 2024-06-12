@@ -1,21 +1,22 @@
 import React, { useState } from "react";
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Avatar } from "@nextui-org/react";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, NavbarMenuToggle, Avatar } from "@nextui-org/react";
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../Redux/authSlice';
-import  SearchByCity from '../components/SearchByCity';
+import SearchByCity from '../components/SearchByCity';
 
 const NavbarComponent = () => {
   const loggedIn = useSelector(state => state.auth.isLoggedIn);
   const profilePic = useSelector(state => state.auth.data.profilePicURL);
   const dispatch = useDispatch();
+
   const handleLogout = () => {
     try {
       dispatch(logout());
-      
-    }finally{
-      window.location.reload()
+    } finally {
+      window.location.reload();
     }
-  }
+  };
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -31,40 +32,39 @@ const NavbarComponent = () => {
       </NavbarBrand>
       <NavbarContent className="nav-links" justify="center">
         <NavbarItem>
-          <Link color="foreground" href="/buyvehicle">
+          <Link className=" text-blue-600   mr-4 font-bold hover:underline focus:underline  `${activeLink === 'Sell' && 'underline'}`" color="foreground" href="/buyvehicle">
             Buy
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="foreground" href="/sellvehicle">
+          <Link  className=" text-blue-600 mr-4 font-bold hover:underline focus:underline  `${activeLink === 'Sell' && 'underline'}`" color="foreground" href="/sellvehicle">
             Sell
           </Link>
         </NavbarItem>
+        
         <NavbarItem>
-          <SearchByCity/>
-        </NavbarItem>
-        <NavbarItem>
-          <Link color="foreground" href="/vehiclelist">
-            vehiclelist
+          <Link  className="text-blue-600 mr-4 font-bold hover:underline focus:underline" color="foreground" href="/vehiclelist">
+            Vehicle List
           </Link>
         </NavbarItem>
-       
-
+        <NavbarItem className="">
+          <SearchByCity className="" />
+        </NavbarItem>
         {loggedIn ? (
           <>
             <NavbarItem>
-              <Button color="error" onClick={handleLogout}>
+              <Link className="ml-5 text-blue-600 font-bold hover:underline focus:underline " color="foreground" href="/myvehicle">
+                My Vehicles
+              </Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Button className="border border-blue-900 border-solid text-blue-600 font-bold mr-4" color="error" onClick={handleLogout}>
                 Logout
               </Button>
             </NavbarItem>
             <NavbarItem>
-              <Link color="foreground" href="/editprofile">
-                <Avatar src={profilePic}/>
-              </Link>
-            </NavbarItem>
-            <NavbarItem>
-              <Link color="foreground" href="/myvehicle">
-               MyVehicles
+              <Link className="" color="foreground" href="/editprofile">
+                <Avatar className="" src={profilePic} />
               </Link>
             </NavbarItem>
           </>
@@ -83,7 +83,6 @@ const NavbarComponent = () => {
           </>
         )}
       </NavbarContent>
-      
     </Navbar>
   );
 };

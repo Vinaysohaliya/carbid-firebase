@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { Button, Divider, Image, Input, Link, ScrollShadow } from '@nextui-org/react';
+import React, { useEffect, useState } from 'react';
+import { Button, Divider, Image, Input, Link, ScrollShadow, CircularProgress } from '@nextui-org/react';
 import { useDispatch } from 'react-redux';
-import carimg from '../assets/f402d1e9bd1077179c11d5502a3180a1.jpg'
+import carimg from '../assets/f402d1e9bd1077179c11d5502a3180a1.jpg';
 import { searchVehicles } from '../Redux/vehicleSlice';
 import b1 from '../assets/374c24fdbbb811e3fe494f27ae695992.png'
 import b2 from '../assets/6a2c6d1d7a63e9b0b4c51c016d3d96a8.png'
@@ -14,11 +14,12 @@ import b8 from '../assets/c3e37bcf2700ab5e993594e2e31f0852.png'
 import b9 from '../assets/d0202be409abd6ce3bc3cb03884c56e7.jpg'
 import b10 from '../assets/dd574ce9ae4551ed764f80ff3e7addc1.png'
 
-const BuySearch = () => {
 
+const BuySearch = () => {
   const brands =[b1,b2,b3,b4,b5,b6,b7,b8,b9,b10]
   const [searchTerm, setSearchTerm] = useState('');
   const [vehicles, setVehicles] = useState([]);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const debounceDelay = 500;
 
@@ -28,14 +29,21 @@ const BuySearch = () => {
   };
 
   useEffect(() => {
-    const debounce = setTimeout(async () => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const searchResults = await searchVehicles(searchTerm);
+        setVehicles(searchResults);
+      } catch (error) {
+        console.error('Error fetching search results:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const debounce = setTimeout(() => {
       if (searchTerm !== '') {
-        try {
-          const searchResults = await searchVehicles(searchTerm);
-          setVehicles(searchResults);
-        } catch (error) {
-          throw error;
-        }
+        fetchData();
       } else {
         setVehicles([]);
       }
@@ -85,10 +93,12 @@ const BuySearch = () => {
               ],
             }}
             placeholder="Type to search..."
-
           />
-
-          {vehicles.length > 0 && (
+          {loading ? (
+            <div className="flex justify-center mt-4">
+              <CircularProgress  />
+            </div>
+          ) : vehicles.length > 0 ? (
             <ScrollShadow className="w-full max-w-[470px] h-[200px]">
               <div className="flex flex-col w-full">
                 {vehicles.map((vehicle) => (
@@ -111,10 +121,9 @@ const BuySearch = () => {
                 ))}
               </div>
             </ScrollShadow>
+          ) : (
+            <p className="text-center mt-4 text-red-500 ">No results found</p>
           )}
-
-
-
         </div>
         <div className="mb-4 text-white font-semibold">Search By Brand</div>
         <div className="flex gap-4">
@@ -137,7 +146,6 @@ const BuySearch = () => {
             </div>
           ))}
         </div>
-
       </div>
     </div>
   );

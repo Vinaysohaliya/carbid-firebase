@@ -2,8 +2,8 @@ import { Divider } from '@nextui-org/react'
 import React from 'react'
 import vehicleSlice from '../Redux/vehicleSlice';
 
-const Vehicleinfo = ({ Vehicleinfo }) => {
-  console.log(Vehicleinfo);
+const Vehicleinfo = ({ vehicle}) => {
+  // console.log(Vehicleinfo);
   return (
     <div className='w-1/2 mt-10'>
       <div className='flex  ml-20 flex-col'>

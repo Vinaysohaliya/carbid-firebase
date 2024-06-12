@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, ScrollShadow } from '@nextui-org/react';
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spinner } from '@nextui-org/react';
 import { fetchAllVehicles, updateAdminVehicleStatus, updateVehicleDetails } from '../Redux/vehicleSlice';
 
 export const AdminDashboard = () => {
@@ -8,14 +8,17 @@ export const AdminDashboard = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [vehicleList, setVehicleList] = useState([]);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchVehicles = async () => {
+      setLoading(true);
       const resultAction = await dispatch(fetchAllVehicles());
       console.log(resultAction);
       if (fetchAllVehicles.fulfilled.match(resultAction)) {
         setVehicleList(resultAction.payload);
       }
+      setLoading(false);
     };
 
     fetchVehicles();
@@ -29,51 +32,59 @@ export const AdminDashboard = () => {
   const handleAccept = async () => {
     console.log("Accepted", selectedVehicle);
     const updatedData = { ...selectedVehicle, adminApprove: "ACCEPT" };
-    await dispatch(updateAdminVehicleStatus({ vehicleId: selectedVehicle.id, status:updatedData.adminApprove }));
+    await dispatch(updateAdminVehicleStatus({ vehicleId: selectedVehicle.id, status: updatedData.adminApprove }));
     onOpenChange();
   };
 
   const handleDecline = async () => {
     console.log("Declined", selectedVehicle);
     const updatedData = { ...selectedVehicle, adminApprove: "DECLINE" };
-    await dispatch(updateAdminVehicleStatus({ vehicleId: selectedVehicle.id, status:updatedData.adminApprove }));
-
+    await dispatch(updateAdminVehicleStatus({ vehicleId: selectedVehicle.id, status: updatedData.adminApprove }));
     onOpenChange();
   };
 
   return (
     <div className="p-4">
       <h2 className="text-2xl font-bold mb-4">Admin Dashboard</h2>
-      {vehicleList.length === 0 && <p>No vehicles found</p>}
-      {vehicleList.length > 0 && (
-        <Table aria-label="Vehicle Details Table">
-          <TableHeader>
-            <TableColumn>ID</TableColumn>
-            <TableColumn>BRAND</TableColumn>
-            <TableColumn>MODEL</TableColumn>
-            <TableColumn>OWNER TYPE</TableColumn>
-            <TableColumn>SELLER TYPE</TableColumn>
-            <TableColumn>EVALUATION STATUS</TableColumn>
-            <TableColumn>ADMIN APPROVE</TableColumn>
-            <TableColumn>Edit</TableColumn>
-          </TableHeader>
-          <TableBody>
-            {vehicleList.map((vehicle) => (
-              <TableRow key={vehicle.id}>
-                <TableCell>{vehicle.id}</TableCell>
-                <TableCell>{vehicle.brand}</TableCell>
-                <TableCell>{vehicle.model}</TableCell>
-                <TableCell>{vehicle.ownerType}</TableCell>
-                <TableCell>{vehicle.sellerType}</TableCell>
-                <TableCell>{vehicle.evaluationDone}</TableCell>
-                <TableCell>{vehicle.adminApprove}</TableCell>
-                <TableCell>
-                  <Button onPress={() => handleEditClick(vehicle)}>Edit</Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+      {loading ? (
+        <div className="flex justify-center items-center">
+          <Spinner size="lg" />
+        </div>
+      ) : (
+        <>
+          {vehicleList.length === 0 ? (
+            <p>No vehicles found</p>
+          ) : (
+            <Table aria-label="Vehicle Details Table">
+              <TableHeader>
+                <TableColumn>ID</TableColumn>
+                <TableColumn>BRAND</TableColumn>
+                <TableColumn>MODEL</TableColumn>
+                <TableColumn>OWNER TYPE</TableColumn>
+                <TableColumn>SELLER TYPE</TableColumn>
+                <TableColumn>EVALUATION STATUS</TableColumn>
+                <TableColumn>ADMIN APPROVE</TableColumn>
+                <TableColumn>Edit</TableColumn>
+              </TableHeader>
+              <TableBody>
+                {vehicleList.map((vehicle) => (
+                  <TableRow key={vehicle.id}>
+                    <TableCell>{vehicle.id}</TableCell>
+                    <TableCell>{vehicle.brand}</TableCell>
+                    <TableCell>{vehicle.model}</TableCell>
+                    <TableCell>{vehicle.ownerType}</TableCell>
+                    <TableCell>{vehicle.sellerType}</TableCell>
+                    <TableCell>{vehicle.evaluationDone}</TableCell>
+                    <TableCell>{vehicle.adminApprove}</TableCell>
+                    <TableCell>
+                      <Button onPress={() => handleEditClick(vehicle)}>Edit</Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </>
       )}
 
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>

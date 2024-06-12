@@ -12,6 +12,7 @@ const EditProfile = () => {
   const [role, setRole] = useState(data.role || '');
   const [profilePic, setProfilePic] = useState(null);
   const [previewPic, setPreviewPic] = useState(data.photoURL || '');
+  const [error ,setError] = useState(null)
   useEffect(() => {
     const fetchProfile = async () => {
       if (isLoggedIn) {
@@ -47,15 +48,16 @@ const EditProfile = () => {
      setName(res.payload.name)
 
     } catch (error) {
+      console.error('Error updating profile:', error);
       setError(error.message);
     }
   };
   return (
-    <div className="max-w-md mx-auto mt-10">
+    <div className="max-w-md mx-auto mt-10 border border-blue-100 border-solid  p-10">
       <h2 className="text-2xl font-semibold mb-4">Edit Profile</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label className="block text-gray-700">Name</label>
+          <label className="block text-gray-700 font-bold ">Name</label>
           <input
             type="text"
             value={name}
@@ -64,7 +66,7 @@ const EditProfile = () => {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Role</label>
+          <label className="block font-bold text-gray-700">Role</label>
           <input
             type="text"
             value={role}
@@ -73,7 +75,7 @@ const EditProfile = () => {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700">Profile Picture</label>
+          <label className="block font-bold text-gray-700">Profile Picture</label>
           {previewPic && <Image src={previewPic} alt="Profile Preview" className="w-20 h-20 rounded-full mb-2" />}
           <input
             type="file"

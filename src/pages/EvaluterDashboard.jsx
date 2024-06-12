@@ -8,10 +8,11 @@ import {
   TableCell,
   getKeyValue,
   Button,
+  Spinner,
 } from "@nextui-org/react";
 import { useDispatch } from "react-redux";
 import { fetchVehiclesWithUsers } from "../Redux/vehicleSlice";
-import { Modal, ModalContent, ModalHeader, ModalBody } from "@nextui-org/react";
+import { Modal, ModalContent, ModalBody } from "@nextui-org/react";
 import VehicleEditForm from "../components/VehicleEditForm";
 
 const columns = [
@@ -29,12 +30,12 @@ const columns = [
   },
   {
     key: "Status",
-    label: "status",
+    label: "STATUS",
   },
   {
     key: "Edit",
-    label: "Edit",
-  }
+    label: "EDIT",
+  },
 ];
 
 export default function EvaluterDashboard() {
@@ -42,16 +43,18 @@ export default function EvaluterDashboard() {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [vehicleData, setVehicleData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchVehicles = async () => {
+      setLoading(true);
       const res = await dispatch(fetchVehiclesWithUsers());
       setVehicleData(res.payload);
+      setLoading(false);
     };
     fetchVehicles();
   }, [dispatch]);
-
-  const [vehicleData, setVehicleData] = useState([]);
 
   const handleButtonClick = (tableNumber) => {
     setActiveTable(tableNumber);
@@ -66,7 +69,6 @@ export default function EvaluterDashboard() {
     setIsOpen(false);
   };
 
-
   return (
     <div>
       <div className="btn-container">
@@ -74,36 +76,51 @@ export default function EvaluterDashboard() {
           color={activeTable === 1 ? "primary" : "secondary"}
           size="sm"
           onClick={() => handleButtonClick(1)}
+          className="mb-5"
         >
           Table 1
         </Button>
       </div>
-      <Table aria-label="Example table with dynamic content">
-        <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn key={column.key}>{column.label}</TableColumn>
+      {loading ? (
+        <div className="flex justify-center items-center">
+          <Spinner size="lg" />
+        </div>
+      ) : (
+        <>
+          {vehicleData.length === 0 ? (
+            <p>No vehicles found</p>
+          ) : (
+            <Table aria-label="Example table with dynamic content">
+              <TableHeader columns={columns}>
+                {(column) => (
+                  <TableColumn key={column.key}>{column.label}</TableColumn>
+                )}
+              </TableHeader>
+              <TableBody  items={vehicleData}>
+                {(item) => (
+                  <TableRow  key={item.vehicleId}>
+                    {(columnKey) => (
+                      <TableCell>
+                        {getKeyValue(item, columnKey)}
+                        {columnKey === 'Edit' && (
+                          <Button
+                            color="danger"
+                            size="sm"
+                            onClick={() => handleEditClick(item)}
+                          >
+                            Edit
+                          </Button>
+                        )}
+                        {columnKey === 'Status' && <div>{item.evaluationDone}</div>}
+                      </TableCell>
+                    )}
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
           )}
-        </TableHeader>
-        <TableBody items={vehicleData}>
-          {(item) => (
-            <TableRow key={item.vehicleId}>
-              {(columnKey) => (
-                <TableCell>
-                  {getKeyValue(item, columnKey)}
-                 {columnKey=='Edit' &&  <Button
-                    color="danger"
-                    size="sm"
-                    onClick={() => handleEditClick(item)}
-                  >
-                    Edit
-                  </Button>}
-                  {columnKey=='Status' && <div>{item.evaluationDone}</div> }
-                </TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+        </>
+      )}
       <Modal isOpen={isOpen} onClose={handleModalClose}>
         <ModalContent>
           <ModalBody>
