@@ -36,7 +36,7 @@ const VehicleSellingForm = ({ vehicle, onAddNewVehicle }) => {
   const handleSubmit = async () => {
     try {
       if (!agreeToTerms) {
-        toast.error('Please fill all required fields.');
+        toast.error('Please agree to the terms and conditions.');
         return;
       }
       setIsLoading(true);
@@ -55,16 +55,18 @@ const VehicleSellingForm = ({ vehicle, onAddNewVehicle }) => {
       <div>
         <Card className="py-4">
           <CardHeader className="pb-0 pt-2 px-4 flex-col items-center justify-center">
-            <p className="text-tiny uppercase font-bold">{!vehicle.evaluationDone ? "Your Vehicle Is under Evaluation" : "Click Button Below to add on Auction"}</p>
-            <h4 className="font-bold text-large">Frontend Radio</h4>
-            <Button onPress={onOpen}>Your Vehicle</Button>
+            <p className="text-tiny uppercase font-bold text-blue-600">
+              {!vehicle.evaluationDone ? "Your Vehicle Is under Evaluation" : "Click Button Below to add on Auction"}
+            </p>
+            <h4 className="font-bold text-large text-blue-800">Frontend Radio</h4>
+            <Button className="bg-blue-600 text-white" onPress={onOpen}>Your Vehicle</Button>
           </CardHeader>
-          <CardBody className="overflow-visible py-2">
+          <CardBody className="overflow-visible py-2 flex justify-center items-center">
             <Image
               alt="Card background"
-              className="object-cover rounded-xl"
+              className="object-cover rounded-xl w-full md:w-64 lg:w-72 xl:w-80" // Adjust width based on screen size
               src='/src/assets/fleet.png'
-              width={250}
+              height={250} // Maintain aspect ratio with fixed height
             />
           </CardBody>
         </Card>
@@ -72,7 +74,7 @@ const VehicleSellingForm = ({ vehicle, onAddNewVehicle }) => {
 
       <Modal size='2xl' isOpen={isOpen} onOpenChange={onClose}>
         <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">Submit Vehicle Details</ModalHeader>
+          <ModalHeader className="flex flex-col gap-1 text-blue-800">Submit Vehicle Details</ModalHeader>
           <ModalBody>
             {isFetching ? (
               <div className="flex justify-center items-center py-4">
@@ -82,21 +84,20 @@ const VehicleSellingForm = ({ vehicle, onAddNewVehicle }) => {
               <form>
                 {(stage === 5 && adminApprove !== "ACCEPT") ? (
                   <div>
-                    <h2>Your vehicle is under process</h2>
+                    <h2 className="text-blue-800">Your vehicle is under process</h2>
                   </div>
                 ) : (
                   <>
                     {stage === 5 && adminApprove === "ACCEPT" && (
                       <div>
-                        <h2>Your vehicle is Approved</h2>
+                        <h2 className="text-blue-800">Your vehicle is Approved</h2>
                       </div>
                     )}
-                    {(
-                      <>
-                        {stage === 6 && (
-                          <div>
-                            <ScrollShadow className="w-[640px] h-[400px]">
-                            <p>Terms and conditions
+                    <>
+                      {stage === 6 && (
+                        <div className="p-4 bg-blue-50 rounded-lg">
+                          <ScrollShadow className="w-full h-[400px] p-4 overflow-y-auto">
+                          <p>Terms and conditions
                               By accessing or using our website (www.indianautoauction.com) or any related services provided by IAA, you agree to be bound by the following terms and conditions:
 
                               1. Acceptance of Terms: By accessing or using IAA, you agree to abide by these Terms and Conditions and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this site.
@@ -128,41 +129,40 @@ const VehicleSellingForm = ({ vehicle, onAddNewVehicle }) => {
                             <Checkbox
                               checked={agreeToTerms}
                               onChange={(e) => setAgreeToTerms(e.target.checked)}
+                              className="mt-4 text-blue-800"
                             >
                               I agree to the terms and conditions
                             </Checkbox>
-                            </ScrollShadow>
-                          </div>
-                        )}
-                        {stage === 7 && (
-                          <div>
-                            <h2>Expected Starting Bid</h2>
-                            <div>{vehicle.startingBid}</div>
-                            <h2>Enter Starting Bid</h2>
-                            <Input
-                              type="number"
-                              placeholder="Enter starting bid"
-                              value={startingBid}
-                              onChange={(e) => setStartingBid(e.target.value)}
-                            />
-                          </div>
-                        )}
-                      </>
-                    )}
+                          </ScrollShadow>
+                        </div>
+                      )}
+                      {stage === 7 && (
+                        <div className="p-4 bg-blue-50 rounded-lg">
+                          <h2 className="text-blue-800">Enter Starting Bid</h2>
+                          <Input
+                            type="number"
+                            placeholder="Enter starting bid"
+                            value={startingBid}
+                            onChange={(e) => setStartingBid(e.target.value)}
+                            className="mt-2 bg-white text-blue-800"
+                          />
+                        </div>
+                      )}
+                    </>
                   </>
                 )}
-                <Divider />
+                <Divider className="my-4" />
                 {isLoading ? (
                   <LoadingButton />
                 ) : (
-                  <div className='my-4 flex items-center justify-end'>
+                  <div className="my-4 flex items-center justify-end">
                     {stage !== 5 && (
-                      <Button radius='sm' className='mr-2' onClick={() => setStage((prevStage) => Math.max(prevStage - 1, 1))}>
+                      <Button className="mr-2 bg-blue-600 text-white" radius="sm" onClick={() => setStage((prevStage) => Math.max(prevStage - 1, 1))}>
                         Previous
                       </Button>
                     )}
                     {(stage !== 5 || adminApprove === 'ACCEPT') && (
-                      <Button type="button" radius='sm' onClick={stage === 7 ? handleSubmit : () => setStage((prevStage) => Math.max(prevStage + 1, 1))}>
+                      <Button className="bg-blue-600 text-white" type="button" radius="sm" onClick={stage === 7 ? handleSubmit : () => setStage((prevStage) => Math.max(prevStage + 1, 1))}>
                         {stage === 7 ? 'Submit' : 'Next'}
                       </Button>
                     )}

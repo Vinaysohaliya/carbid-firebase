@@ -24,9 +24,9 @@ const SignIn = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto">
-      <h2 className="text-2xl font-semibold mb-4 text-blue-500">Sign In</h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
+    <div className="max-w-md mx-auto p-4">
+      <h2 className="text-2xl font-semibold mb-4 text-blue-500 text-center">Sign In</h2>
+      {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
       <div className="mb-4">
         <input
           type="email"
@@ -47,11 +47,11 @@ const SignIn = () => {
       </div>
       <button
         onClick={handleSignIn}
-        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:bg-blue-600"
+        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded w-full focus:outline-none focus:bg-blue-600"
       >
         Sign In
       </button>
-      <div className="mt-4">
+      <div className="mt-4 text-center">
         <p>
           Don't have an account?{' '}
           <Link to="/signup" className="text-blue-500 hover:text-blue-700">

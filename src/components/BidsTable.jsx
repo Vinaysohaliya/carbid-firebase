@@ -21,11 +21,11 @@ const BidsTable = ({ bids, handleSelectBid }) => {
   };
 
   return (
-    <>
+    <div className="w-full overflow-x-auto">
       <Table aria-label="Bids Table">
         <TableHeader>
           <TableColumn>Rank</TableColumn>
-          <TableColumn>Bid ID</TableColumn>
+          <TableColumn>Bidder Name</TableColumn>
           <TableColumn>Amount</TableColumn>
           <TableColumn>Action</TableColumn>
         </TableHeader>
@@ -37,7 +37,7 @@ const BidsTable = ({ bids, handleSelectBid }) => {
                 <TableCell>{bid.userName}</TableCell>
                 <TableCell>{bid.amount}</TableCell>
                 <TableCell>
-                  <button onClick={() => handleBidSelection(bid)}>Select Bid</button>
+                  <Button color="primary" variant="outlined" onClick={() => handleBidSelection(bid)}>Select Bid</Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -50,12 +50,12 @@ const BidsTable = ({ bids, handleSelectBid }) => {
             Are you sure you want to select this bid?
           </ModalBody>
           <ModalFooter>
-            <Button color="error" variant="light" onClick={handleCloseModal}>Cancel</Button>
-            <Button color="primary" onClick={handleConfirmSelection}>Confirm</Button>
+            <Button color="error" variant="outlined" onClick={handleCloseModal}>Cancel</Button>
+            <Button color="primary" variant="contained" onClick={handleConfirmSelection}>Confirm</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </div>
   );
 };
 

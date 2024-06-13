@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { checkIfVehicleLiked, fetchVehicle, toggleVehicleLike } from '../Redux/vehicleSlice';
-import { Input, Button, Divider, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Popover, PopoverTrigger, PopoverContent, Image, ScrollShadow } from '@nextui-org/react';
+import { Input, Button, Divider, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Image, ScrollShadow } from '@nextui-org/react';
 import Vehicleinfo from '../components/Vehicleinfo';
 import { fetchBidData } from '../Redux/auctionSlice';
 import { placeBid } from '../Redux/bidSlice';
 import LoadingButton from '../components/LoadingButton ';
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import toast from 'react-hot-toast';
-
 
 const VehicleDetail = () => {
   const userName = useSelector((state) => state.auth.data.displayName);
@@ -23,7 +22,6 @@ const VehicleDetail = () => {
   const vehicle = useSelector((state) => state.vehicle.onevehicle);
   const [startingBid, setStartingBid] = useState(null);
   const [highestBid, setHighestBid] = useState(null);
-
   const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
@@ -72,27 +70,31 @@ const VehicleDetail = () => {
       setStartingBid(bidData.payload.firstBid);
       setHighestBid(bidData.payload.highestBid);
     } catch (error) {
-      toast(error.message);
+      toast.error(error.message);
     } finally {
       setIsPlacingBid(false);
     }
   };
 
-
   if (!vehicle) {
-    return <div>No auction details found</div>;
+    return <div className="p-6">No auction details found</div>;
   }
 
   return (
     <div className="p-6">
       <div className="flex flex-col lg:flex-row mt-10 gap-10">
         <div className="w-full lg:w-1/2 flex flex-col items-center">
-          <Image width={600} isZoomed alt="hero Image" src={selectedImage ? selectedImage : vehicle.vehiclePhotos[0]} />
-          <ScrollShadow className="w-[600px] h-[75px]" orientation="horizontal" hideScrollBar={true}>
+          <Image
+            width={600}
+            isZoomed
+            alt="Vehicle Image"
+            src={selectedImage ? selectedImage : vehicle.vehiclePhotos[0]}
+          />
+          <ScrollShadow className="w-[600px] h-[75px]" orientation="horizontal" hideScrollBar>
             <div className="flex mt-2" style={{ minWidth: `${vehicle.vehiclePhotos.length * 120}px` }}>
               {vehicle.vehiclePhotos.map((photo, index) => (
                 <div key={index} className="mr-2 cursor-pointer" onClick={() => setSelectedImage(photo)}>
-                  <img className="rounded-md" width={110} alt="NextUI hero Image" src={photo} />
+                  <img className="rounded-md" width={110} alt="Vehicle Thumbnail" src={photo} />
                 </div>
               ))}
             </div>
@@ -102,7 +104,9 @@ const VehicleDetail = () => {
           <div className="flex justify-between m-2">
             <div className="font-bold text-xl">{vehicle.model}</div>
             <div>
-              <Button onClick={handleLike} className="text-xl text-blue-600 cursor-pointer bg-white">{isLiked ?  <FaHeart /> : <FaRegHeart />}</Button>
+              <Button onClick={handleLike} className="text-xl text-blue-600 cursor-pointer bg-white">
+                {isLiked ? <FaHeart /> : <FaRegHeart />}
+              </Button>
             </div>
           </div>
           <ul className="flex gap-4 mb-4">
@@ -117,13 +121,13 @@ const VehicleDetail = () => {
             <div className="mb-2 cursor-pointer text-blue-500">Check inspection report</div>
             <div className="mb-2 cursor-pointer text-blue-500">Check service history</div>
           </div>
-          <div className="flex mt-5 gap-10">
-            <div className="w-1/2 text-center">
+          <div className="flex flex-col mt-5 gap-4 md:flex-row md:justify-between md:gap-10">
+            <div className="w-full md:w-1/2 text-center">
               <div className="font-extrabold text-2xl">{startingBid}</div>
               <div className="font-light">Starting Bid</div>
               <Button fullWidth disabled>Book Test Drive Coming Soon ...</Button>
             </div>
-            <div className="w-1/2 text-center">
+            <div className="w-full md:w-1/2 text-center">
               <div className="font-extrabold text-2xl">{highestBid}</div>
               <div className="font-light">Current bid</div>
               {isPlacingBid ? (

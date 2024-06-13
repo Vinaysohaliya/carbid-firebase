@@ -1,107 +1,104 @@
-import { Divider } from '@nextui-org/react'
-import React from 'react'
-import vehicleSlice from '../Redux/vehicleSlice';
+import React from 'react';
+import { Divider } from '@nextui-org/react';
 
-const Vehicleinfo = ({ vehicle}) => {
-  // console.log(Vehicleinfo);
+const Vehicleinfo = ({ vehicle }) => {
   return (
-    <div className='w-1/2 mt-10'>
-      <div className='flex  ml-20 flex-col'>
-        <div className=' flex justify-between w-full'>
-          <div className=' w-1/3'>
+    <div className='w-full md:w-1/2 mt-10 px-4 md:px-0'>
+      <div className='flex flex-col'>
+        <div className='flex flex-wrap justify-between'>
+          <div className='w-full md:w-1/2 lg:w-1/3 mb-4'>
             <p className='font-light'>Vehicle Type</p>
-            <div>Car</div>
+            <div>{vehicle.vehicleType}</div>
             <Divider className="my-4" />
           </div>
-          <div className='w-1/3'>
+          <div className='w-full md:w-1/2 lg:w-1/3 mb-4'>
             <p className='font-light'>Vehicle Brand</p>
-            <div>Car</div>
+            <div>{vehicle.brand}</div>
             <Divider className="my-4" />
           </div>
         </div>
-        <div className=' flex justify-between w-full'>
-          <div className=' w-1/3'>
-            <p className='font-light'>Fule Type</p>
-            <div>Car</div>
+        <div className='flex flex-wrap justify-between'>
+          <div className='w-full md:w-1/2 lg:w-1/3 mb-4'>
+            <p className='font-light'>Fuel Type</p>
+            <div>{vehicle.fuelType}</div>
             <Divider className="my-4" />
           </div>
-          <div className='w-1/3'>
+          <div className='w-full md:w-1/2 lg:w-1/3 mb-4'>
             <p className='font-light'>Transmission</p>
-            <div>{Vehicleinfo.transmission}</div>
+            <div>{vehicle.transmission}</div>
             <Divider className="my-4" />
           </div>
         </div>
-        <div className=' flex justify-between w-full'>
-          <div className=' w-1/3'>
+        <div className='flex flex-wrap justify-between'>
+          <div className='w-full md:w-1/2 lg:w-1/3 mb-4'>
             <p className='font-light'>Mileage</p>
-            <div>Car</div>
+            <div>{vehicle.mileage}</div>
             <Divider className="my-4" />
           </div>
-          <div className='w-1/3'>
+          <div className='w-full md:w-1/2 lg:w-1/3 mb-4'>
             <p className='font-light'>Engine</p>
-            <div>Car</div>
+            <div>{vehicle.engine}</div>
             <Divider className="my-4" />
           </div>
         </div>
-        <div className=' flex justify-between w-full'>
-          <div className=' w-1/3'>
+        <div className='flex flex-wrap justify-between'>
+          <div className='w-full md:w-1/2 lg:w-1/3 mb-4'>
             <p className='font-light'>Max Power</p>
-            <div>Car</div>
+            <div>{vehicle.maxPower}</div>
             <Divider className="my-4" />
           </div>
-          <div className='w-1/3'>
+          <div className='w-full md:w-1/2 lg:w-1/3 mb-4'>
             <p className='font-light'>Torque</p>
-            <div>Car</div>
+            <div>{vehicle.torque}</div>
             <Divider className="my-4" />
           </div>
         </div>
-        <div className=' flex justify-between w-full'>
-          <div className=' w-1/3'>
+        <div className='flex flex-wrap justify-between'>
+          <div className='w-full md:w-1/2 lg:w-1/3 mb-4'>
             <p className='font-light'>Seats</p>
-            <div>Car</div>
+            <div>{vehicle.seats}</div>
             <Divider className="my-4" />
           </div>
-          <div className='w-1/3'>
+          <div className='w-full md:w-1/2 lg:w-1/3 mb-4'>
             <p className='font-light'>Wheel Size</p>
-            <div>Car</div>
+            <div>{vehicle.wheelSize}</div>
             <Divider className="my-4" />
           </div>
         </div>
-        <div className=' flex justify-between w-full'>
-          <div className=' w-1/3'>
+        <div className='flex flex-wrap justify-between'>
+          <div className='w-full md:w-1/2 lg:w-1/3 mb-4'>
             <p className='font-light'>Ownership</p>
-            <div>{Vehicleinfo.ownerType}</div>
+            <div>{vehicle.ownerType}</div>
             <Divider className="my-4" />
           </div>
-          <div className='w-1/3'>
+          <div className='w-full md:w-1/2 lg:w-1/3 mb-4'>
             <p className='font-light'>Distance travelled</p>
-            <div>{Vehicleinfo.travelDistance}</div>
+            <div>{vehicle.distanceTravelled}</div>
             <Divider className="my-4" />
           </div>
         </div>
-        <div className=' flex justify-between w-full'>
-          <div className=' w-1/3'>
+        <div className='flex flex-wrap justify-between'>
+          <div className='w-full md:w-1/2 lg:w-1/3 mb-4'>
             <p className='font-light'>Registration year</p>
-            <div>{Vehicleinfo.registrationYear}</div>
+            <div>{vehicle.registrationYear}</div>
             <Divider className="my-4" />
           </div>
-          <div className='w-1/3'>
+          <div className='w-full md:w-1/2 lg:w-1/3 mb-4'>
             <p className='font-light'>Make year</p>
-            <div>Car</div>
+            <div>{vehicle.makeYear}</div>
             <Divider className="my-4" />
           </div>
         </div>
-        <div className=' flex justify-between w-full'>
-          <div className=' w-1/3'>
+        <div className='flex flex-wrap justify-between'>
+          <div className='w-full md:w-1/2 lg:w-1/3 mb-4'>
             <p className='font-light'>State code</p>
-            <div>Car</div>
+            <div>{vehicle.stateCode}</div>
             <Divider className="my-4" />
           </div>
-          
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Vehicleinfo
+export default Vehicleinfo;

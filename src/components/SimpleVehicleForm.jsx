@@ -157,7 +157,7 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
                 <Radio value="individual">Individual</Radio>
               </div>
             </RadioGroup>
-            <h2>Seller Information</h2>
+            <h2 className='text-blue-500'>Seller Information</h2>
             {formData.sellerType === 'individual' && <div className='flex flex-col my-2'>
               <div className='flex my-2'>
                 <Input
@@ -191,7 +191,7 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
               <span className="text-gray-700">Upload your ID proof</span>
               <div className="mt-1 flex  flex-col">
                 <span className="text-gray-500">(PDF, PNG, JPG up to 5MB)</span>
-                <span className=" bg-gray-200 rounded-md px-3 py-1 size-2/5 flex items-center justify-center text-sm font-medium text-gray-700 mr-2">
+                <span className=" bg-blue-600 rounded-md px-3 py-1 size-2/5 flex items-center justify-center text-sm font-medium mr-2 text-white">
                   Choose file
                 </span>
                 <input type="file" className="sr-only" onChange={(e) => handelIdproof(e.target.files[0])} />
@@ -270,16 +270,16 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
       case 2:
         return (
           <ScrollShadow hideScrollBar className="w-[600px] h-[400px]">
-            <div className=' flex flex-col'>
+            <div className=' flex flex-col '>
               <div >
                 <select
                   value={formData.registrationYear}
                   onChange={(e) => setFormData({ ...formData, registrationYear: e.target.value })}
-                  className="mt-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  className="mt-2 mr-4 border border-blue-300 rounded-md p-1 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 outline-none text-blue-600 bg-white"
                 >
                   <option value="">Select registration year</option>
                   {[2022, 2021, 2020, 2019, 2018].map((year) => (
-                    <option key={year} value={year}>
+                    <option key={year} value={year} className="text-blue-600">
                       {year}
                     </option>
                   ))}
@@ -288,126 +288,133 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
                 <select
                   value={formData.city}
                   onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                  className="mt-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                  className="mt-2 border border-blue-300 rounded-md p-1 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 outline-none text-blue-600 bg-white"
                 >
                   <option value="">City</option>
                   {['bengaluru'].map((city) => (
-                    <option key={city} value={city}>
+                    <option key={city} value={city} className="text-blue-600">
                       {city}
                     </option>
                   ))}
                 </select>
 
-              </div>
-              <div className=' flex items-center justify-between my-2'>
-                <select
-                  value={formData.brand}
-                  onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
-                  className='mt-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
-                >
-                  <option value="">Select vehicle brand</option>
-                  {brands.map((brand) => (
-                    <option key={brand} value={brand}>{brand}</option>
-                  ))}
-                </select>
-
-
-                <select
-                  value={formData.model}
-                  onChange={(e) => setFormData({ ...formData, model: e.target.value })}
-                  className='mt-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
-                >
-                  <option value="">Select vehicle model</option>
-                  {models.map((model) => (
-                    <option key={model} value={model}>
-                      {model}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className=' flex items-center justify-between my-2'>
-
-                <div>
-                  <label value="">Select vehicleType </label>
-                  <select
-                    value={formData.vehicleType}
-                    onChange={(e) => setFormData({ ...formData, vehicleType: e.target.value })}
-                    className='mt-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
-                  >
-                    <option value="car">Car</option>
-                    <option value="bike">Bike</option>
-                    <option value="scooty">Scooty</option>
-                  </select>
-                </div>
-
-
-                <div>
-                  <label value="">Select fuelType </label>
-                  <select
-                    value={formData.fuelType}
-                    onChange={(e) => setFormData({ ...formData, fuelType: e.target.value })}
-                    className='mt-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
-                  >
-                    <option value="petrol">Petrol</option>
-                    <option value="diesel">Diesel</option>
-                    <option value="cng">CNG</option>
-                  </select>
-                </div>
-
 
               </div>
+              <div className='flex items-center justify-between my-2 '>
+  <select
+    value={formData.brand}
+    onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
+    className='mt-2 border border-blue-300 rounded-md p-1 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 outline-none text-blue-600 bg-white'
+  >
+    <option value="">Select vehicle brand</option>
+    {brands.map((brand) => (
+      <option key={brand} value={brand} className="text-blue-600">
+        {brand}
+      </option>
+    ))}
+  </select>
+
+  <select
+    value={formData.model}
+    onChange={(e) => setFormData({ ...formData, model: e.target.value })}
+    className='mt-2 border border-blue-300 rounded-md p-1 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 outline-none text-blue-600 bg-white'
+  >
+    <option value="">Select vehicle model</option>
+    {models.map((model) => (
+      <option key={model} value={model} className="text-blue-600">
+        {model}
+      </option>
+    ))}
+  </select>
+</div>
+
+
+<div className='flex items-center justify-between my-2'>
+
+<div className='border border-blue-300 rounded-md p-1'>
+  <label className="text-blue-600">Select vehicle type</label>
+  <select
+    value={formData.vehicleType}
+    onChange={(e) => setFormData({ ...formData, vehicleType: e.target.value })}
+    className='mt-2  focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 outline-none text-blue-600 bg-white'
+  >
+    <option value="car">Car</option>
+    <option value="bike">Bike</option>
+    <option value="scooty">Scooty</option>
+  </select>
+</div>
+
+<div className="ml-4 border border-blue-300 rounded-md p-1">
+  <label className="text-blue-600">Select fuel type</label>
+  <select
+    value={formData.fuelType}
+    onChange={(e) => setFormData({ ...formData, fuelType: e.target.value })}
+    className='mt-2  focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 outline-none text-blue-600 bg-white'
+  >
+    <option value="petrol">Petrol</option>
+    <option value="diesel">Diesel</option>
+    <option value="cng">CNG</option>
+  </select>
+</div>
+
+</div>
+
 
 
 
             </div>
-            <div className=' flex items-center w-full justify-between mb-2'>
-              <div className='w-full'>
-                <p>Distance Travel</p>
-                <Input
-                  type="text"
-                  placeholder="Travel Distance (in kilometers)"
-                  value={formData.travelDistance}
-                  radius='sm'
-                  className='mt-2 w-2/3 '
-                  onChange={(e) => setFormData({ ...formData, travelDistance: e.target.value })}
-                />
-              </div>
-              <div className=''>
-                <p>Transmission Type</p>
-                <RadioGroup
-                  value={formData.transmission}
-                  // label=""
-                  className="mt-2 "
-                  onChange={(e) => setFormData({ ...formData, transmission: e.target.value })}
-                >
-                  <div className=' flex items-center w-1/2'>
-                    <Radio value="auto">Automatic</Radio>
-                    <Radio value="manual">Manual</Radio>
-                  </div>
-                </RadioGroup>
-              </div>
-            </div>
-            <RadioGroup
-              value={formData.ownerType}
-              label="Owner Type"
-              className="mt-2"
-              onChange={(e) => setFormData({ ...formData, ownerType: e.target.value })}
-            >
-              <div className='flex mb-2'>
-                <Radio value="first" >First Owner</Radio>
-                <Radio value="second" className='mx-2'>Second Owner</Radio>
-                <Radio value="third">Third Owner</Radio>
-              </div>
-            </RadioGroup>
-            <Input
-              type="text"
-              placeholder="Car Location"
-              value={formData.carLocation}
-              radius='sm'
-              className='mt-2'
-              onChange={(e) => setFormData({ ...formData, carLocation: e.target.value })}
-            />
+            <div className='flex items-center w-full justify-between mb-2'>
+
+{/* Distance Travel */}
+<div className='w-full'>
+  <p className="text-blue-600">Distance Travel</p>
+  <input
+    type="text"
+    placeholder="Travel Distance (in kilometers)"
+    value={formData.travelDistance}
+    onChange={(e) => setFormData({ ...formData, travelDistance: e.target.value })}
+    className='mt-2 px-3 py-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 outline-none text-blue-600 bg-white w-2/3'
+  />
+</div>
+
+{/* Transmission Type */}
+<div className=''>
+  <p className='text-blue-600'>Transmission Type</p>
+  <RadioGroup
+    value={formData.transmission}
+    onChange={(e) => setFormData({ ...formData, transmission: e.target.value })}
+    className="mt-2"
+  >
+    <div className='flex items-center'>
+      <Radio value="auto" className="mr-4">Automatic</Radio>
+      <Radio value="manual" className="ml-4">Manual</Radio>
+    </div>
+  </RadioGroup>
+</div>
+</div>
+
+<RadioGroup
+  value={formData.ownerType}
+  label="Owner Type"
+  className="mt-2"
+  onChange={(e) => setFormData({ ...formData, ownerType: e.target.value })}
+>
+  <div className='flex mb-2'>
+    <Radio value="first" className="mr-4">First Owner</Radio>
+    <Radio value="second" className='mx-4'>Second Owner</Radio>
+    <Radio value="third">Third Owner</Radio>
+  </div>
+</RadioGroup>
+
+<Input
+  type="text"
+  placeholder="Car Location"
+  value={formData.carLocation}
+  radius='sm'
+  className='mt-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
+  onChange={(e) => setFormData({ ...formData, carLocation: e.target.value })}
+/>
+
             <RadioGroup
               value={formData.modification}
               label="Has there been any modification?"
@@ -436,14 +443,15 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
       case 3:
         return (
           <div>
-            <input
-              type="file"
-              placeholder="Upload vehicle photos"
-              onChange={(e) => handlePhotoUpload(e.target.files)}
-              multiple
-              radius='sm'
-              className='mt-2'
-            />
+        <input
+  type="file"
+  placeholder="Upload vehicle photos"
+  onChange={(e) => handlePhotoUpload(e.target.files)}
+  multiple
+  className="mt-2 rounded-md bg-blue-500 text-white px-4 py-2 focus:outline-none focus:bg-blue-600 focus:border-blue-700 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+/>
+
+
             <div className="flex mt-2">
               {photoPreviews.map((preview, index) => (
                 <Image
@@ -459,10 +467,10 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
       case 4:
         return (
           <div>
-            <h2>Pickup Location</h2>
+            <h2 className='text-blue-600'>Pickup Location</h2>
             <div className='flex items-center'>
               <Checkbox
-                onChange={handlepickup}  >Same as car location</Checkbox>
+                onChange={handlepickup}  ><span className='text-blue-600'>Same as car location</span></Checkbox>
             </div>
             <Input
               type="text"
@@ -482,7 +490,7 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
 
   return (
     <>
-      <Button onPress={onOpen} disabled={formDisabled}>Add Vehicle</Button>
+      <Button className='font-bold bg-blue-600 text-white' onPress={onOpen} disabled={formDisabled}>Add Vehicle</Button>
       <Modal size='2xl' isOpen={isOpen} onOpenChange={onClose}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">Submit Vehicle Details</ModalHeader>
@@ -497,13 +505,15 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
                 ) : (
                   <>
                     <Button
+                    className="mr-2 bg-blue-600 text-white"
                       radius='sm'
-                      className='mr-2'
+                     
                       onClick={() => setStage((prevStage) => Math.max(prevStage - 1, 1))}
                     >
                       Previous
                     </Button>
                     <Button
+                    className="mr-2 bg-blue-600 text-white"
                       type="button"
                       radius='sm'
                       onClick={(e) => {

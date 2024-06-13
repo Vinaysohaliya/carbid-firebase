@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spinner } from '@nextui-org/react';
-import { fetchAllVehicles, updateAdminVehicleStatus, updateVehicleDetails } from '../Redux/vehicleSlice';
+import { fetchAllVehicles, updateAdminVehicleStatus } from '../Redux/vehicleSlice';
 
 export const AdminDashboard = () => {
   const dispatch = useDispatch();
@@ -64,7 +64,7 @@ export const AdminDashboard = () => {
                 <TableColumn>SELLER TYPE</TableColumn>
                 <TableColumn>EVALUATION STATUS</TableColumn>
                 <TableColumn>ADMIN APPROVE</TableColumn>
-                <TableColumn>Edit</TableColumn>
+                <TableColumn>Edit</TableColumn> {/* Remove className='text-blue-600' which was causing syntax error */}
               </TableHeader>
               <TableBody>
                 {vehicleList.map((vehicle) => (
@@ -97,35 +97,37 @@ export const AdminDashboard = () => {
               <ModalBody className="space-y-4 overflow-auto max-h-[400px]">
                 {selectedVehicle && (
                   <div className="space-y-2">
-                    <p><strong>ID:</strong> {selectedVehicle.id}</p>
-                    <p><strong>Brand:</strong> {selectedVehicle.brand}</p>
-                    <p><strong>Model:</strong> {selectedVehicle.model}</p>
-                    <p><strong>Owner Type:</strong> {selectedVehicle.ownerType}</p>
-                    <p><strong>Seller Type:</strong> {selectedVehicle.sellerType}</p>
-                    <p><strong>Evaluation Status:</strong> {selectedVehicle.evaluationDone}</p>
-                    <p><strong>Address:</strong> {selectedVehicle.address}</p>
-                    <p><strong>Admin Approve:</strong> {selectedVehicle.adminApprove.toString()}</p>
-                    <p><strong>Auction ID:</strong> {selectedVehicle.auctionId}</p>
-                    <p><strong>Auction Status:</strong> {selectedVehicle.auctionStatus.toString()}</p>
-                    <p><strong>Car Location:</strong> {selectedVehicle.carLocation}</p>
-                    <p><strong>Created At:</strong> {new Date(selectedVehicle.createdAt.seconds * 1000).toLocaleString()}</p>
-                    <p><strong>Dealership Name:</strong> {selectedVehicle.dealershipName}</p>
-                    <p><strong>Fuel Type:</strong> {selectedVehicle.fuelType}</p>
-                    <p><strong>ID Proof:</strong> <a href={selectedVehicle.idProof} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">View ID Proof</a></p>
-                    <p><strong>Mobile:</strong> {selectedVehicle.mobile}</p>
-                    <p><strong>Modification:</strong> {selectedVehicle.modification}</p>
-                    <p><strong>Modification Details:</strong> {selectedVehicle.modificationDetails}</p>
-                    <p><strong>Name:</strong> {selectedVehicle.name}</p>
-                    <p><strong>Pickup Location:</strong> {selectedVehicle.pickupLocation}</p>
-                    <p><strong>Registration Year:</strong> {selectedVehicle.registrationYear}</p>
-                    <p><strong>Safety Rating:</strong> {selectedVehicle.safetyRating}</p>
-                    <p><strong>Transmission:</strong> {selectedVehicle.transmission}</p>
-                    <p><strong>Travel Distance:</strong> {selectedVehicle.travelDistance}</p>
-                    <p><strong>Vehicle Type:</strong> {selectedVehicle.vehicleType}</p>
-                    <p><strong>Website:</strong> {selectedVehicle.website}</p>
-                    <p><strong>Vehicle Photos:</strong> {selectedVehicle.vehiclePhotos.map((photo, index) => (
+                    <p className="m-5 border-b border-blue-300"><strong>ID:</strong> {selectedVehicle.id}</p>
+                    <p className="m-5 border-b border-blue-300"><strong>Brand:</strong> {selectedVehicle.brand}</p>
+                    <p className="m-5 border-b border-blue-300"><strong>Model:</strong> {selectedVehicle.model}</p>
+                    <p className="m-5 border-b border-blue-300"><strong>Owner Type:</strong> {selectedVehicle.ownerType}</p>
+                    <p className="m-5 border-b border-blue-300"><strong>Seller Type:</strong> {selectedVehicle.sellerType}</p>
+                    <p className="m-5 border-b border-blue-300"><strong>Evaluation Status:</strong> {selectedVehicle.evaluationDone}</p>
+                    <p className="m-5 border-b border-blue-300"><strong>Admin Approve:</strong> {selectedVehicle.adminApprove.toString()}</p>
+                    <p className='m-5 border-b border-blue-300'><strong  className='text-blue-600'>Address:</strong> {selectedVehicle.address}</p>
+                    {/* <p className='m-5 border-b border-blue-300'><strong  className='text-blue-600'>Admin Approve:</strong> {selectedVehicle.adminApprove.toString()}</p> */}
+                    <p className='m-5 border-b border-blue-300'><strong className='text-blue-600'>Auction ID:</strong> {selectedVehicle.auctionId}</p>
+                    <p className='m-5 border-b border-blue-300'><strong className='text-blue-600'>Auction Status:</strong> {selectedVehicle.auctionStatus.toString()}</p>
+                    <p className=' m-5 border-b border-blue-300'><strong className='text-blue-600'>Car Location:</strong> {selectedVehicle.carLocation}</p>
+                    <p className='m-5 border-b border-blue-300'><strong className='text-blue-600'>Created At:</strong> {new Date(selectedVehicle.createdAt.seconds * 1000).toLocaleString()}</p>
+                    <p className='m-5 border-b border-blue-300'><strong className='text-blue-600'>Dealership Name:</strong> {selectedVehicle.dealershipName}</p>
+                    <p className='m-5 border-b border-blue-300'><strong className='text-blue-600'>Fuel Type:</strong> {selectedVehicle.fuelType}</p>
+                    <p className='m-5 border-b border-blue-300'><strong className='text-blue-600'>ID Proof:</strong> <a href={selectedVehicle.idProof} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">View ID Proof</a></p>
+                    <p className='m-5 border-b border-blue-300'><strong className='text-blue-600'>Mobile:</strong> {selectedVehicle.mobile}</p>
+                    <p className='m-5 border-b border-blue-300'><strong className='text-blue-600'>Modification:</strong> {selectedVehicle.modification}</p>
+                    <p className='m-5 border-b border-blue-300'><strong className='text-blue-600'>Modification Details:</strong> {selectedVehicle.modificationDetails}</p>
+                    <p className='m-5 border-b border-blue-300'><strong className='text-blue-600'>Name:</strong> {selectedVehicle.name}</p>
+                    <p className='m-5 border-b border-blue-300'><strong className='text-blue-600'>Pickup Location:</strong> {selectedVehicle.pickupLocation}</p>
+                    <p className='m-5 border-b border-blue-300'><strong className='text-blue-600'>Registration Year:</strong> {selectedVehicle.registrationYear}</p>
+                    <p className='m-5 border-b border-blue-300'><strong  className='text-blue-600' >Safety Rating:</strong> {selectedVehicle.safetyRating}</p>
+                    <p className='m-5 border-b border-blue-300'><strong  className='text-blue-600'>Transmission:</strong> {selectedVehicle.transmission}</p>
+                    <p className='m-5 border-b border-blue-300'><strong  className='text-blue-600'>Travel Distance:</strong> {selectedVehicle.travelDistance}</p>
+                    <p className='m-5 border-b border-blue-300'><strong  className='text-blue-600'>Vehicle Type:</strong> {selectedVehicle.vehicleType}</p>
+                    <p className='m-5 border-b border-blue-300'><strong  className='text-blue-600'>Website:</strong> {selectedVehicle.website}</p>
+                    <p className='m-5 border-b border-blue-300'><strong  className='text-blue-600'>Vehicle Photos:</strong> {selectedVehicle.vehiclePhotos.map((photo, index) => (
                       <a key={index} href={photo} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Photo {index + 1}</a>
                     ))}</p>
+    
                   </div>
                 )}
               </ModalBody>

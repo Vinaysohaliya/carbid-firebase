@@ -1,15 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import SignIn from '../components/Signin';
 
 const AuthLayout = ({ children }) => {
-  const isLoggedIn = localStorage.getItem('isLoggedIn');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Check localStorage or any other authentication mechanism
+    const storedLoggedInStatus = localStorage.getItem('isLoggedIn');
+    setIsLoggedIn(storedLoggedInStatus === 'true');
+  }, []);
 
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       {isLoggedIn ? (
-        children
+        // Render children if logged in
+        <div className="flex-grow">{children}</div>
       ) : (
-        <SignIn/>
+        // Render sign-in component if not logged in
+        <SignIn />
       )}
     </div>
   );

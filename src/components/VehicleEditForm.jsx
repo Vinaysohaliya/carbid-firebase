@@ -25,6 +25,7 @@ const VehicleEditForm = ({ selectedVehicle, onClose }) => {
   const [interiorPreviews, setInteriorPreviews] = useState([]);
 const [idProofEvaluterPanel, setidProofEvaluterPanel] = useState();
 const [IdPreviews , setIdPreviews ] = useState();
+const [formVisible, setFormVisible] = useState(true)
 
   const handlePhotoUpload = (files) => {
     const photoFiles = Array.from(files);
@@ -71,8 +72,8 @@ const [IdPreviews , setIdPreviews ] = useState();
               label="Seller Type"
               onChange={(e) => setFormData({ ...formData, sellerType: e.target.value })}
             >
-              <Radio value="dealer">Dealer</Radio>
-              <Radio value="individual">Individual</Radio>
+              <Radio value="dealer"><span className='text-blue-600'>Dealer</span></Radio>
+              <Radio value="individual"><span className='text-blue-600'>Individual</span></Radio>
             </RadioGroup>
             <Input
               type="text"
@@ -80,6 +81,7 @@ const [IdPreviews , setIdPreviews ] = useState();
               name="name"
               value={formData.name}
               onChange={handleChange}
+              className='mb-3 mt-2'
             />
             <Input
               type="tel"
@@ -87,6 +89,7 @@ const [IdPreviews , setIdPreviews ] = useState();
               name="mobile"
               value={formData.mobile}
               onChange={handleChange}
+               className='mb-3'
             />
             <Input
               type="text"
@@ -94,8 +97,17 @@ const [IdPreviews , setIdPreviews ] = useState();
               name="address"
               value={formData.address}
               onChange={handleChange}
+               className='mb-3'
             />
-            <input type="file" onChange={(e) => handleIdProofUpload(e.target.files[0])} />
+            <label className="block m-4">
+              <div className="mt-1 flex  flex-col">
+                <span className=" bg-blue-600 rounded-md px-3 py-1 size-2/5 flex items-center justify-center text-sm font-medium mr-2 text-white">
+                  Choose file
+                </span>
+                <input type="file" className="sr-only" onChange={(e) => handleIdProofUpload(e.target.files[0])} />
+              </div>
+            </label>
+            {/* <input type="file" onChange={(e) => handleIdProofUpload(e.target.files[0])} /> */}
             <Image src={IdPreviews} alt={'ID Proof'} className="w-20 h-20 object-cover rounded-md" />
 
             <Image src={formData.idProof} alt={'ID Proof'} className="w-20 h-20 object-cover rounded-md" />
@@ -105,6 +117,7 @@ const [IdPreviews , setIdPreviews ] = useState();
               name="registrationYear"
               value={formData.registrationYear}
               onChange={handleChange}
+               className='mb-3 mt-2'
             />
             <Input
               type="text"
@@ -112,6 +125,8 @@ const [IdPreviews , setIdPreviews ] = useState();
               name="brand"
               value={formData.brand}
               onChange={handleChange}
+              className='mb-3'
+              
             />
             <Input
               type="text"
@@ -119,6 +134,8 @@ const [IdPreviews , setIdPreviews ] = useState();
               name="model"
               value={formData.model}
               onChange={handleChange}
+              className='mb-3'
+
             />
             <Input
               type="text"
@@ -126,26 +143,28 @@ const [IdPreviews , setIdPreviews ] = useState();
               name="travelDistance"
               value={formData.travelDistance}
               onChange={handleChange}
+              className='mb-3'
+
             />
             <RadioGroup
               value={formData.transmission}
               label="Transmission"
               onChange={(e) => setFormData({ ...formData, transmission: e.target.value })}
             >
-              <Radio value="auto">Automatic</Radio>
-              <Radio value="manual">Manual</Radio>
+              <Radio value="auto"><span className='text-blue-600'>Automatic</span></Radio>
+              <Radio value="manual"><span className='text-blue-600'>Manual</span></Radio>
             </RadioGroup>
             <RadioGroup
               value={formData.ownerType}
               label="Owner Type"
               onChange={(e) => setFormData({ ...formData, ownerType: e.target.value })}
             >
-              <Radio value="first">First Owner</Radio>
-              <Radio value="second">Second Owner</Radio>
-              <Radio value="third">Third Owner</Radio>
+              <Radio value="first"><span className='text-blue-600'>First Owner</span></Radio>
+              <Radio value="second"><span className='text-blue-600'>Second Owner</span></Radio>
+              <Radio value="third"><span className='text-blue-600'>Third Owner</span></Radio>
             </RadioGroup>
             <Checkbox name="pickupLocationSame" checked={formData.pickupLocationSame} onChange={handleChange}>
-              Same as car location
+            <span className='text-blue-600'>Same as car location</span>
             </Checkbox>
             <Input
               type="text"
@@ -153,6 +172,7 @@ const [IdPreviews , setIdPreviews ] = useState();
               name="pickupLocation"
               value={formData.pickupLocation}
               onChange={handleChange}
+              className='mb-4 mt-4'
             />
           </div>
         );
@@ -164,8 +184,8 @@ const [IdPreviews , setIdPreviews ] = useState();
               value={formData.safetyRating}
               onChange={(e) => setFormData({ ...formData, safetyRating: e.target.value })}
             >
-              <Radio value="NCAL">NCAL</Radio>
-              <Radio value="GNCAP">GNCAP</Radio>
+              <Radio value="NCAL"><span className='text-blue-600'>NCAL</span></Radio>
+              <Radio value="GNCAP"><span className='text-blue-600'>GNCAP</span></Radio>
             </RadioGroup>
           </div>
         );
@@ -177,17 +197,18 @@ const [IdPreviews , setIdPreviews ] = useState();
               value={formData.modification}
               onChange={(e) => setFormData({ ...formData, modification: e.target.value })}
             >
-              <Radio value="yes">Yes</Radio>
-              <Radio value="no">No</Radio>
+              <Radio value="yes"><span className='text-blue-600'>Yes</span></Radio>
+              <Radio value="no"><span className='text-blue-600'>No</span></Radio>
             </RadioGroup>
             {formData.modification === 'yes' && (
               <>
-                <h2>If Yes, Please Specify</h2>
+                <h2 className='text-blue-600 mt-3 mb-4'>If Yes, Please Specify</h2>
                 <Input
                   type="text"
                   name="modificationDetails"
                   value={formData.modificationDetails}
                   onChange={handleChange}
+                  className='mb-5'
                 />
               </>
             )}
@@ -221,8 +242,8 @@ const [IdPreviews , setIdPreviews ] = useState();
         );
       case 5:
         return (
-          <div>
-            <h3>Status</h3>
+          <div className='mb-5'>
+            <h3 className='text-blue-600'>Status</h3>
             <Input
               type="number"
               label="Name"
@@ -235,8 +256,8 @@ const [IdPreviews , setIdPreviews ] = useState();
               label="Status"
               onChange={(e) => setFormData({ ...formData, evaluationDone: e.target.value })}
             >
-              <Radio value="APPROVE">Approve</Radio>
-              <Radio value="DECLINE">Decline</Radio>
+              <Radio value="APPROVE"><span className='text-blue-600'>Approve</span></Radio>
+              <Radio  value="DECLINE"><span className=' text-blue-600'>Decline</span></Radio>
             </RadioGroup>
           </div>
         );
@@ -254,21 +275,33 @@ const [IdPreviews , setIdPreviews ] = useState();
         idProofEvaluterPanel,
         updatedData: { ...updatedDataWithoutEmailNameAndvehicleId, vehiclePhotos: interiorPhotos }
       }));
+      setFormVisible(false)
     } catch (err) {
       console.error('Failed to update vehicle details:', err);
       alert('Failed to update vehicle details');
     }
   };
+  if (!formVisible) {
+     alert("SUCCESS")
+  }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} >
       <ScrollShadow className="w-full sm:w-[450px] sm:h-[400px] max-w-full max-h-[75vh] overflow-auto">
 
         {renderStage()}
-        <Button onClick={() => setStage(stage > 1 ? stage - 1 : 1)}>Previous</Button>
-        <Button onClick={() => setStage(stage < 5 ? stage + 1 : 5)}>Next</Button>
-        {stage === 5 && <Button type="submit">Confirm & Proceed</Button>}
-        <Button onClick={onClose}>Close</Button>
+        <div className='flex justify-around mt-12'>
+        {stage > 1 && (
+      <Button className='bg-blue-600 text-white mr-2' onClick={() => setStage(stage - 1)}>Previous</Button>
+    )}
+    {stage < 5 && (
+      <Button className='bg-blue-600 text-white mr-2' onClick={() => setStage(stage + 1)}>Next</Button>
+    )}
+    {stage === 5 && (
+      <Button  className='bg-blue-600 text-white mr-2' type="submit">Confirm & Proceed</Button>
+    )}
+    <Button className='bg-blue-600 text-white' onClick={onClose}>Close</Button>
+        </div>
       </ScrollShadow>
     </form>
   );

@@ -4,11 +4,11 @@ import Filters from '../components/Filter/Filters';
 
 const Allvehicles = () => {
   return (
-    <div className="flex">
-      <div className="w-1/6 pr-4">
+    <div className="flex flex-col md:flex-row"> {/* Flex column for mobile, flex row for larger screens */}
+      <div className="md:w-1/6 pr-4"> {/* Sidebar with filters */}
         <Filters />
       </div>
-      <div className="w-3/4">
+      <div className="md:w-5/6"> {/* Vehicle list */}
         <VehicleList />
       </div>
     </div>

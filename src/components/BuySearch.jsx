@@ -14,9 +14,8 @@ import b8 from '../assets/c3e37bcf2700ab5e993594e2e31f0852.png'
 import b9 from '../assets/d0202be409abd6ce3bc3cb03884c56e7.jpg'
 import b10 from '../assets/dd574ce9ae4551ed764f80ff3e7addc1.png'
 
-
 const BuySearch = () => {
-  const brands =[b1,b2,b3,b4,b5,b6,b7,b8,b9,b10]
+  const brands = [b1, b2, b3, b4, b5, b6, b7, b8, b9, b10];
   const [searchTerm, setSearchTerm] = useState('');
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -64,7 +63,7 @@ const BuySearch = () => {
         style={{ height: '600px' }}
       />
       <div className="absolute bottom-16 left-10 right-10 z-10">
-        <div className="flex flex-col w-1/3">
+        <div className="flex flex-col w-full sm:w-2/3 lg:w-1/2 mx-auto">
           <Input
             onChange={handleSearchChange}
             label="Search"
@@ -96,14 +95,14 @@ const BuySearch = () => {
           />
           {loading ? (
             <div className="flex justify-center mt-4">
-              <CircularProgress  />
+              <CircularProgress />
             </div>
           ) : vehicles.length > 0 ? (
-            <ScrollShadow className="w-full max-w-[470px] h-[200px]">
+            <ScrollShadow className="w-full max-w-[470px] h-[200px] mt-4">
               <div className="flex flex-col w-full">
                 {vehicles.map((vehicle) => (
                   <Link className="flex flex-col" key={vehicle.id} href={`/vehicle/${vehicle.id}`}>
-                    <div className="bg-white w-full h-auto gap-2  py-1 px-2 rounded-md flex flex-col sm:flex-row items-center justify-start">
+                    <div className="bg-white w-full h-auto gap-2 py-1 px-2 rounded-md flex flex-col sm:flex-row items-center justify-start">
                       <Image
                         width={50}
                         height={50}
@@ -113,20 +112,20 @@ const BuySearch = () => {
                       />
                       <div className="text-center flex items-center justify-center gap-2 mt-2 sm:mt-0 sm:ml-4">
                         <div className='text-black'>{vehicle.model}</div>
-                        <div className=" text-black">{vehicle.brand}</div>
+                        <div className="text-black">{vehicle.brand}</div>
                       </div>
                     </div>
-                    <Divider className="" />
+                    <Divider className="mt-2" />
                   </Link>
                 ))}
               </div>
             </ScrollShadow>
           ) : (
-            <p className="text-center mt-4 text-red-500 ">No results found</p>
+            <p className="text-center mt-4 text-red-500">No results found</p>
           )}
         </div>
-        <div className="mb-4 text-white font-semibold">Search By Brand</div>
-        <div className="flex gap-4">
+        <div className="mb-4 text-white font-semibold mt-4 sm:mt-8">Search By Brand</div>
+        <div className="flex flex-wrap gap-4 justify-center sm:justify-start">
           {brands.map((b, index) => (
             <div
               key={index}
