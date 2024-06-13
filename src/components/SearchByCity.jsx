@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, CircularProgress } from '@nextui-org/react';
+import { Modal, ModalContent,Link, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, CircularProgress } from '@nextui-org/react';
 import { useDispatch } from 'react-redux';
 import { fetchByCity } from '../Redux/vehicleSlice';
+import { useLocation } from 'react-router-dom';
 
 const SearchByCity = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -9,7 +10,7 @@ const SearchByCity = () => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-
+  const location= useLocation();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,7 +38,6 @@ const SearchByCity = () => {
   const handleInputChange = (e) => {
     setFilterCriteria({ ...filterCriteria, city: e.target.value });
   };
-
   return (
     <>
       <Button onPress={onOpen} className='w-full md:w-auto'>Search Vehicle</Button>
@@ -62,9 +62,14 @@ const SearchByCity = () => {
               {loading ? (
                 <CircularProgress aria-label="Loading..." />
               ) : results.length ? (
-                <ul>
+                <ul className=' flex flex-col'>
                   {results.map((result, index) => (
-                    <li key={index}>{result.model}</li>
+                    <Link
+                    href={location.pathname.includes('vehicle/') ? `${result.id}` : `vehicle/${result.id}`}
+                    key={index}
+                  >
+                    {result.model}
+                  </Link>
                   ))}
                 </ul>
               ) : (

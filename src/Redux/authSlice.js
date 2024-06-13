@@ -28,6 +28,7 @@ export const createAccount = createAsyncThunk("/auth/signup", async ({ email, pa
         await setDoc(doc(db, 'users', userCredential.user.uid), {
             name: name,
             role: role,
+            email:email,
             profilePicURL: profilePicURL
         });
 
