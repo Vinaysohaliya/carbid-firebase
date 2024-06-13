@@ -12,6 +12,7 @@ import Clock from '../Clock'
 
 
 const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmount = null, bids = null }) => {
+  console.log(vehicle);
   const { id, make, model, vehiclePhotos, brand, fuelType, transmission, distanceTraveled } = vehicle;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -76,7 +77,7 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
       <Card shadow="dark-lg" className="w-[300px] flex flex-col rounded-xl overflow-hidden">
         <div className="relative h-48 overflow-hidden">
           <div className="absolute z-10 top-2 left-2 bg-gray-800 bg-opacity-75 text-white rounded-md px-2 py-1 text-sm">
-          {/* <Clock vehicle={vehicle} /> */}
+          <Clock vehicle={vehicle} />
           </div>
           <Image radius="none" alt={`${make} ${model}`} src={vehiclePhotos} className="object-cover w-full h-full z-0" />
         </div>

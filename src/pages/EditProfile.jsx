@@ -56,27 +56,30 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 border border-blue-100 border-solid p-10">
-      {!isEditing ? (
-        <div className="text-center">
-          {previewPic ? (
-            <Image src={previewPic} alt="Profile" className="w-20 h-20 rounded-full mx-auto mb-4 " />
-          ) : (
-            <div className="w-20 h-20 rounded-full bg-gray-300 mx-auto mb-4 flex items-center justify-center">
-              <span className="text-xl text-white font-bold">{name.charAt(0)}</span>
-            </div>
-          )}
-          <h2 className="text-xl font-semibold">{name}</h2>
-          <p className="text-gray-600">{email}</p>
-          <p className="text-gray-600">{role}</p>
-          <p className="text-gray-600">Your profile is under review</p>
-          <button
-            onClick={() => setIsEditing(true)}
-            className="mt-4 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700"
-          >
-            Edit Details
-          </button>
-        </div>
+    <div className="max-w-md mx-auto mt-10 border border-blue-100 border-solid p-10 ">
+    {!isEditing ? (
+      <div className="text-center">
+        {previewPic ? (
+          <div className=" mb-4"> {/* Centering container */}
+            <Image src={previewPic} alt="Profile" className="w-20 h-20 rounded-full mx-auto " />
+          </div>
+        ) : (
+          <div className="w-20 h-20 rounded-full bg-gray-300 mx-auto mb-4 flex items-center justify-center">
+            <span className="text-xl text-white font-bold">{name.charAt(0)}</span>
+          </div>
+        )}
+        <h2 className="text-xl font-semibold mb-2">{name}</h2>
+        <p className="text-gray-600 mb-2">{email}</p>
+        <p className="text-gray-600 mb-2">{role}</p>
+        <p className="text-gray-600 mb-2">Your profile is under review</p>
+        <button
+          onClick={() => setIsEditing(true)}
+          className="mt-4 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700"
+        >
+          Edit Details
+        </button>
+      </div>
+        
       ) : (
         <form onSubmit={handleSubmit}>
           <div className="mb-4">

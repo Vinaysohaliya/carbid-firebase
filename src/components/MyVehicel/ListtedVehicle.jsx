@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserSubmittedVehicles } from '../../Redux/vehicleSlice';
 import VehicleCard from '../Card/VehicleCard';
-import { CircularProgress, Card, Skeleton } from '@nextui-org/react';
+import { Card, Skeleton } from '@nextui-org/react';
 
 const ListtedVehicle = () => {
     const dispatch = useDispatch();
@@ -28,10 +28,10 @@ const ListtedVehicle = () => {
         <div className="container mx-auto px-4">
             <h2 className='text-start mb-6 font-bold text-2xl'>Listed Vehicles</h2>
             {loading ? ( // Show skeleton loading effect while loading is true
-                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 justify-center'>
+                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4'>
                     {[...Array(vehicles.length > 0 ? vehicles.length : 6)].map((_, index) => (
                         <div key={index}>
-                            <Card className="w-[200px] space-y-5 p-4" radius="lg">
+                            <Card className="w-full space-y-5 p-4" radius="lg">
                                 <Skeleton className="rounded-lg">
                                     <div className="h-24 rounded-lg bg-default-300"></div>
                                 </Skeleton>
@@ -51,7 +51,7 @@ const ListtedVehicle = () => {
                     ))}
                 </div>
             ) : (
-                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 justify-center'>
+                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4'>
                     {vehicles && vehicles.map((vehicle) => (
                         <div key={vehicle.id}>
                             <VehicleCard isonListed={true} vehicle={vehicle} bids={vehicle.bids} />

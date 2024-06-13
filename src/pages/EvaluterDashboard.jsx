@@ -6,6 +6,7 @@ import {
   TableBody,
   TableRow,
   TableCell,
+  getKeyValue,
   Button,
   Spinner,
 } from "@nextui-org/react";
@@ -69,12 +70,13 @@ export default function EvaluterDashboard() {
   };
 
   return (
-    <div className="max-w-screen-lg mx-auto px-4 py-8">
-      <div className="flex justify-center mb-5">
+    <div>
+      <div className="btn-container">
         <Button
           color={activeTable === 1 ? "primary" : "secondary"}
           size="sm"
           onClick={() => handleButtonClick(1)}
+          className="mb-5"
         >
           Table 1
         </Button>
@@ -94,12 +96,13 @@ export default function EvaluterDashboard() {
                   <TableColumn key={column.key}>{column.label}</TableColumn>
                 )}
               </TableHeader>
-              <TableBody items={vehicleData}>
+              <TableBody  items={vehicleData}>
                 {(item) => (
-                  <TableRow key={item.vehicleId}>
+                  <TableRow  key={item.vehicleId}>
                     {(columnKey) => (
                       <TableCell>
-                        {columnKey === "Edit" ? (
+                        {getKeyValue(item, columnKey)}
+                        {columnKey === 'Edit' && (
                           <Button
                             color="danger"
                             size="sm"
@@ -107,11 +110,8 @@ export default function EvaluterDashboard() {
                           >
                             Edit
                           </Button>
-                        ) : columnKey === "Status" ? (
-                          <div>{item.evaluationDone}</div>
-                        ) : (
-                          item[columnKey]
                         )}
+                        {columnKey === 'Status' && <div>{item.evaluationDone}</div>}
                       </TableCell>
                     )}
                   </TableRow>

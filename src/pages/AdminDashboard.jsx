@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Spinner } from '@nextui-org/react';
-import { fetchAllVehicles, updateAdminVehicleStatus } from '../Redux/vehicleSlice';
+import { fetchAllVehicles, updateAdminVehicleStatus, updateVehicleDetails } from '../Redux/vehicleSlice';
 
 export const AdminDashboard = () => {
   const dispatch = useDispatch();
@@ -57,14 +57,14 @@ export const AdminDashboard = () => {
           ) : (
             <Table aria-label="Vehicle Details Table">
               <TableHeader>
-                <TableColumn>ID</TableColumn>
-                <TableColumn>BRAND</TableColumn>
-                <TableColumn>MODEL</TableColumn>
-                <TableColumn>OWNER TYPE</TableColumn>
-                <TableColumn>SELLER TYPE</TableColumn>
-                <TableColumn>EVALUATION STATUS</TableColumn>
-                <TableColumn>ADMIN APPROVE</TableColumn>
-                <TableColumn>Edit</TableColumn> {/* Remove className='text-blue-600' which was causing syntax error */}
+                <TableColumn className='text-blue-600'>ID</TableColumn>
+                <TableColumn  className='text-blue-600'>BRAND</TableColumn>
+                <TableColumn  className='text-blue-600'>MODEL</TableColumn>
+                <TableColumn  className='text-blue-600'>OWNER TYPE</TableColumn>
+                <TableColumn  className='text-blue-600'>SELLER TYPE</TableColumn>
+                <TableColumn  className='text-blue-600'>EVALUATION STATUS</TableColumn>
+                <TableColumn  className='text-blue-600'>ADMIN APPROVE</TableColumn>
+                <TableColumn>  className='text-blue-600'Edit</TableColumn>
               </TableHeader>
               <TableBody>
                 {vehicleList.map((vehicle) => (
@@ -97,15 +97,14 @@ export const AdminDashboard = () => {
               <ModalBody className="space-y-4 overflow-auto max-h-[400px]">
                 {selectedVehicle && (
                   <div className="space-y-2">
-                    <p className="m-5 border-b border-blue-300"><strong>ID:</strong> {selectedVehicle.id}</p>
-                    <p className="m-5 border-b border-blue-300"><strong>Brand:</strong> {selectedVehicle.brand}</p>
-                    <p className="m-5 border-b border-blue-300"><strong>Model:</strong> {selectedVehicle.model}</p>
-                    <p className="m-5 border-b border-blue-300"><strong>Owner Type:</strong> {selectedVehicle.ownerType}</p>
-                    <p className="m-5 border-b border-blue-300"><strong>Seller Type:</strong> {selectedVehicle.sellerType}</p>
-                    <p className="m-5 border-b border-blue-300"><strong>Evaluation Status:</strong> {selectedVehicle.evaluationDone}</p>
-                    <p className="m-5 border-b border-blue-300"><strong>Admin Approve:</strong> {selectedVehicle.adminApprove.toString()}</p>
+                    <p className='m-5 border-b border-blue-300'><strong  className='text-blue-600 '>ID:</strong> {selectedVehicle.id}</p>
+                    <p className='m-5 border-b border-blue-300'><strong  className='text-blue-600'>Brand:</strong> {selectedVehicle.brand}</p>
+                    <p className='m-5 border-b border-blue-300'><strong  className='text-blue-600'>Model:</strong> {selectedVehicle.model}</p>
+                    <p className='m-5 border-b border-blue-300'><strong  className='text-blue-600'>Owner Type:</strong> {selectedVehicle.ownerType}</p>
+                    <p className='m-5 border-b border-blue-300'><strong  className='text-blue-600'>Seller Type:</strong> {selectedVehicle.sellerType}</p>
+                    <p className='m-5 border-b border-blue-300'><strong className='text-blue-600'>Evaluation Status:</strong> {selectedVehicle.evaluationDone}</p>
                     <p className='m-5 border-b border-blue-300'><strong  className='text-blue-600'>Address:</strong> {selectedVehicle.address}</p>
-                    {/* <p className='m-5 border-b border-blue-300'><strong  className='text-blue-600'>Admin Approve:</strong> {selectedVehicle.adminApprove.toString()}</p> */}
+                    <p className='m-5 border-b border-blue-300'><strong  className='text-blue-600'>Admin Approve:</strong> {selectedVehicle.adminApprove.toString()}</p>
                     <p className='m-5 border-b border-blue-300'><strong className='text-blue-600'>Auction ID:</strong> {selectedVehicle.auctionId}</p>
                     <p className='m-5 border-b border-blue-300'><strong className='text-blue-600'>Auction Status:</strong> {selectedVehicle.auctionStatus.toString()}</p>
                     <p className=' m-5 border-b border-blue-300'><strong className='text-blue-600'>Car Location:</strong> {selectedVehicle.carLocation}</p>
@@ -127,7 +126,6 @@ export const AdminDashboard = () => {
                     <p className='m-5 border-b border-blue-300'><strong  className='text-blue-600'>Vehicle Photos:</strong> {selectedVehicle.vehiclePhotos.map((photo, index) => (
                       <a key={index} href={photo} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Photo {index + 1}</a>
                     ))}</p>
-    
                   </div>
                 )}
               </ModalBody>

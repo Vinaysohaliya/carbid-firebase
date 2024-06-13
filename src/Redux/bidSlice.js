@@ -80,37 +80,36 @@ export const fetchBidsByUserId = createAsyncThunk(
     try {
       const bids = [];
 
-      // Query the auctions collection for auctions
       const auctionsQuerySnapshot = await getDocs(collection(db, 'auctions'));
 
-      // Iterate through each auction
       for (const auctionDoc of auctionsQuerySnapshot.docs) {
         const auctionData = auctionDoc.data();
         const auctionId = auctionDoc.id;
-        const vehicleId = auctionData.vehicleId; // Assuming vehicleId is a field in auction documents
-        console.log(vehicleId);
-        // Query the bids collection under the auction document
+        const vehicleId = auctionData.vehicleId; 
         const bidsQuerySnapshot = await getDocs(collection(db, `auctions/${auctionId}/bids`));
 
-        // Iterate through each bid in the auction
         for (const bidDoc of bidsQuerySnapshot.docs) {
           const bidData = bidDoc.data();
-          console.log(bidData);
-          // Check if the bid was placed by the specified user
           if (bidData.userId === userId) {
-            console.log("DSf");
             const vehicleDoc = await getDoc(doc(db, 'vehicles', vehicleId));
-            const vehicleData = vehicleDoc.data();
-            bids.push({
-              id: bidDoc.id,
-              auctionId: auctionId,
-              vehicleId: vehicleId,
-              amount: bidData.amount,
-              bidderId: bidData.bidderId,
-              userName: bidData.userName,
-              createdAt: bidData.createdAt,
-              vehicle: vehicleData // Include vehicle details
-            });
+            if (vehicleDoc.exists()) {
+              const vehicleData = {
+                ...vehicleDoc.data(),
+                id: vehicleId, // Directly add vehicleId here
+                
+              };
+              bids.push({
+                id: bidDoc.id,
+                auctionId: auctionId,
+                vehicleId: vehicleId,
+                amount: bidData.amount,
+                bidderId: bidData.bidderId,
+                userName: bidData.userName,
+                createdAt: bidData.createdAt,
+                vehicle: vehicleData 
+              });
+            }      
+           
           }
         }
       }

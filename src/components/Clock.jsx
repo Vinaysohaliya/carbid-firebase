@@ -8,13 +8,15 @@ const Clock = ({ vehicle }) => {
     const loading = useSelector(state => state.auction.loading);
     const error = useSelector(state => state.auction.error);
     const [auctionendTime, setauctionendTime] = useState();
+
     const [remainingTime, setRemainingTime] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await dispatch(fetchAuctionDetails(id));
-                setauctionendTime(res.payload.endTime);
+                 const res = await dispatch(fetchAuctionDetails(id));
+                 console.log(res);
+                setauctionendTime(res.payload.endTime)
             } catch (error) {
                 console.error('Error fetching auction details:', error.message);
             }
@@ -46,6 +48,9 @@ const Clock = ({ vehicle }) => {
         }
     }, [auctionendTime]);
     
+    
+
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -56,7 +61,7 @@ const Clock = ({ vehicle }) => {
 
     return (
         <div className="vehicle-card">
-            <div className="text-lg md:text-xl lg:text-2xl xl:text-3xl">{remainingTime}</div>
+            <div>{remainingTime}</div>
         </div>
     );
 };

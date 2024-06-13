@@ -24,40 +24,42 @@ const SignIn = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4">
-      <h2 className="text-2xl font-semibold mb-4 text-blue-500 text-center">Sign In</h2>
-      {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
-      <div className="mb-4">
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="border rounded px-4 py-2 w-full"
-        />
-      </div>
-      <div className="mb-4">
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="border rounded px-4 py-2 w-full"
-        />
-      </div>
-      <button
-        onClick={handleSignIn}
-        className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded w-full focus:outline-none focus:bg-blue-600"
-      >
-        Sign In
-      </button>
-      <div className="mt-4 text-center">
-        <p>
-          Don't have an account?{' '}
-          <Link to="/signup" className="text-blue-500 hover:text-blue-700">
-            Sign Up
-          </Link>
-        </p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="max-w-md w-full bg-white p-8 border border-gray-200 rounded-lg shadow-md">
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 text-center">Sign In</h2>
+        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
+        <div className="mb-4">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="border rounded px-4 py-2 w-full"
+          />
+        </div>
+        <div className="mb-4">
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="border rounded px-4 py-2 w-full"
+          />
+        </div>
+        <button
+          onClick={handleSignIn}
+          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:bg-blue-600 w-full"
+        >
+          Sign In
+        </button>
+        <div className="mt-4 text-center">
+          <p>
+            Don't have an account?{' '}
+            <Link to="/signup" className="text-blue-500 hover:text-blue-700">
+              Sign Up
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

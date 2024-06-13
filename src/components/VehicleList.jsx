@@ -16,11 +16,11 @@ const VehicleList = () => {
 
     return (
         <div className='my-10'>
-            <h2 className='font-bold my-4 text-center'>Vehicles on Auction</h2>
-            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 justify-center'>
+            <h2 className='font-bold my-4'>Vehicles on auction</h2>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 justify-center'>
                 {loading ? (
                     Array.from({ length: 6 }).map((_, index) => (
-                        <Card key={index} className="w-full sm:w-[calc(50%-1rem)] md:w-[calc(33.33%-1rem)] xl:w-[calc(25%-1rem)] space-y-5 p-4" radius="lg">
+                        <Card key={index} className="w-[200px] space-y-5 p-4" radius="lg">
                             <Skeleton className="rounded-lg">
                                 <div className="h-24 rounded-lg bg-default-300"></div>
                             </Skeleton>

@@ -14,6 +14,7 @@ const MyBids = () => {
         const fetchData = async () => {
             try {
                 const res = await dispatch(fetchBidsByUserId(userId));
+                console.log(res);
                 setVehiclesWithBid(res.payload.bids);
             } catch (error) {
                 console.error(error);
@@ -24,7 +25,7 @@ const MyBids = () => {
 
         fetchData();
     }, [dispatch, userId]);
-
+console.log(vehiclesWithBid);
     return (
         <div className="container mx-auto px-4">
             <h2 className="text-start mb-6 font-bold text-2xl">My Bids</h2>

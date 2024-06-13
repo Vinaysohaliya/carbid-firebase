@@ -14,7 +14,7 @@ const RoleLayout = ({ allowedRoles }) => {
       return <Navigate to="/denied" />; // Redirect to access denied page
     }
   } else {
-    return <Navigate to="/login" />; // Redirect to login page if user is not logged in
+    return <Navigate to="/signin" />; // Redirect to login page if user is not logged in
   }
 };
 
