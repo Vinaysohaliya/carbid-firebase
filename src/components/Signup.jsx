@@ -4,6 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { createAccount } from '../Redux/authSlice';
 
+// Import Next.js UI components as needed
+import { Button } from '@nextui-org/react';
+
 const SignUp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -14,6 +17,7 @@ const SignUp = () => {
   const [role, setRole] = useState('buyer');
   const [profilePic, setProfilePic] = useState(null);
   const [error, setError] = useState('');
+  const [isLoading, setLoading] = useState(false); // State for loading indicator
 
   const handleProfilePicChange = (e) => {
     setProfilePic(e.target.files[0]);
@@ -21,6 +25,7 @@ const SignUp = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loading indicator
     try {
       await dispatch(createAccount({ email, password, name, role, profilePic }));
       navigate('/buyvehicle');
@@ -28,6 +33,7 @@ const SignUp = () => {
       setError(error.message);
       toast.error(error.message);
     }
+    setLoading(false); // Stop loading indicator
   };
 
   return (
@@ -69,22 +75,38 @@ const SignUp = () => {
               className="w-full border rounded-md py-2 px-3"
             />
           </div>
-          <div>
-            <label htmlFor="profilePic" className="block text-blue-500">Profile Picture</label>
-            <input
+          <div >
+          <label className="block m-4">
+          <label htmlFor="profilePic" className="block text-blue-500">Profile Picture</label>
+
+              <div className="mt-3 flex  flex-col">
+                <span className=" bg-blue-600 rounded-md px-3 py-1 size-2/5 flex items-center justify-center text-sm font-medium mr-2 text-white">
+                  Choose file
+                </span>
+                <input
               type="file"
               id="profilePic"
               onChange={handleProfilePicChange}
               required
-              className="w-full border rounded-md py-2 px-3"
-            />
+              className="w-full border rounded-md py-2 px-3 sr-only"
+            /> 
+              </div>
+            </label>
+            
           </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-          >
-            Sign Up
-          </button>
+          {/* Conditionally render the Next.js UI button for loading state */}
+          {isLoading ? (
+            <Button isLoading color="primary" className="w-full">
+              Loading
+            </Button>
+          ) : (
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+            >
+              Sign Up
+            </button>
+          )}
           <p className="text-center">
             Already have an account?{' '}
             <Link to="/signin" className="text-blue-500 hover:text-blue-700">

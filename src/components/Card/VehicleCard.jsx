@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardBody, Button, Image, Divider, DateRangePicker, ModalBody, ModalFooter } from "@nextui-org/react";
+import { Card, CardBody, Button, Image, Divider, ModalBody, ModalFooter } from "@nextui-org/react";
 import { useDispatch, useSelector } from 'react-redux';
 import { checkIfVehicleLiked, deleteVehicle, toggleVehicleLike } from '../../Redux/vehicleSlice';
 import { useNavigate } from "react-router-dom";
@@ -8,11 +8,9 @@ import { fetchBidData } from '../../Redux/auctionSlice';
 import BidsTable from "../BidsTable";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import toast from "react-hot-toast";
-import Clock from '../Clock'
-
+import Clock from '../Clock';
 
 const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmount = null, bids = null }) => {
-  console.log(vehicle);
   const { id, make, model, vehiclePhotos, brand, fuelType, transmission, distanceTraveled } = vehicle;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -21,6 +19,7 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [startingBid, setStartingBid] = useState(null);
   const [highestBid, setHighestBid] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,11 +48,16 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
     navigate(`/vehicle/${id}`);
   };
 
-  const handleDeleteListingClick = () => {
+  const handleDeleteListingClick = async () => {
+    setIsDeleting(true);
     try {
-      dispatch(deleteVehicle({ vehicleId: vehicle.id, userId }))
+      await dispatch(deleteVehicle({ vehicleId: vehicle.id, userId }));
+      toast.success('Vehicle deleted successfully!');
     } catch (error) {
-      throw error;
+      toast.error('Failed to delete the vehicle!');
+      console.error(error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -77,7 +81,7 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
       <Card shadow="dark-lg" className="w-[300px] flex flex-col rounded-xl overflow-hidden">
         <div className="relative h-48 overflow-hidden">
           <div className="absolute z-10 top-2 left-2 bg-gray-800 bg-opacity-75 text-white rounded-md px-2 py-1 text-sm">
-          <Clock vehicle={vehicle} />
+            <Clock vehicle={vehicle} />
           </div>
           <Image radius="none" alt={`${make} ${model}`} src={vehiclePhotos} className="object-cover w-full h-full z-0" />
         </div>
@@ -103,18 +107,23 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
             <div>{highestBid}L</div>
             <div className="text-sm text-gray-500">Current bid</div>
           </div>
-          {/* <div className="mt-4">
-            <DateRangePicker placeholder="Select date range" />
-          </div> */}
           <div className="flex justify-between mt-4">
             {isonListed ? (
               <>
                 <Button className="bg-blue-600 text-white" onPress={onOpen}>Open Modal</Button>
-                <Button variant="text" color="error" className="bg-red-600 text-white" onClick={handleDeleteListingClick}>Delete Listing</Button>
+                <Button
+                  variant="text"
+                  color="error"
+                  className="bg-red-600 text-white"
+                  onClick={handleDeleteListingClick}
+                  isLoading={isDeleting}
+                >
+                  {isDeleting ? 'Deleting...' : 'Delete Listing'}
+                </Button>
               </>
             ) : (
               <>
-                <Button  variant="outlined" color="primary" onClick={handleViewDetailClick} className="flex-grow mr-2 bg-blue-600 text-white">
+                <Button variant="outlined" color="primary" onClick={handleViewDetailClick} className="flex-grow mr-2 bg-blue-600 text-white">
                   View details
                 </Button>
                 <Button variant="outlined" color="primary" className="flex-grow bg-blue-600 text-white">

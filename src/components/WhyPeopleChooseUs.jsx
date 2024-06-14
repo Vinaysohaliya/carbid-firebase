@@ -7,7 +7,7 @@ import img4 from '../assets/495528890e54b73580a5a2806034cba0.png';
 
 const WhyPeopleChooseUs = () => {
     return (
-        <div className='flex flex-wrap gap-4 justify-center'>
+        <div className='flex flex-wrap gap-4 grid grid-cols-4 mb-5'>
             <Card className="py-4 w-full md:w-auto max-w-[330px] flex items-center justify-center">
                 <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
                     <Image

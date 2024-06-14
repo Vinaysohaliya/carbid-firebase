@@ -447,13 +447,10 @@ export const deleteVehicle = createAsyncThunk(
   'vehicles/deleteVehicle',
   async ({ vehicleId, userId }, { rejectWithValue }) => {
     try {
-      console.log(vehicleId, userId);
-      console.log(`Deleting vehicle with ID: ${vehicleId},${userId}`);
       const vehicleDocRef = doc(db, 'vehicles', vehicleId);
       const vehicleDocSnapshot = await getDoc(vehicleDocRef);
 
       if (!vehicleDocSnapshot.exists()) {
-        console.log('Vehicle not found');
         throw new Error('Vehicle not found');
       }
 
@@ -461,13 +458,17 @@ export const deleteVehicle = createAsyncThunk(
 
       // Delete vehicle photos from storage
       const photoDeletionPromises = vehicleData.vehiclePhotos.map((photoUrl) => {
+        console.log(photoUrl);
         const photoRef = ref(storage, photoUrl);
+        console.log(photoRef);
         return deleteObject(photoRef);
       });
       await Promise.all(photoDeletionPromises);
 
       // Delete ID proof from storage
       const idProofRef = ref(storage, vehicleData.idProof);
+      console.log(idProofRef);
+
       await deleteObject(idProofRef);
 
       // Delete vehicle document from Firestore

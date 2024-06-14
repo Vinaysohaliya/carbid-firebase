@@ -10,140 +10,143 @@ import useBrandModels from '../hooks/useBrandModels.jsx';
 import toast from 'react-hot-toast';
 import useBrands from '../hooks/useBrands.jsx';
 
-const SimpleVehicleForm = ({ onAddNewVehicle }) => {
-  const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.auth.data.uid);
-  const [isLoading, setisLoding] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const SimpleVehicleForm = ({ onAddNewVehicle }) => {
+    const dispatch = useDispatch();
+    const currentUser = useSelector((state) => state.auth.data.uid);
+    const [isLoading, setisLoding] = useState(false);
+    const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const [photoPreviews, setPhotoPreviews] = useState([]);
-  const [idPreviews, setidPreviews] = useState();
-  const [formDisabled, setFormDisabled] = useState(false);
-  const [idProof, setIdProof] = useState('');
-  const [vehiclePhotos, setVehiclePhotos] = useState([]);
-  const [stage, setStage] = useState(1);
-  const [formData, setFormData] = useState({
-    sellerType: 'individual',
-    name: '',
-    mobile: '',
-    address: '',
-    registrationYear: '',
-    brand: '',
-    model: '',
-    travelDistance: 0,
-    transmission: '',
-    ownerType: '',
-    carLocation: '',
-    modification: '',
-    'modificationDetails': '',
-    pickupLocation: '',
-    dealershipName: '',
-    website: '',
-    city: '',
-    vehicleType: 'car',
-    'fuelType': 'petrol'
-  });
-
-
-  const brands = useBrands();
-  const models = useBrandModels(formData.brand);
-
-  const handlepickup = (e) => {
-    if (e.target.checked) {
-      setFormData({ ...formData, pickupLocation: formData.carLocation });
-    } else {
-      setFormData({ ...formData, pickupLocation: '' });
-    }
-  }
-
-  const handlePhotoUpload = (files) => {
-    const photoFiles = Array.from(files);
-    setVehiclePhotos(photoFiles);
-    const previews = photoFiles.map((file) => URL.createObjectURL(file));
-    setPhotoPreviews(previews);
-
-  };
-
-  const handelIdproof = (files) => {
-    setIdProof(files);
-    const previews = URL.createObjectURL(files);
-    setidPreviews(previews);
+    const [photoPreviews, setPhotoPreviews] = useState([]);
+    const [idPreviews, setidPreviews] = useState();
+    const [formDisabled, setFormDisabled] = useState(false);
+    const [idProof, setIdProof] = useState('');
+    const [vehiclePhotos, setVehiclePhotos] = useState([]);
+    const [stage, setStage] = useState(1);
+    const [formData, setFormData] = useState({
+      sellerType: 'individual',
+      name: '',
+      mobile: '',
+      address: '',
+      registrationYear: '',
+      brand: '',
+      model: '',
+      travelDistance: 0,
+      transmission: '',
+      ownerType: '',
+      carLocation: '',
+      modification: '',
+      'modificationDetails': '',
+      pickupLocation: '',
+      dealershipName: '',
+      website: '',
+      city: '',
+      vehicleType: 'car',
+      'fuelType': 'petrol'
+    });
 
 
-  };
+    const brands = useBrands();
+    const models = useBrandModels(formData.brand);
 
-  const handleSubmit = async (e) => {
-    setisLoding(true);
-    e.preventDefault();
-    try {
-      const missingFields = [];
-      if (!formData.address) missingFields.push('Address');
-      if (!formData.brand) missingFields.push('Brand');
-      if (!formData.carLocation) missingFields.push('Car Location');
-      if (!formData.mobile) missingFields.push('Mobile');
-      if (!formData.model) missingFields.push('Model');
-      if (!formData.modification) missingFields.push('Modification');
-      if (!formData.name) missingFields.push('Name');
-      if (!formData.ownerType) missingFields.push('Owner Type');
-      if (!formData.pickupLocation) missingFields.push('Pickup Location');
-      if (!formData.registrationYear) missingFields.push('Registration Year');
-      if (!formData.sellerType) missingFields.push('Seller Type');
-      if (!formData.transmission) missingFields.push('Transmission');
-      if (!formData.travelDistance) missingFields.push('Travel Distance');
-      if (!idProof) missingFields.push('ID Proof');
-      if (!formData.vehicleType) missingFields.push('vehicleType');
-      if (!formData.fuelType) missingFields.push('fuelType');
-      if (!formData.city) missingFields.push('city');
-      if (vehiclePhotos.length === 0) missingFields.push('Vehicle Photos');
-
-      if (formData.sellerType === 'dealer') {
-        if (!formData.dealershipName) missingFields.push('Dealership Name');
-        if (!formData.salesRange) missingFields.push('Sales Range');
+    const handlepickup = (e) => {
+      if (e.target.checked) {
+        setFormData({ ...formData, pickupLocation: formData.carLocation });
+      } else {
+        setFormData({ ...formData, pickupLocation: '' });
       }
-
-      if (missingFields.length > 0) {
-        const missingFieldsString = missingFields.join(', ');
-        toast.error(`Please fill all required fields: ${missingFieldsString}`);
-        return;
-      }
-
-      await dispatch(submitVehicleDetails({
-        vehicleData: formData,
-        vehiclePhotos,
-        userId: currentUser,
-        idProof,
-        stage
-      }));
-
-      setFormData({
-        sellerType: 'individual',
-        name: '',
-        mobile: '',
-        address: '',
-        registrationYear: '',
-        brand: '',
-        model: '',
-        travelDistance: '',
-        transmission: '',
-        ownerType: '',
-        carLocation: '',
-        modification: '',
-        pickupLocation: '',
-        dealershipName: '',
-        website: '',
-        city: '',
-        'fuelType': 'petrol',
-        'vehicleType': 'car'
-      });
-      setStage(1);
-      onAddNewVehicle(true);
-      onClose();
-    } catch (error) {
-      console.error('Error submitting vehicle details:', error.message);
-    } finally {
-      setisLoding(false);
     }
-  };
+
+    const handlePhotoUpload = (files) => {
+      const photoFiles = Array.from(files);
+      console.log(photoFiles);
+      setVehiclePhotos(photoFiles);
+      const previews = photoFiles.map((file) => URL.createObjectURL(file));
+      console.log(previews);
+      setPhotoPreviews(previews);
+    };
+    const handelIdproof = (files) => {
+      setIdProof(files);
+      const previews = URL.createObjectURL(files);
+      setidPreviews(previews);
+
+
+    };
+
+    const handleSubmit = async (e) => {
+      setisLoding(true);
+      e.preventDefault();
+      try {
+        const missingFields = [];
+        if (!formData.address) missingFields.push('Address');
+        if (!formData.brand) missingFields.push('Brand');
+        if (!formData.carLocation) missingFields.push('Car Location');
+        if (!formData.mobile) missingFields.push('Mobile');
+        if (!formData.model) missingFields.push('Model');
+        if (!formData.modification) missingFields.push('Modification');
+        if (!formData.name) missingFields.push('Name');
+        if (!formData.ownerType) missingFields.push('Owner Type');
+        if (!formData.pickupLocation) missingFields.push('Pickup Location');
+        if (!formData.registrationYear) missingFields.push('Registration Year');
+        if (!formData.sellerType) missingFields.push('Seller Type');
+        if (!formData.transmission) missingFields.push('Transmission');
+        if (!formData.travelDistance) missingFields.push('Travel Distance');
+        if (!idProof) missingFields.push('ID Proof');
+        if (!formData.vehicleType) missingFields.push('vehicleType');
+        if (!formData.fuelType) missingFields.push('fuelType');
+        if (!formData.city) missingFields.push('city');
+        if (vehiclePhotos.length === 0) missingFields.push('Vehicle Photos');
+
+        if (formData.sellerType === 'dealer') {
+          if (!formData.dealershipName) missingFields.push('Dealership Name');
+          if (!formData.salesRange) missingFields.push('Sales Range');
+        }
+
+        if (missingFields.length > 0) {
+          const missingFieldsString = missingFields.join(', ');
+          toast.error(`Please fill all required fields: ${missingFieldsString}`);
+          return;
+        }
+
+        await dispatch(submitVehicleDetails({
+          vehicleData: formData,
+          vehiclePhotos,
+          userId: currentUser,
+          idProof,
+          stage
+        }));
+
+        setFormData({
+          sellerType: 'individual',
+          name: '',
+          mobile: '',
+          address: '',
+          registrationYear: '',
+          brand: '',
+          model: '',
+          travelDistance: '',
+          transmission: '',
+          ownerType: '',
+          carLocation: '',
+          modification: '',
+          pickupLocation: '',
+          dealershipName: '',
+          website: '',
+          city: '',
+          'fuelType': 'petrol',
+          'vehicleType': 'car'
+        });
+        setVehiclePhotos([])
+        setIdProof('')
+        setidPreviews('')
+        setStage(1);
+        onAddNewVehicle(true);
+        onClose();
+      } catch (error) {
+        console.error('Error submitting vehicle details:', error.message);
+      } finally {
+        setisLoding(false);
+      }
+    };
 
 
   const renderStage = () => {
@@ -301,63 +304,63 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
 
               </div>
               <div className='flex items-center justify-between my-2 '>
-  <select
-    value={formData.brand}
-    onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
-    className='mt-2 border border-blue-300 rounded-md p-1 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 outline-none text-blue-600 bg-white'
-  >
-    <option value="">Select vehicle brand</option>
-    {brands.map((brand) => (
-      <option key={brand} value={brand} className="text-blue-600">
-        {brand}
-      </option>
-    ))}
-  </select>
+                <select
+                  value={formData.brand}
+                  onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
+                  className='mt-2 border border-blue-300 rounded-md p-1 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 outline-none text-blue-600 bg-white'
+                >
+                  <option value="">Select vehicle brand</option>
+                  {brands.map((brand) => (
+                    <option key={brand} value={brand} className="text-blue-600">
+                      {brand}
+                    </option>
+                  ))}
+                </select>
 
-  <select
-    value={formData.model}
-    onChange={(e) => setFormData({ ...formData, model: e.target.value })}
-    className='mt-2 border border-blue-300 rounded-md p-1 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 outline-none text-blue-600 bg-white'
-  >
-    <option value="">Select vehicle model</option>
-    {models.map((model) => (
-      <option key={model} value={model} className="text-blue-600">
-        {model}
-      </option>
-    ))}
-  </select>
-</div>
+                <select
+                  value={formData.model}
+                  onChange={(e) => setFormData({ ...formData, model: e.target.value })}
+                  className='mt-2 border border-blue-300 rounded-md p-1 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 outline-none text-blue-600 bg-white'
+                >
+                  <option value="">Select vehicle model</option>
+                  {models.map((model) => (
+                    <option key={model} value={model} className="text-blue-600">
+                      {model}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
 
-<div className='flex items-center justify-between my-2'>
+              <div className='flex items-center justify-between my-2'>
 
-<div className='border border-blue-300 rounded-md p-1'>
-  <label className="text-blue-600">Select vehicle type</label>
-  <select
-    value={formData.vehicleType}
-    onChange={(e) => setFormData({ ...formData, vehicleType: e.target.value })}
-    className='mt-2  focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 outline-none text-blue-600 bg-white'
-  >
-    <option value="car">Car</option>
-    <option value="bike">Bike</option>
-    <option value="scooty">Scooty</option>
-  </select>
-</div>
+                <div className='border border-blue-300 rounded-md p-1'>
+                  <label className="text-blue-600">Select vehicle type</label>
+                  <select
+                    value={formData.vehicleType}
+                    onChange={(e) => setFormData({ ...formData, vehicleType: e.target.value })}
+                    className='mt-2  focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 outline-none text-blue-600 bg-white'
+                  >
+                    <option value="car">Car</option>
+                    <option value="bike">Bike</option>
+                    <option value="scooty">Scooty</option>
+                  </select>
+                </div>
 
-<div className="ml-4 border border-blue-300 rounded-md p-1">
-  <label className="text-blue-600">Select fuel type</label>
-  <select
-    value={formData.fuelType}
-    onChange={(e) => setFormData({ ...formData, fuelType: e.target.value })}
-    className='mt-2  focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 outline-none text-blue-600 bg-white'
-  >
-    <option value="petrol">Petrol</option>
-    <option value="diesel">Diesel</option>
-    <option value="cng">CNG</option>
-  </select>
-</div>
+                <div className="ml-4 border border-blue-300 rounded-md p-1">
+                  <label className="text-blue-600">Select fuel type</label>
+                  <select
+                    value={formData.fuelType}
+                    onChange={(e) => setFormData({ ...formData, fuelType: e.target.value })}
+                    className='mt-2  focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 outline-none text-blue-600 bg-white'
+                  >
+                    <option value="petrol">Petrol</option>
+                    <option value="diesel">Diesel</option>
+                    <option value="cng">CNG</option>
+                  </select>
+                </div>
 
-</div>
+              </div>
 
 
 
@@ -365,55 +368,55 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
             </div>
             <div className='flex items-center w-full justify-between mb-2'>
 
-{/* Distance Travel */}
-<div className='w-full'>
-  <p className="text-blue-600">Distance Travel</p>
-  <input
-    type="text"
-    placeholder="Travel Distance (in kilometers)"
-    value={formData.travelDistance}
-    onChange={(e) => setFormData({ ...formData, travelDistance: e.target.value })}
-    className='mt-2 px-3 py-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 outline-none text-blue-600 bg-white w-2/3'
-  />
-</div>
+              {/* Distance Travel */}
+              <div className='w-full'>
+                <p className="text-blue-600">Distance Travel</p>
+                <input
+                  type="text"
+                  placeholder="Travel Distance (in kilometers)"
+                  value={formData.travelDistance}
+                  onChange={(e) => setFormData({ ...formData, travelDistance: e.target.value })}
+                  className='mt-2 px-3 py-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 outline-none text-blue-600 bg-white w-2/3'
+                />
+              </div>
 
-{/* Transmission Type */}
-<div className=''>
-  <p className='text-blue-600'>Transmission Type</p>
-  <RadioGroup
-    value={formData.transmission}
-    onChange={(e) => setFormData({ ...formData, transmission: e.target.value })}
-    className="mt-2"
-  >
-    <div className='flex items-center'>
-      <Radio value="auto" className="mr-4">Automatic</Radio>
-      <Radio value="manual" className="ml-4">Manual</Radio>
-    </div>
-  </RadioGroup>
-</div>
-</div>
+              {/* Transmission Type */}
+              <div className=''>
+                <p className='text-blue-600'>Transmission Type</p>
+                <RadioGroup
+                  value={formData.transmission}
+                  onChange={(e) => setFormData({ ...formData, transmission: e.target.value })}
+                  className="mt-2"
+                >
+                  <div className='flex items-center'>
+                    <Radio value="auto" className="mr-4">Automatic</Radio>
+                    <Radio value="manual" className="ml-4">Manual</Radio>
+                  </div>
+                </RadioGroup>
+              </div>
+            </div>
 
-<RadioGroup
-  value={formData.ownerType}
-  label="Owner Type"
-  className="mt-2"
-  onChange={(e) => setFormData({ ...formData, ownerType: e.target.value })}
->
-  <div className='flex mb-2'>
-    <Radio value="first" className="mr-4">First Owner</Radio>
-    <Radio value="second" className='mx-4'>Second Owner</Radio>
-    <Radio value="third">Third Owner</Radio>
-  </div>
-</RadioGroup>
+            <RadioGroup
+              value={formData.ownerType}
+              label="Owner Type"
+              className="mt-2"
+              onChange={(e) => setFormData({ ...formData, ownerType: e.target.value })}
+            >
+              <div className='flex mb-2'>
+                <Radio value="first" className="mr-4">First Owner</Radio>
+                <Radio value="second" className='mx-4'>Second Owner</Radio>
+                <Radio value="third">Third Owner</Radio>
+              </div>
+            </RadioGroup>
 
-<Input
-  type="text"
-  placeholder="Car Location"
-  value={formData.carLocation}
-  radius='sm'
-  className='mt-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
-  onChange={(e) => setFormData({ ...formData, carLocation: e.target.value })}
-/>
+            <Input
+              type="text"
+              placeholder="Car Location"
+              value={formData.carLocation}
+              radius='sm'
+              className='mt-2 rounded-md border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50'
+              onChange={(e) => setFormData({ ...formData, carLocation: e.target.value })}
+            />
 
             <RadioGroup
               value={formData.modification}
@@ -443,13 +446,22 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
       case 3:
         return (
           <div>
-        <input
-  type="file"
-  placeholder="Upload vehicle photos"
-  onChange={(e) => handlePhotoUpload(e.target.files)}
-  multiple
-  className="mt-2 rounded-md bg-blue-500 text-white px-4 py-2 focus:outline-none focus:bg-blue-600 focus:border-blue-700 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-/>
+            <label className="block m-4">
+              <div className="mt-1 flex  flex-col">
+                <span className=" bg-blue-600 rounded-md px-3 py-1 size-2/5 flex items-center justify-center text-sm font-medium mr-2 text-white">
+                  Choose file
+                </span>
+                <input
+                  type="file"
+                  placeholder="Upload vehicle photos"
+                  onChange={(e) => handlePhotoUpload(e.target.files)}
+                  multiple
+                  className="mt-2 rounded-md bg-blue-500 text-white px-4 py-2 focus:outline-none focus:bg-blue-600 focus:border-blue-700 focus:ring focus:ring-blue-200 focus:ring-opacity-50 sr-only"
+                />
+                {/* <input type="file" className="sr-only" onChange={(e) => handelIdproof(e.target.files[0])} /> */}
+              </div>
+            </label>
+
 
 
             <div className="flex mt-2">
@@ -505,15 +517,15 @@ const SimpleVehicleForm = ({ onAddNewVehicle }) => {
                 ) : (
                   <>
                     <Button
-                    className="mr-2 bg-blue-600 text-white"
+                      className="mr-2 bg-blue-600 text-white"
                       radius='sm'
-                     
+
                       onClick={() => setStage((prevStage) => Math.max(prevStage - 1, 1))}
                     >
                       Previous
                     </Button>
                     <Button
-                    className="mr-2 bg-blue-600 text-white"
+                      className="mr-2 bg-blue-600 text-white"
                       type="button"
                       radius='sm'
                       onClick={(e) => {

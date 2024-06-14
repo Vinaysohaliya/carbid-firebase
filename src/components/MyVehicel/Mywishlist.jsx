@@ -53,10 +53,16 @@ const MyWishlist = () => {
                     ))}
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4">
-                    {vehicles && vehicles.map((vehicle) => (
-                        <VehicleCard key={vehicle.id} vehicle={vehicle} />
-                    ))}
+                <div>
+                    {vehicles.length === 0 ? ( // Show message if vehicles array is empty
+                        <p className="text-center font-bold text-xl mt-8">No Vehicles in Your Wishlist</p>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4">
+                            {vehicles.map((vehicle) => (
+                                <VehicleCard key={vehicle.id} vehicle={vehicle} />
+                            ))}
+                        </div>
+                    )}
                 </div>
             )}
         </div>

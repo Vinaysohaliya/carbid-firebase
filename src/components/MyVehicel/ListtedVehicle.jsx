@@ -29,7 +29,7 @@ const ListtedVehicle = () => {
             <h2 className='text-start mb-6 font-bold text-2xl'>Listed Vehicles</h2>
             {loading ? ( // Show skeleton loading effect while loading is true
                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4'>
-                    {[...Array(vehicles.length > 0 ? vehicles.length : 6)].map((_, index) => (
+                    {[...Array(6)].map((_, index) => (
                         <div key={index}>
                             <Card className="w-full space-y-5 p-4" radius="lg">
                                 <Skeleton className="rounded-lg">
@@ -42,7 +42,7 @@ const ListtedVehicle = () => {
                                     <Skeleton className="w-4/5 rounded-lg">
                                         <div className="h-3 w-4/5 rounded-lg bg-default-200"></div>
                                     </Skeleton>
-                                    <Skeleton className="w-2/5 rounded-lg">  
+                                    <Skeleton className="w-2/5 rounded-lg">
                                         <div className="h-3 w-2/5 rounded-lg bg-default-300"></div>
                                     </Skeleton>
                                 </div>
@@ -52,11 +52,15 @@ const ListtedVehicle = () => {
                 </div>
             ) : (
                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4'>
-                    {vehicles && vehicles.map((vehicle) => (
-                        <div key={vehicle.id}>
-                            <VehicleCard isonListed={true} vehicle={vehicle} bids={vehicle.bids} />
-                        </div>
-                    ))}
+                    {vehicles.length === 0 ? (
+                        <p className='font-bold mt-8  text-xl text-center'>No Listed Vehicles</p>
+                    ) : (
+                        vehicles.map((vehicle) => (
+                            <div key={vehicle.id}>
+                                <VehicleCard isonListed={true} vehicle={vehicle} bids={vehicle.bids} />
+                            </div>
+                        ))
+                    )}
                 </div>
             )}
         </div>

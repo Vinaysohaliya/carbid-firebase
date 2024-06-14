@@ -25,7 +25,7 @@ const MyBids = () => {
 
         fetchData();
     }, [dispatch, userId]);
-console.log(vehiclesWithBid);
+
     return (
         <div className="container mx-auto px-4">
             <h2 className="text-start mb-6 font-bold text-2xl">My Bids</h2>
@@ -54,11 +54,15 @@ console.log(vehiclesWithBid);
                 </div>
             ) : (
                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 justify-center'>
-                    {vehiclesWithBid.map((vehicle) => (
-                        <div key={vehicle.id}>
-                            <VehicleCard isonMyBid={true} vehicle={vehicle.vehicle} MyBidAmount={vehicle.amount} />
-                        </div>
-                    ))}
+                    {vehiclesWithBid.length === 0 ? (
+                        <div className='font-bold mt-8 ml-10 text-xl text-center'>No Vehicle in Your Bids</div>
+                    ) : (
+                        vehiclesWithBid.map((vehicle) => (
+                            <div key={vehicle.id}>
+                                <VehicleCard isonMyBid={true} vehicle={vehicle.vehicle} MyBidAmount={vehicle.amount} />
+                            </div>
+                        ))
+                    )}
                 </div>
             )}
         </div>
