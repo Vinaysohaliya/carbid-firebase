@@ -7,7 +7,6 @@ import { Card, CardHeader } from '@nextui-org/react';
 
 const Sellform = () => {
   const [vehicles, setVehicles] = useState([]);
-  const [shouldRefetch, setShouldRefetch] = useState(false);
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.auth.data.uid);
 
@@ -17,33 +16,28 @@ const Sellform = () => {
         try {
           const res = await dispatch(fetchUserSubmittedVehiclesbutnotonAuction(userId));
           setVehicles(res.payload);
-          setShouldRefetch(false);
         } catch (error) {
           console.error('Error fetching user vehicles:', error.message);
         }
       }
     }
     fetchUserVehicles();
-  }, [dispatch, userId, shouldRefetch]);
+  }, [dispatch, userId]);
 
-  const handleAddNewVehicle = (shouldRefetch) => {
-    if (shouldRefetch) {
-      setShouldRefetch(shouldRefetch);
-    }
-  };
+ 
 
   return (
     <div className='flex flex-col items-center'>
       <Card className="py-4 mt-4 w-full sm:max-w-screen-lg">
         <CardHeader className="pb-0 pt-2 px-4 flex flex-col items-start">
           <div className='my-6 font-bold text-2xl text-center sm:text-left'>Add Vehicle to Auction</div>
-          <SimpleVehicleForm onAddNewVehicle={handleAddNewVehicle} />
+          <SimpleVehicleForm  />
         </CardHeader>
       </Card>
 
       <div className='flex flex-col items-center mt-6 sm:flex-row sm:justify-center sm:items-start sm:flex-wrap gap-6'>
         {vehicles.map((vehicle, index) => (
-          !vehicle.auctionStatus && <VehicleSellingForm key={index} vehicle={vehicle} onAddNewVehicle={handleAddNewVehicle} />
+          !vehicle.auctionStatus && <VehicleSellingForm key={index} vehicle={vehicle}  />
         ))}
       </div>
     </div>

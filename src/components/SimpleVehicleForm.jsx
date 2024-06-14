@@ -10,7 +10,7 @@ import useBrandModels from '../hooks/useBrandModels.jsx';
 import toast from 'react-hot-toast';
 import useBrands from '../hooks/useBrands.jsx';
 
-  const SimpleVehicleForm = ({ onAddNewVehicle }) => {
+  const SimpleVehicleForm = ({  }) => {
     const dispatch = useDispatch();
     const currentUser = useSelector((state) => state.auth.data.uid);
     const [isLoading, setisLoding] = useState(false);
@@ -139,8 +139,8 @@ import useBrands from '../hooks/useBrands.jsx';
         setIdProof('')
         setidPreviews('')
         setStage(1);
-        onAddNewVehicle(true);
         onClose();
+        window.location.reload();
       } catch (error) {
         console.error('Error submitting vehicle details:', error.message);
       } finally {

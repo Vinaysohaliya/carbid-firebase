@@ -5,7 +5,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Inp
 import { toast } from 'react-hot-toast';
 import LoadingButton from './LoadingButton .jsx';
 
-const VehicleSellingForm = ({ vehicle, onAddNewVehicle }) => {
+const VehicleSellingForm = ({ vehicle }) => {
   const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [adminApprove, setAdminApprove] = useState();
@@ -41,7 +41,6 @@ const VehicleSellingForm = ({ vehicle, onAddNewVehicle }) => {
       }
       setIsLoading(true);
       await dispatch(submitVehicleDetails({ vehicleId: vehicle.id, stage, agreeToTerms, setAgreeToTerms, startingBid }));
-      onAddNewVehicle(true);
       onClose();
     } catch (error) {
       console.error('Error submitting vehicle details:', error.message);
