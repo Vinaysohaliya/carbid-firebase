@@ -11,7 +11,9 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import toast from 'react-hot-toast';
 
 const VehicleDetail = () => {
+
   const userName = useSelector((state) => state.auth.data.displayName);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const [isLiked, setIsLiked] = useState(false);
   const [isPlacingBid, setIsPlacingBid] = useState(false);
   const { id } = useParams();
@@ -23,7 +25,9 @@ const VehicleDetail = () => {
   const [startingBid, setStartingBid] = useState(null);
   const [highestBid, setHighestBid] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
-
+  const endDate = vehicle?.endTime?.toDate();
+  const currentTime = new Date();
+  const timeDifference = endDate - currentTime;
   useEffect(() => {
     const fetchData = async () => {
       await dispatch(fetchVehicle({ vehicleId: id }));
@@ -45,7 +49,6 @@ const VehicleDetail = () => {
         }
       }
     };
-
     if (vehicle) {
       fetchBidAmounts();
     }
@@ -130,10 +133,25 @@ const VehicleDetail = () => {
             <div className="w-full md:w-1/2 text-center">
               <div className="font-extrabold text-2xl">{highestBid}</div>
               <div className="font-light">Current bid</div>
-              {isPlacingBid ? (
-                <Button fullWidth loading>Placing Bid...</Button>
+              {timeDifference <= 0 ? (
+                <div>Auction End</div>
               ) : (
-                <Button onPress={onOpen} fullWidth>Place Bid</Button>
+                <div>
+                  {isLoggedIn ? (
+                    isPlacingBid ? (
+                      <Button fullWidth loading>
+                        Placing Bid...
+                      </Button>
+                    ) : (
+                      <Button onPress={onOpen} fullWidth>
+                        Place Bid
+                      </Button>
+                    )
+                  ) : (
+                    <div>Login To Place Bid</div>
+                  )}
+
+                </div>
               )}
             </div>
           </div>

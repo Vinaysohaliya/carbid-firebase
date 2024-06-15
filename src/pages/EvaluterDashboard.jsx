@@ -45,11 +45,12 @@ export default function EvaluterDashboard() {
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [vehicleData, setVehicleData] = useState([]);
   const [loading, setLoading] = useState(true);
-
+console.log(vehicleData);
   useEffect(() => {
     const fetchVehicles = async () => {
       setLoading(true);
       const res = await dispatch(fetchVehiclesWithUsers());
+      console.log(res);
       setVehicleData(res.payload);
       setLoading(false);
     };
@@ -87,7 +88,7 @@ export default function EvaluterDashboard() {
         </div>
       ) : (
         <>
-          {vehicleData.length === 0 ? (
+          {vehicleData?.length === 0 ? (
             <p>No vehicles found</p>
           ) : (
             <Table aria-label="Example table with dynamic content">

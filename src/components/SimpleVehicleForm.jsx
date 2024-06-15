@@ -58,10 +58,8 @@ import useBrands from '../hooks/useBrands.jsx';
 
     const handlePhotoUpload = (files) => {
       const photoFiles = Array.from(files);
-      console.log(photoFiles);
       setVehiclePhotos(photoFiles);
       const previews = photoFiles.map((file) => URL.createObjectURL(file));
-      console.log(previews);
       setPhotoPreviews(previews);
     };
     const handelIdproof = (files) => {
@@ -294,7 +292,7 @@ import useBrands from '../hooks/useBrands.jsx';
                   className="mt-2 border border-blue-300 rounded-md p-1 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 outline-none text-blue-600 bg-white"
                 >
                   <option value="">City</option>
-                  {['bengaluru'].map((city) => (
+                  {['Bengaluru'].map((city) => (
                     <option key={city} value={city} className="text-blue-600">
                       {city}
                     </option>

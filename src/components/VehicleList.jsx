@@ -38,11 +38,23 @@ const VehicleList = () => {
                         </Card>
                     ))
                 ) : (
-                    vehicles.map((vehicle) => (
-                        vehicle.adminApprove === 'ACCEPT' && vehicle.evaluationDone === 'APPROVE' && vehicle.auctionStatus && (vehicle.userId!==uId) &&(
-                            <VehicleCard key={vehicle.id} vehicle={vehicle} />
-                        )
-                    ))
+                    vehicles.map((vehicle) => {
+                        const endDate = vehicle.endTime.toDate();
+                        const currentTime = new Date();
+                        const timeDifference = endDate - currentTime;
+
+                        if (timeDifference > 0 &&
+                            vehicle.adminApprove === 'ACCEPT' &&
+                            vehicle.evaluationDone === 'APPROVE' &&
+                            vehicle.auctionStatus &&
+                            vehicle.userId !== uId) {
+                                return (
+                                    <VehicleCard key={vehicle.id} vehicle={vehicle} />
+                                );
+                            } else {
+                                return null; // Return null for vehicles that don't meet criteria
+                            }
+                    })
                 )}
             </div>
         </div>

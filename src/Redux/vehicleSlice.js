@@ -29,6 +29,7 @@ export const fetchVehiclesWithUsers = createAsyncThunk(
       const vehiclesWithUsers = await Promise.all(
         vehiclesSnapshot.docs.map(async (vehicleDoc) => {
           const vehicleData = vehicleDoc.data();
+          console.log(vehicleData);
           const userDocRef = doc(db, 'users', vehicleData.userId);
           const userDocSnapshot = await getDoc(userDocRef);
           if (userDocSnapshot.exists()) {
@@ -100,6 +101,8 @@ export const submitVehicleDetails = createAsyncThunk(
   async ({ vehicleData, vehiclePhotos, userId, idProof, startingBid, agreeToTerms, stage, vehicleId }) => {
     try {
       let vehicleIdResult;
+      const endTime = new Date();
+      endTime.setDate(endTime.getDate() + 7);
       if (stage === 7) {
         try {
           if (startingBid !== undefined && agreeToTerms) {
@@ -112,9 +115,10 @@ export const submitVehicleDetails = createAsyncThunk(
                 startingBid: parsedStartingBid,
                 agreeToTerms: agreeToTerms,
                 auctionStatus: true,
+                endTime: endTime,
+
               });
-              const endTime = new Date();
-              endTime.setDate(endTime.getDate() + 7);
+             
 
 
               const auctionQuerySnapshot = await getDocs(userVehiclesQuery);
