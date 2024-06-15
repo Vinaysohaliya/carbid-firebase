@@ -139,7 +139,8 @@ export const submitVehicleDetails = createAsyncThunk(
 
       } else if (stage === 4) {
         const photoUrls = await Promise.all(vehiclePhotos.map(async (photoFile) => {
-          const photoRef = ref(storage, `vehiclePhotos/${userId}/${photoFile.name}`);
+          const uniqueTimestamp = Date.now(); 
+          const photoRef = ref(storage, `vehiclePhotos/${userId}/${uniqueTimestamp}_${photoFile.name}`);
           await uploadBytes(photoRef, photoFile);
           return getDownloadURL(photoRef).catch(error => { throw error; });
         }));
@@ -447,6 +448,7 @@ export const deleteVehicle = createAsyncThunk(
   'vehicles/deleteVehicle',
   async ({ vehicleId, userId }, { rejectWithValue }) => {
     try {
+      console.log(vehicleId,userId);
       const vehicleDocRef = doc(db, 'vehicles', vehicleId);
       const vehicleDocSnapshot = await getDoc(vehicleDocRef);
 

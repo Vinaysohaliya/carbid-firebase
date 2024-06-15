@@ -25,7 +25,7 @@ const VehicleCard = ({ vehicle, isonListed = false, isonMyBid = false, MyBidAmou
     const fetchData = async () => {
       const isLiked = await dispatch(checkIfVehicleLiked({ vehicleId: id, userId }));
       setIsLiked(isLiked.payload);
-
+console.log(vehicle);
       const bidData = await dispatch(fetchBidData({ auctionId: vehicle.auctionId, vehicleId: id }));
       setStartingBid(bidData.payload.firstBid);
       setHighestBid(bidData.payload.highestBid);
