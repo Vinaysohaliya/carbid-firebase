@@ -45,6 +45,7 @@ const Filters = () => {
     <Card radius='none' className="max-w-lg mx-auto">
       <CardBody className="flex flex-wrap  justify-center">
         <div className="flex justify-end w-full my-4">
+        
           <div className='flex w-full items-center justify-between'>
             <div className='text-blue-500 text-2xl font-semibold '>Filter</div>
               <div type="button" onClick={clearFilters} className=" ">

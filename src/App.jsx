@@ -21,7 +21,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Layout><Home /></Layout>} />
+        {/* <Route path="/" element={<Layout><Home /></Layout>} /> */}
         <Route path="/vehiclelist" element={<Layout><Allvehicles /></Layout>} />
         <Route path="/signup" element={<Layout><Signup /></Layout>} />
         <Route path="/vehicle/:id" element={<Layout><VehicleDetail /></Layout>} />
@@ -35,7 +35,7 @@ function App() {
             element={<Layout><SellDashboard /></Layout>}
           />
           <Route
-            path="/buyvehicle"
+            path="/"
             element={<Layout><BuyDashBoard /></Layout>}
           />
           <Route

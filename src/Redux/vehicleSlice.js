@@ -118,7 +118,7 @@ export const submitVehicleDetails = createAsyncThunk(
                 endTime: endTime,
 
               });
-             
+
 
 
               const auctionQuerySnapshot = await getDocs(userVehiclesQuery);
@@ -143,7 +143,7 @@ export const submitVehicleDetails = createAsyncThunk(
 
       } else if (stage === 4) {
         const photoUrls = await Promise.all(vehiclePhotos.map(async (photoFile) => {
-          const uniqueTimestamp = Date.now(); 
+          const uniqueTimestamp = Date.now();
           const photoRef = ref(storage, `vehiclePhotos/${userId}/${uniqueTimestamp}_${photoFile.name}`);
           await uploadBytes(photoRef, photoFile);
           return getDownloadURL(photoRef).catch(error => { throw error; });
@@ -275,12 +275,12 @@ export const fetchByCity = createAsyncThunk(
       } = filterCriteria || {};
 
       let queryRef = collection(db, 'vehicles');
-      
+
       if (city) {
-        queryRef = query(queryRef, where('city', '>=', city), where('city', '<', city + '\uf8ff'));  
+        queryRef = query(queryRef, where('city', '>=', city), where('city', '<', city + '\uf8ff'));
       }
 
-     
+
       const querySnapshot = await getDocs(queryRef);
 
       const vehicles = [];
@@ -313,7 +313,7 @@ export const searchVehicles = (searchTerm) => {
       const searchResults = [];
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        if (data.auctionStatus===true && data.brand.toLowerCase().startsWith(searchTerm.toLowerCase())) {
+        if (data.auctionStatus === true && data.brand.toLowerCase().startsWith(searchTerm.toLowerCase())) {
           console.log(data.auctionStatus);
           searchResults.push({ id: doc.id, ...data });
         }
@@ -452,7 +452,7 @@ export const deleteVehicle = createAsyncThunk(
   'vehicles/deleteVehicle',
   async ({ vehicleId, userId }, { rejectWithValue }) => {
     try {
-      console.log(vehicleId,userId);
+      console.log(vehicleId, userId);
       const vehicleDocRef = doc(db, 'vehicles', vehicleId);
       const vehicleDocSnapshot = await getDoc(vehicleDocRef);
 
@@ -521,9 +521,12 @@ export const fetchVehiclesByFilter = createAsyncThunk(
         transmission = [],
         maxPrice,
         minPrice,
+        city
+
       } = filterCriteria || {};
       const fuelTypeValues = fuelType?.map(value => value.toLowerCase());
       const vehicleTypeValues = vehicleType?.map(value => value.toLowerCase());
+
 
       let queryRef = collection(db, 'vehicles');
       if (brand.length > 0) {
@@ -547,13 +550,17 @@ export const fetchVehiclesByFilter = createAsyncThunk(
       if (fuelTypeValues.length > 0) {
         queryRef = query(queryRef, where('fuelType', 'in', fuelType));
       }
+      if (city) {
+        localStorage.setItem('city', city)
+        queryRef = query(queryRef, where('city', '>=', city), where('city', '<', city + '\uf8ff'));
+      }
       if (vehicleTypeValues.length > 0) {
         queryRef = query(queryRef, where('vehicleType', 'in', vehicleTypeValues));
       }
       if (transmission.length > 0) {
         queryRef = query(queryRef, where('transmission', 'in', transmission));
       }
-      
+
       if (!!minPrice && !!maxPrice) {
         console.log(minPrice, maxPrice);
         queryRef = query(queryRef, where('startingBid', '>=', minPrice), where('startingBid', '<=', maxPrice));
@@ -565,6 +572,7 @@ export const fetchVehiclesByFilter = createAsyncThunk(
       querySnapshot.forEach((doc) => {
         vehicles.push({ id: doc.id, ...doc.data() });
       });
+      console.log(vehicles);
       return vehicles;
     } catch (error) {
       throw error;
@@ -676,11 +684,11 @@ export const fetchLikedVehicles = createAsyncThunk(
 
 
 
-
 const initialState = {
   loading: false,
   error: null,
   vehicles: [],
+  city: localStorage.getItem('city') || "",
   onevehicle: null
 };
 
@@ -717,16 +725,16 @@ const vehicleSlice = createSlice({
       .addCase(fetchVehicle.pending, (state) => {
         state.loading = true;
         state.error = null;
-        state.onevehicle = null; 
+        state.onevehicle = null;
       })
       .addCase(fetchVehicle.fulfilled, (state, action) => {
         state.loading = false;
-        state.onevehicle = action.payload; 
+        state.onevehicle = action.payload;
       })
       .addCase(fetchVehicle.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
-        state.onevehicle = null; 
+        state.onevehicle = null;
       })
       .addCase(fetchVehiclesByFilter.pending, (state) => {
         state.loading = true;

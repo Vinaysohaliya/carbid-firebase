@@ -6,16 +6,18 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  getKeyValue,
   Button,
   Spinner,
+  Modal,
+  ModalContent,
+  ModalBody,
+  Divider,
 } from "@nextui-org/react";
 import { useDispatch } from "react-redux";
 import { fetchVehiclesWithUsers } from "../Redux/vehicleSlice";
-import { Modal, ModalContent, ModalBody } from "@nextui-org/react";
 import VehicleEditForm from "../components/VehicleEditForm";
 
-const columns = [
+const columnsTable1 = [
   {
     key: "model",
     label: "MODEL",
@@ -29,6 +31,65 @@ const columns = [
     label: "EMAIL",
   },
   {
+    key: "Evaluation",
+    label: "Evaluation completed on",
+  },
+  {
+    key: "MarkAsComplate",
+    label: "",
+  },
+  {
+    key: "Edit",
+    label: "EDIT",
+  },
+];
+
+const columnsTable2 = [
+  {
+    key: "model",
+    label: "MODEL",
+  },
+  {
+    key: "userName",
+    label: "SELLER NAME",
+  },
+  {
+    key: "userEmail",
+    label: "EMAIL",
+  },
+  {
+    key: "sechualDate",
+    label: "SCHEDULE DATE",
+  },
+  {
+    key: "sechualtime",
+    label: "SCHEDULE TIME",
+  },
+  
+  {
+    key: "View",
+    label: "View",
+  },
+];
+
+const columnsTable3 = [
+  {
+    key: "model",
+    label: "MODEL",
+  },
+  {
+    key: "userName",
+    label: "SELLER NAME",
+  },
+  {
+    key: "userEmail",
+    label: "EMAIL",
+  },
+  {
+    key: "sentForApproval",
+    label: "Sent for Approval",
+  },
+  {
     key: "Status",
     label: "STATUS",
   },
@@ -38,19 +99,18 @@ const columns = [
   },
 ];
 
-export default function EvaluterDashboard() {
+const EvaluterDashboard = () => {
   const [activeTable, setActiveTable] = useState(1);
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [vehicleData, setVehicleData] = useState([]);
   const [loading, setLoading] = useState(true);
-console.log(vehicleData);
+
   useEffect(() => {
     const fetchVehicles = async () => {
       setLoading(true);
       const res = await dispatch(fetchVehiclesWithUsers());
-      console.log(res);
       setVehicleData(res.payload);
       setLoading(false);
     };
@@ -71,17 +131,36 @@ console.log(vehicleData);
   };
 
   return (
-    <div>
-      <div className="btn-container">
-        <Button
-          color={activeTable === 1 ? "primary" : "secondary"}
+    <div className="ml-8 my-6 ">
+      <div className="btn-container ">
+       
+        <button
+          color=""
           size="sm"
           onClick={() => handleButtonClick(1)}
-          className="mb-5"
+          className={`mb-5 mr-5 ${activeTable === 1 ? "border-b-4 border-blue-900 text-blue-900" : ""}`}
         >
-          Table 1
-        </Button>
+          Evaluation Pending
+        </button>
+        <button
+          color=""
+          size="sm"
+          onClick={() => handleButtonClick(2)}
+          className={`mb-5 mr-5 ${activeTable === 2 ? "border-b-4 border-blue-900 text-blue-900" : ""}`}
+        >
+          Schedule Visit
+        </button>
+        <button
+          color=""
+          size="sm"
+          onClick={() => handleButtonClick(3)}
+          className={`mb-5 ${activeTable === 3 ? "border-b-4 border-blue-900 text-blue-900": ""}`}
+        >
+          Sent For Approval
+        </button>
+        
       </div>
+      <Divider/>
       {loading ? (
         <div className="flex justify-center items-center">
           <Spinner size="lg" />
@@ -91,19 +170,20 @@ console.log(vehicleData);
           {vehicleData?.length === 0 ? (
             <p>No vehicles found</p>
           ) : (
-            <Table aria-label="Example table with dynamic content">
-              <TableHeader columns={columns}>
+            <Table aria-label="Example table with dynamic content" className="mt-4">
+              <TableHeader columns={activeTable === 1 ? columnsTable1 : (activeTable === 2 ? columnsTable2 : columnsTable3)}>
                 {(column) => (
                   <TableColumn key={column.key}>{column.label}</TableColumn>
                 )}
               </TableHeader>
-              <TableBody  items={vehicleData}>
+              <TableBody items={vehicleData}>
+              
                 {(item) => (
-                  <TableRow  key={item.vehicleId}>
+                  <TableRow key={item.vehicleId}>
                     {(columnKey) => (
                       <TableCell>
-                        {getKeyValue(item, columnKey)}
-                        {columnKey === 'Edit' && (
+                        {item[columnKey.toLowerCase()]}
+                        {columnKey === "Edit" && (
                           <Button
                             color="danger"
                             size="sm"
@@ -112,7 +192,57 @@ console.log(vehicleData);
                             Edit
                           </Button>
                         )}
-                        {columnKey === 'Status' && <div>{item.evaluationDone}</div>}
+                        {item[columnKey.toLowerCase()]}
+                        {columnKey === "View" && (
+                          <Button
+                            color="success"
+                            size="sm"
+                            onClick={() => handleEditClick(item)}
+                          >
+                            View
+                          </Button>
+                        )}
+                        {(columnKey === "MarkAsComplate" ) && (
+                          <div className="text-blue-600 font-semibold">✔ Mark as complate</div>
+                        )}
+                        {(columnKey === "sechualDate" ) && (
+                          <div>21 June 24</div>
+                        )}
+                        {(columnKey === "Evaluation" ) && (
+                          <div>21 June 24</div>
+                        )}
+                        {(columnKey === "sechualtime" && <div>3:15 PM</div>)}
+                        {columnKey === "sentForApproval" && (
+                          <div>21 Jan 24</div>
+                        )}
+                        {columnKey === "Status" && <div>
+                          <div>
+                            {item.evaluationDone === 'APPROVE' && (
+                              <span className=" ml-2">
+                                <span className="text-green-600 w-4 h-4 rounded-sm">
+                                &#9679;
+                                </span>
+                                 Up for Auction
+                              </span>
+                            )}
+                            {item.evaluationDone === 'PENDING' && (
+                              <span className=" ml-2">
+                                <span className="text-yellow-600 w-4 h-4 rounded-sm">
+                                &#9679;
+                                </span>
+                                 Pending
+                              </span>
+                            )}
+                            {item.evaluationDone === 'DECLINED' && (
+                              <span className=" ml-2">
+                                <span className="text-red-600 w-4 h-4 rounded-sm">
+                                &#9679;
+                                </span>
+                                 Evaluation Failed
+                              </span>
+                            )}
+                          </div>
+                        </div>}
                       </TableCell>
                     )}
                   </TableRow>
@@ -136,4 +266,6 @@ console.log(vehicleData);
       </Modal>
     </div>
   );
-}
+};
+
+export default EvaluterDashboard;

@@ -42,7 +42,7 @@ const SearchByCity = () => {
   };
   return (
     <>
-      <Button onPress={onOpen} className='w-full md:w-auto'>Search Vehicle</Button>
+      <Button onPress={onOpen} className='w-full md:w-auto mr-4 px-4'>Search Vehicle</Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1 font-bold text-blue-600">Search By City</ModalHeader>
