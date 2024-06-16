@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProfile, updateProfile } from '../Redux/authSlice';
 import { Image } from '@nextui-org/react';
+import { FaPen } from "react-icons/fa";
 
 const EditProfile = () => {
   const dispatch = useDispatch();
@@ -56,29 +57,35 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 border border-blue-100 border-solid p-10 ">
+    <div className="max-w-md mx-auto mt-10  p-10 ">
     {!isEditing ? (
-      <div className="text-center">
-        {previewPic ? (
-          <div className=" mb-4"> {/* Centering container */}
-            <Image src={previewPic} alt="Profile" className="w-20 h-20 rounded-full mx-auto " />
-          </div>
-        ) : (
-          <div className="w-20 h-20 rounded-full bg-gray-300 mx-auto mb-4 flex items-center justify-center">
-            <span className="text-xl text-white font-bold">{name.charAt(0)}</span>
-          </div>
-        )}
-        <h2 className="text-xl font-semibold mb-2">{name}</h2>
-        <p className="text-gray-600 mb-2">{email}</p>
-        <p className="text-gray-600 mb-2">{role}</p>
-        <p className="text-gray-600 mb-2">Your profile is under review</p>
-        <button
-          onClick={() => setIsEditing(true)}
-          className="mt-4 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700"
-        >
-          Edit Details
-        </button>
-      </div>
+      <div className="text-center p-6 bg-white rounded-lg shadow-lg max-w-sm mx-auto">
+      {previewPic ? (
+        <div className="mb-4">
+          <Image
+            src={previewPic}
+            alt="Profile"
+            className="w-20 h-20 rounded-full mx-auto"
+            width={80}
+            height={80}
+          />
+        </div>
+      ) : (
+        <div className="w-20 h-20 rounded-full bg-gray-300 mx-auto mb-4 flex items-center justify-center">
+          <span className="text-xl text-white font-bold">{name.charAt(0)}</span>
+        </div>
+      )}
+      <h2 className="text-xl font-semibold mb-2">{name}</h2>
+      <p className="text-gray-600 mb-2">{email}</p>
+      <p className="text-gray-600 mb-2">{role}</p>
+      <p className="text-gray-600 mb-4">Your profile is under review</p>
+      <button
+        onClick={() => setIsEditing(true)}
+        className="mt-4 text-blue-800 py-2 px-4 rounded-md flex items-center justify-center bg-blue-100 hover:bg-blue-200 transition"
+      >
+        <FaPen className="mr-2" /> Edit Details
+      </button>
+    </div>
         
       ) : (
         <form onSubmit={handleSubmit}>

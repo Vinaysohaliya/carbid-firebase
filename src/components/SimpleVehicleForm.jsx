@@ -4,7 +4,16 @@ import { submitVehicleDetails } from '../Redux/vehicleSlice.js';
 import { Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Radio, RadioGroup, Input, Divider, Checkbox, ScrollShadow, Image } from '@nextui-org/react';
 import LoadingButton from './LoadingButton ';
 import useBrandModels from '../hooks/useBrandModels.jsx';
-
+import b1 from '../assets/374c24fdbbb811e3fe494f27ae695992.png';
+import b2 from '../assets/6a2c6d1d7a63e9b0b4c51c016d3d96a8.png';
+import b3 from '../assets/6b887207aa943cdf23bdff721988238b.png';
+import b4 from '../assets/71a56f0bf6e78b7ca53ba588013427c5.png';
+import b5 from '../assets/a9fe987ee1edd3fa351dee20689382da.png';
+import b6 from '../assets/aac85f63ec516ad9f9038d1e9864160b.png';
+import b7 from '../assets/bc3d6ddc5983ce11ad42ba78b28716ca.png';
+import b8 from '../assets/c3e37bcf2700ab5e993594e2e31f0852.png';
+import b9 from '../assets/d0202be409abd6ce3bc3cb03884c56e7.jpg';
+import b10 from '../assets/dd574ce9ae4551ed764f80ff3e7addc1.png';
 
 
 import toast from 'react-hot-toast';
@@ -192,7 +201,7 @@ import useBrands from '../hooks/useBrands.jsx';
               <span className="text-gray-700">Upload your ID proof</span>
               <div className="mt-1 flex  flex-col">
                 <span className="text-gray-500">(PDF, PNG, JPG up to 5MB)</span>
-                <span className=" bg-blue-600 rounded-md px-3 py-1 size-2/5 flex items-center justify-center text-sm font-medium mr-2 text-white">
+                <span className=" bg-blue-800  mt-3 rounded-md px-3 py-1 size-2/5 flex items-center justify-center text-sm font-medium mr-2 text-white">
                   Choose file
                 </span>
                 <input type="file" className="sr-only" onChange={(e) => handelIdproof(e.target.files[0])} />
@@ -446,7 +455,7 @@ import useBrands from '../hooks/useBrands.jsx';
           <div>
             <label className="block m-4">
               <div className="mt-1 flex  flex-col">
-                <span className=" bg-blue-600 rounded-md px-3 py-1 size-2/5 flex items-center justify-center text-sm font-medium mr-2 text-white">
+                <span className=" bg-blue-800 rounded-md px-3 py-1 size-2/5 flex items-center justify-center text-sm font-medium mr-2 text-white">
                   Choose file
                 </span>
                 <input
@@ -500,7 +509,45 @@ import useBrands from '../hooks/useBrands.jsx';
 
   return (
     <>
-      <Button className='font-bold bg-blue-600 text-white' onPress={onOpen} disabled={formDisabled}>Add Vehicle</Button>
+     <div className="flex flex-col items-center justify-center max-h-screen  ">
+      {/* <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-xl "> */}
+        <h2 className="text-xl font-semibold mb-4">Sell your vehicle</h2>
+        <div className="flex space-x-2 mb-6">
+          <Input
+            className="flex-1"
+            placeholder="Vehicle number"
+          />
+          <Button
+            className="bg-blue-600 text-white"
+            onPress={onOpen} 
+          >
+            Search vehicle
+          </Button>
+        </div>
+        <div className="flex items-center mb-4">
+          <div className="flex-grow h-px bg-gray-300"></div>
+          <span className="px-2 text-gray-500">or</span>
+          <div className="flex-grow h-px bg-gray-300"></div>
+        </div>
+        <p className="text-center mb-4">Start with a brand</p>
+        <div className="grid grid-cols-3 gap-4">
+          {[b1,b2,b3,b4,b5,b6,b7,b8].map((brand, index) => (
+            <button
+              key={index}
+              className="flex items-center justify-center p-4 border rounded-lg hover:shadow-md transition"
+            >
+              <Image
+                src={brand} // Ensure you have the brand logos in your public folder
+                alt={brand}
+                className="h-8"
+              />
+              
+            </button>
+          ))}
+        </div>
+      </div>
+    {/* </div> */}
+      {/* <Button className='font-bold bg-blue-600 text-white' onPress={onOpen} disabled={formDisabled}>Add Vehicle</Button> */}
       <Modal size='2xl' isOpen={isOpen} onOpenChange={onClose}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">Submit Vehicle Details</ModalHeader>
@@ -515,7 +562,7 @@ import useBrands from '../hooks/useBrands.jsx';
                 ) : (
                   <>
                     <Button
-                      className="mr-2 bg-blue-600 text-white"
+                      className="mr-2 bg-blue-800 text-white"
                       radius='sm'
 
                       onClick={() => setStage((prevStage) => Math.max(prevStage - 1, 1))}
@@ -523,7 +570,7 @@ import useBrands from '../hooks/useBrands.jsx';
                       Previous
                     </Button>
                     <Button
-                      className="mr-2 bg-blue-600 text-white"
+                      className="mr-2 bg-blue-800 text-white"
                       type="button"
                       radius='sm'
                       onClick={(e) => {

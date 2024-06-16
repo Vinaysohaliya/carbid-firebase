@@ -58,7 +58,7 @@ const VehicleSellingForm = ({ vehicle }) => {
               {!vehicle.evaluationDone ? "Your Vehicle Is under Evaluation" : "Click Button Below to add on Auction"}
             </p>
             <h4 className="font-bold text-large text-blue-800">Frontend Radio</h4>
-            <Button className="bg-blue-600 text-white" onPress={onOpen}>Your Vehicle</Button>
+            <Button className="bg-blue-800 text-white" onPress={onOpen}>Your Vehicle</Button>
           </CardHeader>
           <CardBody className="overflow-visible py-2 flex justify-center items-center">
             <Image

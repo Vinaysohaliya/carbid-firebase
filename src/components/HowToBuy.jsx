@@ -9,7 +9,7 @@ import img3 from '../assets/8c083c9b23917bd7f8dd0ea86c1f4cb1.jpg'
 const HowToBuy = () => {
     return (
         <div className=' flex flex-col ml-10 my-6 '>
-            <div className=' mb-4 font-bold'>How To Buy</div>
+            <div className=' mb-4 font-semibold text-2xl'>How To Buy</div>
             <div className=' flex mb-4 '>
                 <Image
                     width={200}

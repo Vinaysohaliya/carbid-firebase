@@ -14,6 +14,9 @@ import {
   Divider,
 } from "@nextui-org/react";
 import { useDispatch } from "react-redux";
+import {Link} from "@nextui-org/react";
+import { GoChevronRight } from "react-icons/go";
+
 import { fetchVehiclesWithUsers } from "../Redux/vehicleSlice";
 import VehicleEditForm from "../components/VehicleEditForm";
 
@@ -65,7 +68,7 @@ const columnsTable2 = [
     key: "sechualtime",
     label: "SCHEDULE TIME",
   },
-  
+
   {
     key: "View",
     label: "View",
@@ -133,7 +136,7 @@ const EvaluterDashboard = () => {
   return (
     <div className="ml-8 my-6 ">
       <div className="btn-container ">
-       
+
         <button
           color=""
           size="sm"
@@ -154,13 +157,13 @@ const EvaluterDashboard = () => {
           color=""
           size="sm"
           onClick={() => handleButtonClick(3)}
-          className={`mb-5 ${activeTable === 3 ? "border-b-4 border-blue-900 text-blue-900": ""}`}
+          className={`mb-5 ${activeTable === 3 ? "border-b-4 border-blue-900 text-blue-900" : ""}`}
         >
           Sent For Approval
         </button>
-        
+
       </div>
-      <Divider/>
+      <Divider />
       {loading ? (
         <div className="flex justify-center items-center">
           <Spinner size="lg" />
@@ -177,7 +180,7 @@ const EvaluterDashboard = () => {
                 )}
               </TableHeader>
               <TableBody items={vehicleData}>
-              
+
                 {(item) => (
                   <TableRow key={item.vehicleId}>
                     {(columnKey) => (
@@ -185,30 +188,33 @@ const EvaluterDashboard = () => {
                         {item[columnKey.toLowerCase()]}
                         {columnKey === "Edit" && (
                           <Button
-                            color="danger"
+                            color=""
                             size="sm"
                             onClick={() => handleEditClick(item)}
+                             className="text-blue-800 font-semibold"
                           >
-                            Edit
+                           
+                             View Detail <GoChevronRight />
                           </Button>
                         )}
                         {item[columnKey.toLowerCase()]}
                         {columnKey === "View" && (
                           <Button
-                            color="success"
+                            color=""
                             size="sm"
                             onClick={() => handleEditClick(item)}
+                            className="text-blue-800 font-semibold"
                           >
-                            View
+                            Edit <GoChevronRight/>
                           </Button>
                         )}
-                        {(columnKey === "MarkAsComplate" ) && (
+                        {(columnKey === "MarkAsComplate") && (
                           <div className="text-blue-600 font-semibold">✔ Mark as complate</div>
                         )}
-                        {(columnKey === "sechualDate" ) && (
+                        {(columnKey === "sechualDate") && (
                           <div>21 June 24</div>
                         )}
-                        {(columnKey === "Evaluation" ) && (
+                        {(columnKey === "Evaluation") && (
                           <div>21 June 24</div>
                         )}
                         {(columnKey === "sechualtime" && <div>3:15 PM</div>)}
@@ -220,25 +226,25 @@ const EvaluterDashboard = () => {
                             {item.evaluationDone === 'APPROVE' && (
                               <span className=" ml-2">
                                 <span className="text-green-600 w-4 h-4 rounded-sm">
-                                &#9679;
+                                  &#9679;
                                 </span>
-                                 Up for Auction
+                                Up for Auction
                               </span>
                             )}
                             {item.evaluationDone === 'PENDING' && (
                               <span className=" ml-2">
                                 <span className="text-yellow-600 w-4 h-4 rounded-sm">
-                                &#9679;
+                                  &#9679;
                                 </span>
-                                 Pending
+                                Pending
                               </span>
                             )}
                             {item.evaluationDone === 'DECLINED' && (
                               <span className=" ml-2">
                                 <span className="text-red-600 w-4 h-4 rounded-sm">
-                                &#9679;
+                                  &#9679;
                                 </span>
-                                 Evaluation Failed
+                                Evaluation Failed
                               </span>
                             )}
                           </div>

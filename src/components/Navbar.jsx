@@ -1,8 +1,12 @@
 import React, { useState } from "react";
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, Avatar, NavbarMenuToggle } from "@nextui-org/react";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, Avatar, NavbarMenuToggle,Image } from "@nextui-org/react";
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../Redux/authSlice';
 import SearchByCity from '../components/SearchByCity';
+import logo from '../assets/logo/WhatsApp Image 2024-06-16 at 16.23.49_d16d42f4.jpg'
+// import { PiCarProfile } from "react-icons/pi";
+import { GoPersonFill } from "react-icons/go";
+
 
 const NavbarComponent = () => {
   const loggedIn = useSelector(state => state.auth.isLoggedIn);
@@ -31,9 +35,10 @@ const NavbarComponent = () => {
 
       <NavbarContent className="w-full" >
         <div className=" flex items-center justify-between w-full">
-          <div className="flex pr-5">
+          <div className="flex pr-5 items-center">
             <NavbarItem className="logo mr-4">
-              <h1>LOGO</h1>
+              <Image width={50} height={50} src={logo}/>
+              
             </NavbarItem>
             {/* <NavbarItem>
           <Link className="text-blue-600 mr-4 font-bold hover:underline focus:underline" color="foreground" href="/buyvehicle">
@@ -72,6 +77,7 @@ const NavbarComponent = () => {
                   <Link className="ml-2" color="foreground" href="/editprofile">
                     <Avatar src={profilePic} />
                   </Link>
+                  {/* <GoPersonFill className="w-full h-full text-3xl text-blue-700" />  */}
                 </NavbarItem>
               </>
             ) : (
